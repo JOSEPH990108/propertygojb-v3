@@ -1,0 +1,16 @@
+import type { ReactNode } from "react";
+
+export default function AdminLayout({
+  children,
+}: Readonly<{
+  children: ReactNode;
+}>) {
+  return (
+    <main className="min-h-screen px-6 py-10">
+      <div className="mb-6 border-b pb-4">
+        <p className="text-sm text-muted-foreground">Admin Portal</p>
+      </div>
+      {children}
+    </main>
+  );
+}
