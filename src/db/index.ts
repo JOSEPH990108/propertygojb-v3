@@ -1,18 +1,24 @@
-// src\db\index.ts
+// src/db/index.ts
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+
 import * as schema from "./schema";
 
 const databaseUrl = process.env.DATABASE_URL;
 
-const queryClient = databaseUrl
-  ? postgres(databaseUrl, {
-      max: 10,
-    })
-  : null;
+if (!databaseUrl) {
+  throw new Error("DATABASE_URL is required");
+}
 
-export const db = queryClient ? drizzle(queryClient, { schema }) : null;
+export const client = postgres(databaseUrl, {
+  max: 10,
+});
 
-export type DatabaseClient = NonNullable<typeof db>;
+export const db = drizzle(client, {
+  schema,
+});
+
+export type DatabaseClient = typeof db;
+
 export { schema };
 export * from "./schema";

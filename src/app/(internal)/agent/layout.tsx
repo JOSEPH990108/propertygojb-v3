@@ -1,10 +1,14 @@
 import type { ReactNode } from "react";
 
-export default function AgentLayout({
+import { requireRole } from "@/lib/auth/guards";
+
+export default async function AgentLayout({
   children,
 }: Readonly<{
   children: ReactNode;
 }>) {
+  await requireRole(["AGENT"], "/agent");
+
   return (
     <main className="min-h-screen px-6 py-10">
       <div className="mb-6 border-b pb-4">

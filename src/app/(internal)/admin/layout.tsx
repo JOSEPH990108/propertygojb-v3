@@ -1,10 +1,14 @@
 import type { ReactNode } from "react";
 
-export default function AdminLayout({
+import { requireRole } from "@/lib/auth/guards";
+
+export default async function AdminLayout({
   children,
 }: Readonly<{
   children: ReactNode;
 }>) {
+  await requireRole(["ADMIN", "SUPER_ADMIN"], "/admin");
+
   return (
     <main className="min-h-screen px-6 py-10">
       <div className="mb-6 border-b pb-4">
