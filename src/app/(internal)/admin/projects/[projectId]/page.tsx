@@ -190,6 +190,13 @@ export default async function ProjectDetailPage({
               Manage Layouts
             </Link>
 
+            <Link
+              href={`/admin/projects/${project.id}/units`}
+              className="inline-flex h-9 items-center rounded-xl border border-emerald-200 bg-emerald-50 px-4 text-sm font-bold text-emerald-700 transition hover:bg-emerald-100"
+            >
+              Manage Units
+            </Link>
+
             <AppStatusBadge tone={project.isPublished ? "success" : "warning"}>
               {project.isPublished ? "Published" : "Draft"}
             </AppStatusBadge>
