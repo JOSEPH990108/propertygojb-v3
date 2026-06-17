@@ -33,10 +33,13 @@ export function GoogleLoginButton({ callbackURL = "/" }: GoogleLoginButtonProps)
       <Button
         type="button"
         variant="outline"
-        className="w-full"
+        className="h-12 w-full rounded-xl border-slate-200 bg-white/80 text-base font-semibold shadow-sm hover:bg-slate-50"
         disabled={isPending}
         onClick={handleGoogleLogin}
       >
+        <span className="mr-3 grid size-6 place-items-center rounded-full bg-white text-lg">
+          G
+        </span>
         {isPending ? "Redirecting..." : "Continue with Google"}
       </Button>
 
