@@ -36,6 +36,7 @@ type AppSelectProps = {
   className?: string;
   triggerClassName?: string;
   contentClassName?: string;
+  disabled?: boolean;
   renderValue?: (option: AppSelectOption | undefined) => ReactNode;
   renderOption?: (option: AppSelectOption) => ReactNode;
 };
@@ -50,6 +51,7 @@ export function AppSelect({
   className,
   triggerClassName,
   contentClassName,
+  disabled,
   renderValue,
   renderOption,
 }: AppSelectProps) {
@@ -59,6 +61,7 @@ export function AppSelect({
     <Popover>
       <PopoverTrigger asChild>
         <Button
+          disabled={disabled}
           type="button"
           variant="outline"
           className={cn(
@@ -83,6 +86,7 @@ export function AppSelect({
         className={cn(
           "w-[var(--radix-popover-trigger-width)] min-w-64 rounded-2xl border-slate-200 bg-white/95 p-2 shadow-2xl backdrop-blur-xl",
           contentClassName,
+  disabled,
         )}
       >
         <Command>
