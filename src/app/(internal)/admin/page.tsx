@@ -15,7 +15,6 @@ import { desc, eq } from "drizzle-orm";
 
 import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { db, schema } from "@/db";
-import { requireRole } from "@/lib/auth/guards";
 
 function formatDate(value: Date | null) {
   if (!value) {
@@ -96,7 +95,6 @@ function QuickActionCard({
 }
 
 export default async function AdminDashboardPage() {
-  await requireRole(["ADMIN", "SUPER_ADMIN"], "/admin");
 
   const users = await db
     .select({
