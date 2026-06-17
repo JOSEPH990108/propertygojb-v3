@@ -1,15 +1,33 @@
 import type { ReactNode } from "react";
 
-export default function AgentLayout({
+import { InternalTopbar } from "@/components/internal/shell/internal-topbar";
+import { requireRole } from "@/lib/auth/guards";
+
+export default async function AgentLayout({
   children,
 }: Readonly<{
   children: ReactNode;
 }>) {
+  const allowedRoles: Parameters<typeof requireRole>[0] =
+    process.env.NODE_ENV === "development"
+      ? ["AGENT", "SUPER_ADMIN"]
+      : ["AGENT"];
+
+  const authContext = await requireRole(allowedRoles, "/agent");
+  const user = authContext.user as {
+    name?: string | null;
+    email?: string | null;
+  };
+
   return (
     <main className="min-h-screen px-6 py-10">
-      <div className="mb-6 border-b pb-4">
-        <p className="text-sm text-muted-foreground">Agent Portal</p>
-      </div>
+      <InternalTopbar
+        portal="Agent"
+        userName={user.name}
+        userEmail={user.email}
+        roleCode={authContext.roleCode}
+      />
+
       {children}
     </main>
   );

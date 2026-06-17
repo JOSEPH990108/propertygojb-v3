@@ -1,0 +1,1 @@
+ALTER TYPE "public"."otp_purpose" ADD VALUE 'PASSWORD_RESET';
