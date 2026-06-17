@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { asc } from "drizzle-orm";
-import { ArrowLeft, Building2, Images } from "lucide-react";
+import { ArrowLeft, Building2, Images, LayoutTemplate } from "lucide-react";
 
 import { ProjectEditForm } from "@/components/admin/projects/project-edit-form";
 import { AppStatusBadge } from "@/components/common/app-status-badge";
@@ -180,6 +180,14 @@ export default async function ProjectDetailPage({
             >
               <Images className="size-4" />
               Manage Media
+            </Link>
+
+            <Link
+              href={`/admin/projects/${project.id}/layouts`}
+              className="inline-flex h-9 items-center gap-2 rounded-xl border border-purple-200 bg-purple-50 px-4 text-sm font-bold text-purple-700 transition hover:bg-purple-100"
+            >
+              <LayoutTemplate className="size-4" />
+              Manage Layouts
             </Link>
 
             <AppStatusBadge tone={project.isPublished ? "success" : "warning"}>
