@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { asc } from "drizzle-orm";
-import { ArrowLeft, Building2 } from "lucide-react";
+import { ArrowLeft, Building2, Images } from "lucide-react";
 
 import { ProjectEditForm } from "@/components/admin/projects/project-edit-form";
 import { AppStatusBadge } from "@/components/common/app-status-badge";
@@ -173,7 +173,15 @@ export default async function ProjectDetailPage({
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              href={`/admin/projects/${project.id}/media`}
+              className="inline-flex h-9 items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 text-sm font-bold text-blue-700 transition hover:bg-blue-100"
+            >
+              <Images className="size-4" />
+              Manage Media
+            </Link>
+
             <AppStatusBadge tone={project.isPublished ? "success" : "warning"}>
               {project.isPublished ? "Published" : "Draft"}
             </AppStatusBadge>
