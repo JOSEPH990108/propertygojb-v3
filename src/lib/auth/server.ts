@@ -6,20 +6,30 @@ import { nextCookies } from "better-auth/next-js";
 import { phoneNumber } from "better-auth/plugins";
 
 import { db, schema } from "@/db";
+import { createPhoneTempEmail } from "@/lib/auth/phone";
+
+const isProduction = process.env.NODE_ENV === "production";
 
 if (!process.env.BETTER_AUTH_SECRET) {
   throw new Error("BETTER_AUTH_SECRET is required.");
 }
 
-function createPhoneTempEmail(phone: string) {
-  const normalized = phone.replace(/[^\d+]/g, "").replace(/^\+/, "");
-  return `${normalized}@phone.propertygojb.local`;
+function getBetterAuthBaseUrl() {
+  if (process.env.BETTER_AUTH_URL) {
+    return process.env.BETTER_AUTH_URL;
+  }
+
+  if (!isProduction) {
+    return "http://localhost:3000";
+  }
+
+  throw new Error("BETTER_AUTH_URL is required in production.");
 }
 
 export const auth = betterAuth({
   appName: "PropertyGoJB",
   basePath: "/api/auth",
-  baseURL: process.env.BETTER_AUTH_URL ?? "http://localhost:3000",
+  baseURL: getBetterAuthBaseUrl(),
   secret: process.env.BETTER_AUTH_SECRET,
 
   database: drizzleAdapter(db, {
@@ -52,9 +62,17 @@ export const auth = betterAuth({
       expiresIn: 300,
       sendOTP: ({ phoneNumber, code }) => {
         // DEV ONLY: Replace with real SMS provider later.
+        if (isProduction) {
+          throw new Error("sendOTP SMS provider is not configured.");
+        }
+
         console.log(`[DEV PHONE OTP] ${phoneNumber}: ${code}`);
       },
       sendPasswordResetOTP: ({ phoneNumber, code }) => {
+        if (isProduction) {
+          throw new Error("sendPasswordResetOTP SMS provider is not configured.");
+        }
+
         console.log(`[DEV PASSWORD RESET OTP] ${phoneNumber}: ${code}`);
       },
       signUpOnVerification: {

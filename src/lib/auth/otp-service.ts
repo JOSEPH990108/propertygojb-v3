@@ -42,6 +42,22 @@ function safeCompare(leftValue: string, rightValue: string) {
   return timingSafeEqual(left, right);
 }
 
+async function findLatestActiveChallenge(
+  phoneNormalized: string,
+  purpose: AuthOtpPurpose,
+) {
+  return db.query.otpChallenges.findFirst({
+    where: (table, { and, eq, isNull }) =>
+      and(
+        eq(table.phoneNormalized, phoneNormalized),
+        eq(table.purpose, purpose),
+        isNull(table.consumedAt),
+        isNull(table.lockedAt),
+      ),
+    orderBy: (table, { desc }) => [desc(table.createdAt)],
+  });
+}
+
 async function closeActiveChallenges(
   phoneNormalized: string,
   purpose: AuthOtpPurpose,
@@ -70,6 +86,22 @@ export async function createAuthOtpChallenge(params: {
   metadata?: Record<string, unknown>;
 }) {
   const now = new Date();
+  const activeChallenge = await findLatestActiveChallenge(
+    params.phoneNormalized,
+    params.purpose,
+  );
+
+  if (
+    activeChallenge &&
+    activeChallenge.expiresAt.getTime() > now.getTime() &&
+    activeChallenge.resendAvailableAt.getTime() > now.getTime()
+  ) {
+    return {
+      expiresAt: activeChallenge.expiresAt,
+      resendAvailableAt: activeChallenge.resendAvailableAt,
+    };
+  }
+  
   const code = generateOtpCode();
   const expiresAt = new Date(now.getTime() + OTP_EXPIRES_SECONDS * 1000);
   const resendAvailableAt = new Date(now.getTime() + OTP_RESEND_SECONDS * 1000);
@@ -92,7 +124,9 @@ export async function createAuthOtpChallenge(params: {
     metadata: params.metadata ?? {},
   });
 
-  console.log(`[DEV ${params.purpose} OTP] ${params.phoneNumber}: ${code}`);
+  if (process.env.NODE_ENV !== "production") {
+    console.log(`[DEV ${params.purpose} OTP] ${params.phoneNumber}: ${code}`);
+  }
 
   return {
     expiresAt,
@@ -108,16 +142,10 @@ export async function verifyAuthOtpChallenge(params: {
 }) {
   const now = new Date();
 
-  const challenge = await db.query.otpChallenges.findFirst({
-    where: (table, { and, eq, isNull }) =>
-      and(
-        eq(table.phoneNormalized, params.phoneNormalized),
-        eq(table.purpose, params.purpose),
-        isNull(table.consumedAt),
-        isNull(table.lockedAt),
-      ),
-    orderBy: (table, { desc }) => [desc(table.createdAt)],
-  });
+  const challenge = await findLatestActiveChallenge(
+    params.phoneNormalized,
+    params.purpose,
+  );
 
   if (!challenge) {
     return {

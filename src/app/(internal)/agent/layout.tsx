@@ -8,9 +8,12 @@ export default async function AgentLayout({
 }: Readonly<{
   children: ReactNode;
 }>) {
-  // TEMP: Allow SUPER_ADMIN during development for easier portal checking.
-  // TODO: Before production release, change back to ["AGENT"] only if needed.
-  const authContext = await requireRole(["AGENT", "SUPER_ADMIN"], "/agent");
+  const allowedRoles: Parameters<typeof requireRole>[0] =
+    process.env.NODE_ENV === "development"
+      ? ["AGENT", "SUPER_ADMIN"]
+      : ["AGENT"];
+
+  const authContext = await requireRole(allowedRoles, "/agent");
   const user = authContext.user as {
     name?: string | null;
     email?: string | null;
