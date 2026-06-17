@@ -20,14 +20,15 @@ import { useRouter } from "next/navigation";
 
 import { AuthCard } from "@/components/auth/auth-card";
 import { AuthPageShell } from "@/components/auth/auth-page-shell";
+import { PasswordInput } from "@/components/auth/password-input";
+import { PasswordRequirements } from "@/components/auth/password-requirements";
 import { AppButton } from "@/components/common/app-button";
 import { AppSelect, type AppSelectOption } from "@/components/common/app-select";
 import { AppStepper } from "@/components/common/app-stepper";
-import { PasswordInput } from "@/components/auth/password-input";
-import { PasswordRequirements } from "@/components/auth/password-requirements";
-import { isPasswordValid } from "@/lib/auth/password-policy";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth/client";
+import { postJson } from "@/lib/api/client";
+import { appToast } from "@/lib/app-toast";
+import { isPasswordValid } from "@/lib/auth/password-policy";
 import { buildPhoneNumber } from "@/lib/auth/phone";
 
 const countryCodeOptions: AppSelectOption[] = [
@@ -45,6 +46,7 @@ export function ForgotPasswordForm() {
 
   const [step, setStep] = useState<ForgotPasswordStep>("request");
   const [otpSent, setOtpSent] = useState(false);
+  const [resetChallengeId, setResetChallengeId] = useState("");
   const [countryCode, setCountryCode] = useState("+60");
   const [mobile, setMobile] = useState("");
   const [otpDigits, setOtpDigits] = useState(["", "", "", "", "", ""]);
@@ -52,36 +54,35 @@ export function ForgotPasswordForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPasswordRequirements, setShowPasswordRequirements] =
     useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
   const [isPending, startTransition] = useTransition();
-  const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
+  const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const phoneNumber = buildPhoneNumber(countryCode, mobile);
   const otpCode = otpDigits.join("");
 
   function handleSendCode() {
-    setError(null);
-    setMessage(null);
-
     if (!mobile.trim()) {
-      setError("Mobile number is required.");
+      appToast.error("Mobile number is required.");
       return;
     }
 
     startTransition(async () => {
-      const result = await authClient.phoneNumber.requestPasswordReset({
-        phoneNumber,
-      });
+      const result = await postJson(
+        "/api/auth/mobile/forgot-password/request-otp",
+        {
+          countryCode,
+          mobile,
+        },
+      );
 
-      if (result.error) {
-        setError(result.error.message ?? "Unable to send reset OTP.");
+      if (!result.ok) {
+        appToast.error(result.message);
         return;
       }
 
       setOtpSent(true);
-      setMessage("Password reset OTP sent. Check your dev server terminal.");
+      setResetChallengeId("");
+      appToast.success("OTP sent successfully.", "Check your dev server terminal.");
 
       setTimeout(() => {
         inputRefs.current[0]?.focus();
@@ -90,57 +91,72 @@ export function ForgotPasswordForm() {
   }
 
   function handleVerifyCode() {
-    setError(null);
-    setMessage(null);
-
     if (!otpSent) {
-      setError("Please send the OTP code first.");
+      appToast.error("Please send the OTP code first.");
       return;
     }
 
     if (otpCode.length !== 6) {
-      setError("Please enter the 6-digit OTP code.");
+      appToast.error("Please enter the 6-digit OTP code.");
       return;
     }
 
-    setStep("reset");
-    setMessage(null);
+    startTransition(async () => {
+      const result = await postJson<{ challengeId: string }>(
+        "/api/auth/mobile/forgot-password/verify-otp",
+        {
+          countryCode,
+          mobile,
+          code: otpCode,
+        },
+      );
+
+      if (!result.ok) {
+        appToast.error(result.message);
+        return;
+      }
+
+      setResetChallengeId(result.challengeId);
+      setStep("reset");
+      appToast.success("OTP verified successfully.");
+    });
   }
 
   function handleResetPassword() {
-    setError(null);
-    setMessage(null);
-
-    if (otpCode.length !== 6) {
-      setError("Please enter the 6-digit OTP code.");
+    if (!resetChallengeId) {
+      appToast.error("Please verify OTP before resetting password.");
       setStep("request");
       return;
     }
 
     if (!isPasswordValid(newPassword)) {
-      setError("Please make sure your new password meets all requirements.");
       setShowPasswordRequirements(true);
+      appToast.error("Please make sure your new password meets all requirements.");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setError("Passwords do not match.");
+      appToast.error("Passwords do not match.");
       return;
     }
 
     startTransition(async () => {
-      const result = await authClient.phoneNumber.resetPassword({
-        phoneNumber,
-        otp: otpCode,
-        newPassword,
-      });
+      const result = await postJson(
+        "/api/auth/mobile/forgot-password/complete",
+        {
+          countryCode,
+          mobile,
+          challengeId: resetChallengeId,
+          newPassword,
+        },
+      );
 
-      if (result.error) {
-        setError(result.error.message ?? "Unable to reset password.");
-        setStep("request");
+      if (!result.ok) {
+        appToast.error(result.message);
         return;
       }
 
+      appToast.success("Password reset successfully.", "Please login again.");
       router.push("/login");
       router.refresh();
     });
@@ -266,6 +282,7 @@ export function ForgotPasswordForm() {
                         setMobile(event.target.value);
                         setOtpSent(false);
                         setOtpDigits(["", "", "", "", "", ""]);
+                        setResetChallengeId("");
                       }}
                       placeholder="Enter mobile number"
                       inputMode="tel"
@@ -361,9 +378,7 @@ export function ForgotPasswordForm() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-semibold">
-                  Confirm Password
-                </label>
+                <label className="text-sm font-semibold">Confirm Password</label>
                 <PasswordInput
                   value={confirmPassword}
                   onChange={(event) => setConfirmPassword(event.target.value)}
@@ -390,14 +405,6 @@ export function ForgotPasswordForm() {
                 Back to Verify Code
               </button>
             </div>
-          ) : null}
-
-          {message ? (
-            <p className="text-center text-sm text-slate-500">{message}</p>
-          ) : null}
-
-          {error ? (
-            <p className="text-center text-sm text-destructive">{error}</p>
           ) : null}
 
           <div className="text-center">

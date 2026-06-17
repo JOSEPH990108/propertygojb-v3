@@ -2,17 +2,20 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { LockKeyhole, Smartphone } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Smartphone } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-import { AppButton } from "@/components/common/app-button";
-import { AppSelect, type AppSelectOption } from "@/components/common/app-select";
 import { AuthCard } from "@/components/auth/auth-card";
 import { AuthPageShell } from "@/components/auth/auth-page-shell";
 import { GoogleLoginButton } from "@/components/auth/google-login-button";
+import { PasswordInput } from "@/components/auth/password-input";
+import { AppButton } from "@/components/common/app-button";
+import { AppSelect, type AppSelectOption } from "@/components/common/app-select";
 import { Input } from "@/components/ui/input";
-import { buildPhoneNumber } from "@/lib/auth/phone";
+import { postJson } from "@/lib/api/client";
+import { appToast } from "@/lib/app-toast";
 import { authClient } from "@/lib/auth/client";
+import { buildPhoneNumber } from "@/lib/auth/phone";
 
 const countryCodeOptions: AppSelectOption[] = [
   { value: "+60", label: "Malaysia", description: "+60", leading: "MY" },
@@ -22,35 +25,36 @@ const countryCodeOptions: AppSelectOption[] = [
   { value: "+91", label: "India", description: "+91", leading: "IN" },
 ];
 
-function getSafeNextPath(value: string | null) {
-  if (!value || !value.startsWith("/") || value.startsWith("//")) return "/";
-  return value;
-}
 
 export function LoginForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const [countryCode, setCountryCode] = useState("+60");
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  const nextPath = getSafeNextPath(searchParams.get("next"));
 
   function handleLogin() {
-    setError(null);
-
     if (!mobile.trim() || !password) {
-      setError("Mobile number and password are required.");
+      appToast.error("Mobile number and password are required.");
       return;
     }
 
     const phoneNumber = buildPhoneNumber(countryCode, mobile);
 
     startTransition(async () => {
+      const checkResult = await postJson("/api/auth/mobile/login/check", {
+        countryCode,
+        mobile,
+      });
+
+      if (!checkResult.ok) {
+        appToast.error(checkResult.message);
+        return;
+      }
+
       const result = await authClient.signIn.phoneNumber({
         phoneNumber,
         password,
@@ -58,11 +62,12 @@ export function LoginForm() {
       });
 
       if (result.error) {
-        setError(result.error.message ?? "Unable to login.");
+        appToast.error(result.error.message ?? "Invalid mobile number or password.");
         return;
       }
 
-      router.push(nextPath);
+      appToast.success("Login successful.");
+      router.push("/auth-redirect");
       router.refresh();
     });
   }
@@ -72,10 +77,6 @@ export function LoginForm() {
       <AuthCard>
         <div className="space-y-7">
           <div className="space-y-3 text-center">
-            <div className="mx-auto grid size-16 place-items-center rounded-full bg-blue-600 text-white shadow-[0_0_0_14px_rgba(37,99,235,0.10)]">
-              <LockKeyhole className="size-7" />
-            </div>
-
             <h1 className="text-3xl font-black tracking-tight">Welcome Back</h1>
             <p className="mx-auto max-w-xs text-sm leading-6 text-slate-500">
               Login securely with your mobile number and password.
@@ -131,23 +132,21 @@ export function LoginForm() {
 
             <div className="space-y-2">
               <label className="text-sm font-semibold">Password</label>
-              <Input
+              <PasswordInput
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 placeholder="Enter your password"
-                type="password"
                 autoComplete="current-password"
-                className="h-12 rounded-2xl border-slate-200 bg-white/80 shadow-sm"
               />
             </div>
 
-            <div className="flex items-center justify-between gap-3 text-sm">
-              <label className="flex items-center gap-2 text-slate-500">
+            <div className="flex items-center justify-between gap-4 text-sm">
+              <label className="flex items-center gap-2 text-slate-600">
                 <input
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(event) => setRememberMe(event.target.checked)}
-                  className="size-4 rounded border-slate-300"
+                  className="size-4 rounded border-slate-300 accent-blue-600"
                 />
                 Remember me
               </label>
@@ -157,27 +156,30 @@ export function LoginForm() {
               </Link>
             </div>
 
-            {error ? <p className="text-center text-sm text-destructive">{error}</p> : null}
-
-            <AppButton type="button" disabled={isPending} onClick={handleLogin} className="w-full">
+            <AppButton
+              type="button"
+              disabled={isPending}
+              onClick={handleLogin}
+              className="w-full"
+            >
               {isPending ? "Logging in..." : "Log In"}
             </AppButton>
+
+            <div className="flex items-center gap-3">
+              <div className="h-px flex-1 bg-slate-200" />
+              <span className="text-xs text-slate-400">or</span>
+              <div className="h-px flex-1 bg-slate-200" />
+            </div>
+
+            <GoogleLoginButton callbackURL="/auth-redirect" />
+
+            <p className="text-center text-sm text-slate-500">
+              Don&apos;t have an account?{" "}
+              <Link href="/register" className="font-semibold text-blue-600">
+                Register
+              </Link>
+            </p>
           </div>
-
-          <div className="flex items-center gap-3">
-            <div className="h-px flex-1 bg-slate-200" />
-            <span className="text-xs text-slate-400">or</span>
-            <div className="h-px flex-1 bg-slate-200" />
-          </div>
-
-          <GoogleLoginButton callbackURL={nextPath} />
-
-          <p className="text-center text-sm text-slate-500">
-            Don&apos;t have an account?{" "}
-            <Link href="/register" className="font-semibold text-blue-600">
-              Register
-            </Link>
-          </p>
         </div>
       </AuthCard>
     </AuthPageShell>

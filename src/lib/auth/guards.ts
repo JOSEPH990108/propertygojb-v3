@@ -37,15 +37,14 @@ function normalizeRoleCode(value: unknown): GuardRoleCode | undefined {
 
 export function getRoleHomePath(roleCode?: GuardRoleCode): string {
   switch (roleCode) {
-    case "AGENT":
-      return routes.agent.dashboard;
     case "ADMIN":
     case "SUPER_ADMIN":
       return routes.admin.dashboard;
+    case "AGENT":
+      return routes.agent.dashboard;
     case "CUSTOMER":
-      return routes.public.home;
     default:
-      return routes.auth.login;
+      return routes.public.home;
   }
 }
 
@@ -140,7 +139,7 @@ export async function requireRole(
   }
 
   if (!authContext.roleCode) {
-    redirect(routes.auth.login);
+    redirect(routes.public.home);
   }
 
   if (!allowedRoles.includes(authContext.roleCode)) {

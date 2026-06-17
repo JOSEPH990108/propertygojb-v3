@@ -15,6 +15,10 @@ export const passwordRequirements = [
     label: "At least 1 number",
     test: (value: string) => /\d/.test(value),
   },
+  {
+    label: "At least 1 special character",
+    test: (value: string) => /[^A-Za-z0-9]/.test(value),
+  },
 ];
 
 export function isPasswordValid(password: string) {

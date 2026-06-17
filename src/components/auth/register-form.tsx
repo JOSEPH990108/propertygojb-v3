@@ -15,15 +15,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { AuthCard } from "@/components/auth/auth-card";
 import { AuthPageShell } from "@/components/auth/auth-page-shell";
 import { GoogleLoginButton } from "@/components/auth/google-login-button";
+import { PasswordInput } from "@/components/auth/password-input";
+import { PasswordRequirements } from "@/components/auth/password-requirements";
 import { AppButton } from "@/components/common/app-button";
 import { AppSelect, type AppSelectOption } from "@/components/common/app-select";
 import { AppStepper } from "@/components/common/app-stepper";
-import { PasswordInput } from "@/components/auth/password-input";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth/client";
-import { buildPhoneNumber, createPhoneTempEmail } from "@/lib/auth/phone";
-
-import { PasswordRequirements } from "@/components/auth/password-requirements";
+import { postJson } from "@/lib/api/client";
+import { appToast } from "@/lib/app-toast";
 import { isPasswordValid } from "@/lib/auth/password-policy";
 
 const countryCodeOptions: AppSelectOption[] = [
@@ -48,58 +47,42 @@ export function RegisterForm() {
   const [countryCode, setCountryCode] = useState("+60");
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
-  const [showPasswordRequirements, setShowPasswordRequirements] = useState(false);
+  const [showPasswordRequirements, setShowPasswordRequirements] =
+    useState(false);
   const [otpDigits, setOtpDigits] = useState(["", "", "", "", "", ""]);
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
   const [isPending, startTransition] = useTransition();
-  const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
+  const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const nextPath = getSafeNextPath(searchParams.get("next"));
-  const phoneNumber = buildPhoneNumber(countryCode, mobile);
   const otpCode = otpDigits.join("");
 
   function handleStartRegistration() {
-    setError(null);
-    setMessage(null);
-
     if (!name.trim() || !mobile.trim() || !password) {
-      setError("Name, mobile number and password are required.");
+      appToast.error("Name, mobile number and password are required.");
       return;
     }
 
     if (!isPasswordValid(password)) {
-      setError("Please make sure your password meets all requirements.");
       setShowPasswordRequirements(true);
+      appToast.error("Please make sure your password meets all requirements.");
       return;
     }
 
-    const email = createPhoneTempEmail(phoneNumber);
-
     startTransition(async () => {
-      const signUpResult = await authClient.signUp.email({
-        email,
-        name: name.trim(),
+      const result = await postJson("/api/auth/mobile/register/request-otp", {
+        name,
+        countryCode,
+        mobile,
         password,
       });
 
-      if (signUpResult.error) {
-        setError(signUpResult.error.message ?? "Unable to create account.");
-        return;
-      }
-
-      const otpResult = await authClient.phoneNumber.sendOtp({
-        phoneNumber,
-      });
-
-      if (otpResult.error) {
-        setError(otpResult.error.message ?? "Unable to send OTP.");
+      if (!result.ok) {
+        appToast.error(result.message);
         return;
       }
 
       setStep("verify");
-      setMessage("OTP sent. Check your dev server terminal for now.");
+      appToast.success("OTP sent successfully.", "Check your dev server terminal.");
 
       setTimeout(() => {
         inputRefs.current[0]?.focus();
@@ -108,28 +91,47 @@ export function RegisterForm() {
   }
 
   function handleVerifyOtp() {
-    setError(null);
-    setMessage(null);
-
     if (otpCode.length !== 6) {
-      setError("Please enter the 6-digit OTP code.");
+      appToast.error("Please enter the 6-digit OTP code.");
       return;
     }
 
     startTransition(async () => {
-      const result = await authClient.phoneNumber.verify({
-        phoneNumber,
-        code: otpCode,
-        updatePhoneNumber: true,
-        disableSession: false,
-      });
+      const verifyResult = await postJson<{ challengeId: string }>(
+        "/api/auth/mobile/register/verify-otp",
+        {
+          countryCode,
+          mobile,
+          code: otpCode,
+        },
+      );
 
-      if (result.error) {
-        setError(result.error.message ?? "Invalid OTP.");
+      if (!verifyResult.ok) {
+        appToast.error(verifyResult.message);
         return;
       }
 
-      router.push(nextPath);
+      const completeResult = await postJson(
+        "/api/auth/mobile/register/complete",
+        {
+          name,
+          countryCode,
+          mobile,
+          password,
+          challengeId: verifyResult.challengeId,
+        },
+      );
+
+      if (!completeResult.ok) {
+        appToast.error(completeResult.message);
+        return;
+      }
+
+      appToast.success(
+        "Registration completed.",
+        "Please login with your mobile number.",
+      );
+      router.push(nextPath === "/" ? "/login" : `/login?next=${encodeURIComponent(nextPath)}`);
       router.refresh();
     });
   }
@@ -146,7 +148,10 @@ export function RegisterForm() {
     }
   }
 
-  function handleOtpKeyDown(index: number, event: KeyboardEvent<HTMLInputElement>) {
+  function handleOtpKeyDown(
+    index: number,
+    event: KeyboardEvent<HTMLInputElement>,
+  ) {
     if (event.key === "Backspace" && !otpDigits[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
@@ -155,7 +160,11 @@ export function RegisterForm() {
   function handleOtpPaste(event: ClipboardEvent<HTMLInputElement>) {
     event.preventDefault();
 
-    const pasted = event.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    const pasted = event.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, 6);
+
     if (!pasted) return;
 
     const nextDigits = ["", "", "", "", "", ""];
@@ -240,8 +249,12 @@ export function RegisterForm() {
                           {option.leading}
                         </span>
                         <div className="min-w-0 flex-1">
-                          <p className="font-semibold text-slate-900">{option.label}</p>
-                          <p className="text-xs text-slate-500">{option.description}</p>
+                          <p className="font-semibold text-slate-900">
+                            {option.label}
+                          </p>
+                          <p className="text-xs text-slate-500">
+                            {option.description}
+                          </p>
                         </div>
                       </>
                     )}
@@ -294,7 +307,7 @@ export function RegisterForm() {
                 <div className="h-px flex-1 bg-slate-200" />
               </div>
 
-              <GoogleLoginButton callbackURL={nextPath} />
+              <GoogleLoginButton callbackURL="/auth-redirect" />
 
               <p className="text-center text-sm text-slate-500">
                 Already have an account?{" "}
@@ -317,8 +330,6 @@ export function RegisterForm() {
                     onClick={() => {
                       setStep("details");
                       setOtpDigits(["", "", "", "", "", ""]);
-                      setError(null);
-                      setMessage(null);
                     }}
                   >
                     Edit
@@ -365,9 +376,6 @@ export function RegisterForm() {
               </AppButton>
             </div>
           )}
-
-          {message ? <p className="text-center text-sm text-slate-500">{message}</p> : null}
-          {error ? <p className="text-center text-sm text-destructive">{error}</p> : null}
         </div>
       </AuthCard>
     </AuthPageShell>

@@ -71,7 +71,11 @@ export const documentVerificationStatusEnum = pgEnum("document_verification_stat
   "REJECTED",
 ]);
 
-export const otpPurposeEnum = pgEnum("otp_purpose", ["LOGIN", "REGISTER"]);
+export const otpPurposeEnum = pgEnum("otp_purpose", [
+  "LOGIN",
+  "REGISTER",
+  "PASSWORD_RESET",
+]);
 
 export const otpChannelEnum = pgEnum("otp_channel", [
   "SMS",
