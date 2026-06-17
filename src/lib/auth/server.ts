@@ -54,6 +54,9 @@ export const auth = betterAuth({
         // DEV ONLY: Replace with real SMS provider later.
         console.log(`[DEV PHONE OTP] ${phoneNumber}: ${code}`);
       },
+      sendPasswordResetOTP: ({ phoneNumber, code }) => {
+        console.log(`[DEV PASSWORD RESET OTP] ${phoneNumber}: ${code}`);
+      },
       signUpOnVerification: {
         getTempEmail: (phoneNumber) => createPhoneTempEmail(phoneNumber),
         getTempName: (phoneNumber) => phoneNumber,
