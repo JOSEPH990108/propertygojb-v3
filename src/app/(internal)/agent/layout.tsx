@@ -7,7 +7,7 @@ export default async function AgentLayout({
 }: Readonly<{
   children: ReactNode;
 }>) {
-  await requireRole(["AGENT"], "/agent");
+  await requireRole(["AGENT", "SUPER_ADMIN"], "/agent");
 
   return (
     <main className="min-h-screen px-6 py-10">
