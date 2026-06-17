@@ -1,5 +1,20 @@
-import { PlaceholderPage } from "@/components/layout/placeholder-page";
+import { InternalComingSoonPage } from "@/components/internal/shell/internal-coming-soon-page";
 
-export default function AdminAppointmentsPage() {
-  return <PlaceholderPage eyebrow="Admin Portal" title="Appointments" description="Admin appointment management module will be migrated here." />;
+export default function Page() {
+  return (
+    <InternalComingSoonPage
+      title="Appointment Management"
+      eyebrow="Sales Module"
+      description="Manage viewing appointments, follow-up meetings, and agent schedules."
+      icon="appointments"
+      backHref="/admin"
+      backLabel="Back to Admin Dashboard"
+      features={[
+        "Viewing appointment list",
+        "Agent appointment assignment",
+        "Customer follow-up schedule",
+        "Calendar-ready structure",
+      ]}
+    />
+  );
 }
