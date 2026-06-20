@@ -22,6 +22,7 @@ import {
   UsersRound,
   Warehouse,
   X,
+  UploadCloud,
 } from "lucide-react";
 import { useState, useTransition } from "react";
 
@@ -32,6 +33,7 @@ import { cn } from "@/lib/utils";
 
 export type InternalShellIconKey =
   | "dashboard"
+  | "imports"
   | "users"
   | "agents"
   | "projects"
@@ -63,6 +65,7 @@ type InternalShellProps = {
 };
 
 const iconMap = {
+  imports: UploadCloud,
   dashboard: Home,
   users: UserCog,
   agents: BriefcaseBusiness,

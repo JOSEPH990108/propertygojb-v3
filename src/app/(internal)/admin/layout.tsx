@@ -8,6 +8,11 @@ import { requireRole } from "@/lib/auth/guards";
 
 const adminNavItems: InternalShellNavItem[] = [
   { href: "/admin", label: "Dashboard", icon: "dashboard" },
+    {
+      href: "/admin/imports",
+      label: "Import Center",
+      icon: "imports",
+    },
   { href: "/admin/users", label: "Users", icon: "users" },
   { href: "/admin/agents", label: "Agents", icon: "agents" },
   { href: "/admin/projects", label: "Projects", icon: "projects" },
