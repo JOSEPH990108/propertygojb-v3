@@ -9,6 +9,7 @@ import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { Input } from "@/components/ui/input";
 import { postJson } from "@/lib/api/client";
 import { appToast } from "@/lib/app-toast";
+import { appConfirm } from "@/lib/app-confirm";
 
 type SelectOption = {
   id: string;
@@ -149,8 +150,15 @@ function UnitRow({
     });
   }
 
-  function handleRemove() {
-    const confirmed = window.confirm("Remove this unit from the project?");
+  async function handleRemove() {
+    const confirmed = await appConfirm({
+      title: "Remove project unit?",
+      description:
+        "This will remove this unit from the project inventory. This may fail if bookings or related records are linked.",
+      confirmText: "Remove Unit",
+      cancelText: "Keep Unit",
+      tone: "danger",
+    });
 
     if (!confirmed) {
       return;

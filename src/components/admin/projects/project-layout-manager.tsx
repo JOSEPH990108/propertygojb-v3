@@ -10,6 +10,7 @@ import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { Input } from "@/components/ui/input";
 import { postJson } from "@/lib/api/client";
 import { appToast } from "@/lib/app-toast";
+import { appConfirm } from "@/lib/app-confirm";
 
 type LayoutTypeOption = {
   id: string;
@@ -131,8 +132,15 @@ function ProjectLayoutRow({
     });
   }
 
-  function handleRemove() {
-    const confirmed = window.confirm("Remove this layout from the project?");
+  async function handleRemove() {
+    const confirmed = await appConfirm({
+      title: "Remove project layout?",
+      description:
+        "This will remove this layout from the project. This may fail if units are still linked to this layout.",
+      confirmText: "Remove Layout",
+      cancelText: "Keep Layout",
+      tone: "danger",
+    });
 
     if (!confirmed) {
       return;

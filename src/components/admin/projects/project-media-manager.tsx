@@ -10,6 +10,7 @@ import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { Input } from "@/components/ui/input";
 import { postJson } from "@/lib/api/client";
 import { appToast } from "@/lib/app-toast";
+import { appConfirm } from "@/lib/app-confirm";
 
 type MediaTypeOption = {
   id: string;
@@ -88,10 +89,15 @@ function ProjectMediaRow({
     });
   }
 
-  function handleRemove() {
-    const confirmed = window.confirm(
-      "Remove this media from the project? The file record will remain.",
-    );
+  async function handleRemove() {
+    const confirmed = await appConfirm({
+      title: "Remove project media?",
+      description:
+        "This will remove the media from this project. The file record will remain in the system.",
+      confirmText: "Remove Media",
+      cancelText: "Keep Media",
+      tone: "danger",
+    });
 
     if (!confirmed) {
       return;

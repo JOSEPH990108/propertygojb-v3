@@ -9,6 +9,7 @@ import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { Input } from "@/components/ui/input";
 import { postJson } from "@/lib/api/client";
 import { appToast } from "@/lib/app-toast";
+import { appConfirm } from "@/lib/app-confirm";
 
 type SelectOption = {
   id: string;
@@ -89,8 +90,15 @@ function NearbyRow({
     });
   }
 
-  function handleRemove() {
-    const confirmed = window.confirm("Remove this nearby place?");
+  async function handleRemove() {
+    const confirmed = await appConfirm({
+      title: "Remove nearby place?",
+      description:
+        "This will remove the nearby place from this project content.",
+      confirmText: "Remove Nearby Place",
+      cancelText: "Keep Nearby Place",
+      tone: "danger",
+    });
 
     if (!confirmed) {
       return;
