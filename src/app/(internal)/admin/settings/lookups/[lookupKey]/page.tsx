@@ -14,7 +14,8 @@ type LookupDetailPageProps = {
   }>;
 };
 
-type SimpleLookupTable = typeof schema.projectStatuses;
+type CodeLookupTable = typeof schema.projectStatuses;
+type SlugLookupTable = typeof schema.amenities;
 
 export default async function LookupDetailPage({
   params,
@@ -26,23 +27,59 @@ export default async function LookupDetailPage({
     notFound();
   }
 
-  const table = config.table as SimpleLookupTable;
+  const items =
+    config.kind === "code"
+      ? await db
+          .select({
+            id: (config.table as CodeLookupTable).id,
+            code: (config.table as CodeLookupTable).code,
+            slug: (config.table as CodeLookupTable).code,
+            name: (config.table as CodeLookupTable).name,
+            description: (config.table as CodeLookupTable).description,
+            color: (config.table as CodeLookupTable).color,
+            icon: (config.table as CodeLookupTable).icon,
+            sortOrder: (config.table as CodeLookupTable).sortOrder,
+            isActive: (config.table as CodeLookupTable).isActive,
+            deletedAt: (config.table as CodeLookupTable).deletedAt,
+          })
+          .from(config.table as CodeLookupTable)
+          .orderBy(
+            asc((config.table as CodeLookupTable).sortOrder),
+            asc((config.table as CodeLookupTable).name),
+          )
+      : await db
+          .select({
+            id: (config.table as SlugLookupTable).id,
+            code: (config.table as SlugLookupTable).slug,
+            slug: (config.table as SlugLookupTable).slug,
+            name: (config.table as SlugLookupTable).name,
+            description: (config.table as SlugLookupTable).description,
+            color: (config.table as SlugLookupTable).slug,
+            icon: (config.table as SlugLookupTable).slug,
+            sortOrder: (config.table as SlugLookupTable).id,
+            isActive: (config.table as SlugLookupTable).isActive,
+            deletedAt: (config.table as SlugLookupTable).deletedAt,
+          })
+          .from(config.table as SlugLookupTable)
+          .orderBy(asc((config.table as SlugLookupTable).name));
 
-  const items = await db
-    .select({
-      id: table.id,
-      code: table.code,
-      name: table.name,
-      description: table.description,
-      color: table.color,
-      icon: table.icon,
-      sortOrder: table.sortOrder,
-      isActive: table.isActive,
-    })
-    .from(table)
-    .orderBy(asc(table.sortOrder), asc(table.name));
+  const safeItems = items.map((item) => ({
+    id: item.id,
+    code: item.code,
+    slug: item.slug,
+    name: item.name,
+    description: item.description,
+    color: config.kind === "code" ? item.color : null,
+    icon: config.kind === "code" ? item.icon : null,
+    sortOrder: config.kind === "code" ? Number(item.sortOrder) : 0,
+    isActive: item.isActive,
+    deletedAt: item.deletedAt ? item.deletedAt.toISOString() : null,
+  }));
 
-  const activeCount = items.filter((item) => item.isActive).length;
+  const activeCount = safeItems.filter(
+    (item) => item.isActive && !item.deletedAt,
+  ).length;
+  const deletedCount = safeItems.filter((item) => item.deletedAt).length;
 
   return (
     <main className="space-y-8 p-6">
@@ -75,13 +112,20 @@ export default async function LookupDetailPage({
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <AppStatusBadge tone="info">{items.length} Total</AppStatusBadge>
+            <AppStatusBadge tone="info">{safeItems.length} Total</AppStatusBadge>
             <AppStatusBadge tone="success">{activeCount} Active</AppStatusBadge>
+            {deletedCount > 0 ? (
+              <AppStatusBadge tone="danger">{deletedCount} Deleted</AppStatusBadge>
+            ) : null}
           </div>
         </div>
       </section>
 
-      <LookupEditor lookupKey={lookupKey} items={items} />
+      <LookupEditor
+        lookupKey={lookupKey}
+        kind={config.kind}
+        items={safeItems}
+      />
     </main>
   );
 }

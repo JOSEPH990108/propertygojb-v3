@@ -392,7 +392,7 @@ export function PropertyClassificationManager({
   return (
     <div className="space-y-8">
       <section className="grid gap-6 xl:grid-cols-2">
-        <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex h-full flex-col rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-xl font-black tracking-tight text-slate-950">
             Create Category
           </h2>
@@ -400,7 +400,7 @@ export function PropertyClassificationManager({
             Example: HIGH_RISE, LANDED, COMMERCIAL.
           </p>
 
-          <div className="mt-6 grid gap-4">
+          <div className="mt-6 flex flex-1 flex-col gap-4">
             <Input
               value={categoryCode}
               onChange={(event) => setCategoryCode(normalizeCode(event.target.value))}
@@ -431,14 +431,14 @@ export function PropertyClassificationManager({
               type="button"
               disabled={isPending || !categoryCode.trim() || !categoryName.trim()}
               onClick={createCategory}
-              className="h-11 rounded-xl"
+              className="mt-auto h-11 rounded-xl"
             >
               Create Category
             </AppButton>
           </div>
         </div>
 
-        <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex h-full flex-col rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-xl font-black tracking-tight text-slate-950">
             Create Property Type
           </h2>
@@ -446,7 +446,7 @@ export function PropertyClassificationManager({
             Example: High Rise → Condo, Apartment, Flat.
           </p>
 
-          <div className="mt-6 grid gap-4">
+          <div className="mt-6 flex flex-1 flex-col gap-4">
             <AppSelect
               value={typeCategoryId}
               onValueChange={setTypeCategoryId}
@@ -488,7 +488,7 @@ export function PropertyClassificationManager({
               type="button"
               disabled={isPending || !typeCategoryId || !typeCode.trim() || !typeName.trim()}
               onClick={createType}
-              className="h-11 rounded-xl"
+              className="mt-auto h-11 rounded-xl"
             >
               Create Property Type
             </AppButton>
