@@ -10,13 +10,13 @@ import {
 import {
   Clock3,
   Mail,
-  MessageCircle,
   Phone,
   Search,
   UserCheck,
   UsersRound,
 } from "lucide-react";
 
+import { LeadAgentActionMenu } from "@/components/agent/leads/lead-action-menu";
 import { AppSearchInput } from "@/components/common/app-search-input";
 import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { db, schema } from "@/db";
@@ -267,9 +267,12 @@ export default async function AgentLeadsPage({
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="text-lg font-black text-slate-950">
+                      <Link
+                        href={`/agent/leads/${inquiry.leadId}`}
+                        className="text-lg font-black text-slate-950 transition hover:text-blue-700 hover:underline"
+                      >
                         {customerName}
-                      </h3>
+                      </Link>
 
                       <AppStatusBadge
                         tone={isAssignedToMe ? "success" : "warning"}
@@ -316,18 +319,12 @@ export default async function AgentLeadsPage({
                     </p>
                   </div>
 
-                  <div className="flex shrink-0 flex-col gap-2">
-                    {whatsappHref ? (
-                      <a
-                        href={whatsappHref}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 text-sm font-black text-white shadow-sm transition hover:bg-emerald-700"
-                      >
-                        <MessageCircle className="size-4" />
-                        WhatsApp
-                      </a>
-                    ) : null}
+                  <div className="flex shrink-0 flex-col items-end gap-2">
+                    <LeadAgentActionMenu
+                      leadId={inquiry.leadId}
+                      whatsappHref={whatsappHref}
+                      canClaim={!inquiry.currentAssigneeUserId}
+                    />
 
                     <span className="rounded-xl bg-white px-4 py-2 text-center text-xs font-black text-slate-500 ring-1 ring-slate-200">
                       {inquiry.sourceName ?? "Website Project Enquiry"}

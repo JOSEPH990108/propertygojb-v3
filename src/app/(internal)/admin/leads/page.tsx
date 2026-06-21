@@ -12,7 +12,6 @@ import {
 import {
   Clock3,
   Mail,
-  MessageCircle,
   Phone,
   Search,
   UserRound,
@@ -20,6 +19,7 @@ import {
 } from "lucide-react";
 
 import { LeadAssigneeSelect } from "@/components/admin/leads/lead-assignee-select";
+import { LeadAdminActionMenu } from "@/components/admin/leads/lead-action-menu";
 import { AppSearchInput } from "@/components/common/app-search-input";
 import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { db, schema } from "@/db";
@@ -285,9 +285,12 @@ export default async function AdminLeadsPage({
                   >
                     <td className="px-6 py-5">
                       <div className="min-w-0">
-                        <p className="truncate font-black text-slate-950">
+                        <Link
+                          href={`/admin/leads/${inquiry.leadId}`}
+                          className="block truncate font-black text-slate-950 transition hover:text-blue-700 hover:underline"
+                        >
                           {customerName}
-                        </p>
+                        </Link>
 
                         <div className="mt-2 space-y-1 text-xs font-semibold text-slate-500">
                           <p className="flex items-center gap-2">
@@ -351,21 +354,10 @@ export default async function AdminLeadsPage({
                     </td>
 
                     <td className="px-6 py-5 text-right">
-                      {whatsappHref ? (
-                        <a
-                          href={whatsappHref}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 text-xs font-black text-white shadow-sm transition hover:bg-emerald-700"
-                        >
-                          <MessageCircle className="size-4" />
-                          WhatsApp
-                        </a>
-                      ) : (
-                        <span className="text-xs font-semibold text-slate-400">
-                          No mobile
-                        </span>
-                      )}
+                      <LeadAdminActionMenu
+                        leadId={inquiry.leadId}
+                        whatsappHref={whatsappHref}
+                      />
                     </td>
                   </tr>
                 );
