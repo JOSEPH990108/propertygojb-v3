@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { LeadAssigneeSelect } from "@/components/admin/leads/lead-assignee-select";
+import { LeadAppointmentComposer } from "@/components/internal/leads/lead-appointment-composer";
 import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { LeadNoteComposer } from "@/components/internal/leads/lead-note-composer";
 import { LeadStatusSelect } from "@/components/internal/leads/lead-status-select";
@@ -126,6 +127,7 @@ export default async function AdminLeadDetailPage({
         requesterName: schema.inquiries.requesterName,
         requesterPhoneNormalized: schema.inquiries.requesterPhoneNormalized,
         requesterEmail: schema.inquiries.requesterEmail,
+        projectId: schema.inquiries.projectId,
         projectName: schema.projects.name,
         projectDisplayName: schema.projects.displayName,
         projectSlug: schema.projects.slug,
@@ -165,6 +167,23 @@ export default async function AdminLeadDetailPage({
   const customerName = lead.fullName ?? "Customer";
   const phone = lead.phoneNormalized ?? lead.phoneE164 ?? "";
   const whatsappHref = getWhatsappHref(phone, customerName);
+
+  const projectOptions = Array.from(
+    new Map(
+      inquiries
+        .filter((inquiry) => inquiry.projectId)
+        .map((inquiry) => [
+          inquiry.projectId as string,
+          {
+            id: inquiry.projectId as string,
+            name:
+              inquiry.projectDisplayName ??
+              inquiry.projectName ??
+              "Project enquiry",
+          },
+        ]),
+    ).values(),
+  );
 
   return (
     <div className="space-y-8 p-8">
@@ -367,6 +386,22 @@ export default async function AdminLeadDetailPage({
               {inquiries.length === 0 ? (
                 <p className="text-sm text-slate-500">No inquiry found.</p>
               ) : null}
+            </div>
+          </section>
+
+          <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 className="text-xl font-black tracking-tight text-slate-950">
+              Create Viewing Appointment
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-slate-500">
+              Schedule a site viewing using the existing lead activity timeline.
+            </p>
+
+            <div className="mt-5">
+              <LeadAppointmentComposer
+                leadId={lead.id}
+                projectOptions={projectOptions}
+              />
             </div>
           </section>
 

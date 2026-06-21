@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { LeadClaimButton } from "@/components/agent/leads/lead-claim-button";
+import { LeadAppointmentComposer } from "@/components/internal/leads/lead-appointment-composer";
 import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { LeadNoteComposer } from "@/components/internal/leads/lead-note-composer";
 import { LeadStatusSelect } from "@/components/internal/leads/lead-status-select";
@@ -123,6 +124,7 @@ export default async function AgentLeadDetailPage({
         id: schema.inquiries.id,
         messageText: schema.inquiries.messageText,
         receivedAt: schema.inquiries.receivedAt,
+        projectId: schema.inquiries.projectId,
         projectName: schema.projects.name,
         projectDisplayName: schema.projects.displayName,
         projectSlug: schema.projects.slug,
@@ -149,6 +151,23 @@ export default async function AgentLeadDetailPage({
   const customerName = lead.fullName ?? "Customer";
   const phone = lead.phoneNormalized ?? lead.phoneE164 ?? "";
   const whatsappHref = getWhatsappHref(phone, customerName);
+
+  const projectOptions = Array.from(
+    new Map(
+      inquiries
+        .filter((inquiry) => inquiry.projectId)
+        .map((inquiry) => [
+          inquiry.projectId as string,
+          {
+            id: inquiry.projectId as string,
+            name:
+              inquiry.projectDisplayName ??
+              inquiry.projectName ??
+              "Project enquiry",
+          },
+        ]),
+    ).values(),
+  );
 
   return (
     <div className="space-y-8 p-8">
@@ -251,6 +270,23 @@ export default async function AgentLeadDetailPage({
               <LeadStatusSelect
                 leadId={lead.id}
                 currentStatus={lead.currentStatus ?? "NEW"}
+                disabled={!canManageLead}
+              />
+            </div>
+          </section>
+
+          <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 className="text-xl font-black tracking-tight text-slate-950">
+              Create Viewing Appointment
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-slate-500">
+              Claim or assign the lead first, then schedule the site viewing.
+            </p>
+
+            <div className="mt-5">
+              <LeadAppointmentComposer
+                leadId={lead.id}
+                projectOptions={projectOptions}
                 disabled={!canManageLead}
               />
             </div>
