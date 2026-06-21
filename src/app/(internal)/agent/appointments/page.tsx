@@ -3,6 +3,7 @@ import { and, asc, desc, eq, ilike, isNull, or } from "drizzle-orm";
 import { CalendarClock, Clock3, MapPin, Search } from "lucide-react";
 
 import { AppSearchInput } from "@/components/common/app-search-input";
+import { AppointmentActionMenu } from "@/components/internal/appointments/appointment-action-menu";
 import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { db, schema } from "@/db";
 import { requireRole } from "@/lib/auth/guards";
@@ -28,6 +29,42 @@ function getMetadata(value: unknown): AppointmentMetadata {
   }
 
   return value as AppointmentMetadata;
+}
+
+
+function getAppointmentStatus(appointment: {
+  completedAt: Date | null;
+  metadata: unknown;
+}) {
+  const metadata = getMetadata(appointment.metadata);
+
+  if (metadata.appointmentStatus && typeof metadata.appointmentStatus === "string") {
+    return metadata.appointmentStatus;
+  }
+
+  return appointment.completedAt ? "COMPLETED" : "SCHEDULED";
+}
+
+function getAppointmentStatusTone(
+  status: string,
+): "success" | "danger" | "warning" | "info" | "neutral" {
+  switch (status) {
+    case "COMPLETED":
+      return "success";
+    case "CANCELLED":
+      return "danger";
+    case "SCHEDULED":
+      return "warning";
+    default:
+      return "neutral";
+  }
+}
+
+function formatAppointmentStatus(status: string) {
+  return status
+    .split("_")
+    .map((part) => part.slice(0, 1) + part.slice(1).toLowerCase())
+    .join(" ");
 }
 
 function formatDate(value: Date | null) {
@@ -93,7 +130,7 @@ export default async function AgentAppointmentsPage({
     .limit(100);
 
   const scheduledCount = appointments.filter(
-    (appointment) => !appointment.completedAt,
+    (appointment) => getAppointmentStatus(appointment) === "SCHEDULED",
   ).length;
 
   return (
@@ -145,6 +182,7 @@ export default async function AgentAppointmentsPage({
       <section className="grid gap-4">
         {appointments.map((appointment) => {
           const metadata = getMetadata(appointment.metadata);
+          const appointmentStatus = getAppointmentStatus(appointment);
 
           return (
             <article
@@ -158,10 +196,8 @@ export default async function AgentAppointmentsPage({
                       {appointment.customerName ?? "Customer"}
                     </h2>
 
-                    <AppStatusBadge
-                      tone={appointment.completedAt ? "success" : "warning"}
-                    >
-                      {appointment.completedAt ? "Completed" : "Scheduled"}
+                    <AppStatusBadge tone={getAppointmentStatusTone(appointmentStatus)}>
+                      {formatAppointmentStatus(appointmentStatus)}
                     </AppStatusBadge>
                   </div>
 
@@ -185,12 +221,11 @@ export default async function AgentAppointmentsPage({
                   ) : null}
                 </div>
 
-                <Link
-                  href={`/agent/leads/${appointment.leadId}`}
-                  className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-black text-slate-700 shadow-sm transition hover:bg-slate-50"
-                >
-                  View Lead
-                </Link>
+                <AppointmentActionMenu
+                  activityId={appointment.id}
+                  currentStatus={appointmentStatus}
+                  leadHref={`/agent/leads/${appointment.leadId}`}
+                />
               </div>
             </article>
           );

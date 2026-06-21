@@ -3,6 +3,7 @@ import { and, asc, desc, eq, ilike, isNull, or } from "drizzle-orm";
 import { CalendarClock, Clock3, MapPin, Search, UserRound } from "lucide-react";
 
 import { AppSearchInput } from "@/components/common/app-search-input";
+import { AppointmentActionMenu } from "@/components/internal/appointments/appointment-action-menu";
 import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { db, schema } from "@/db";
 
@@ -27,6 +28,42 @@ function getMetadata(value: unknown): AppointmentMetadata {
   }
 
   return value as AppointmentMetadata;
+}
+
+
+function getAppointmentStatus(appointment: {
+  completedAt: Date | null;
+  metadata: unknown;
+}) {
+  const metadata = getMetadata(appointment.metadata);
+
+  if (metadata.appointmentStatus && typeof metadata.appointmentStatus === "string") {
+    return metadata.appointmentStatus;
+  }
+
+  return appointment.completedAt ? "COMPLETED" : "SCHEDULED";
+}
+
+function getAppointmentStatusTone(
+  status: string,
+): "success" | "danger" | "warning" | "info" | "neutral" {
+  switch (status) {
+    case "COMPLETED":
+      return "success";
+    case "CANCELLED":
+      return "danger";
+    case "SCHEDULED":
+      return "warning";
+    default:
+      return "neutral";
+  }
+}
+
+function formatAppointmentStatus(status: string) {
+  return status
+    .split("_")
+    .map((part) => part.slice(0, 1) + part.slice(1).toLowerCase())
+    .join(" ");
 }
 
 function formatDate(value: Date | null) {
@@ -86,10 +123,10 @@ export default async function AdminAppointmentsPage({
     .limit(100);
 
   const scheduledCount = appointments.filter(
-    (appointment) => !appointment.completedAt,
+    (appointment) => getAppointmentStatus(appointment) === "SCHEDULED",
   ).length;
   const completedCount = appointments.filter(
-    (appointment) => appointment.completedAt,
+    (appointment) => getAppointmentStatus(appointment) === "COMPLETED",
   ).length;
 
   return (
@@ -174,6 +211,7 @@ export default async function AdminAppointmentsPage({
             <tbody className="divide-y divide-slate-100">
               {appointments.map((appointment) => {
                 const metadata = getMetadata(appointment.metadata);
+                const appointmentStatus = getAppointmentStatus(appointment);
 
                 return (
                   <tr
@@ -203,10 +241,8 @@ export default async function AdminAppointmentsPage({
                         {metadata.durationMinutes ?? 60} minutes
                       </p>
                       <div className="mt-2">
-                        <AppStatusBadge
-                          tone={appointment.completedAt ? "success" : "warning"}
-                        >
-                          {appointment.completedAt ? "Completed" : "Scheduled"}
+                        <AppStatusBadge tone={getAppointmentStatusTone(appointmentStatus)}>
+                          {formatAppointmentStatus(appointmentStatus)}
                         </AppStatusBadge>
                       </div>
                     </td>
@@ -230,12 +266,11 @@ export default async function AdminAppointmentsPage({
                     </td>
 
                     <td className="px-6 py-5 text-right">
-                      <Link
-                        href={`/admin/leads/${appointment.leadId}`}
-                        className="inline-flex h-10 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 text-xs font-black text-slate-700 shadow-sm transition hover:bg-slate-50"
-                      >
-                        View Lead
-                      </Link>
+                      <AppointmentActionMenu
+                        activityId={appointment.id}
+                        currentStatus={appointmentStatus}
+                        leadHref={`/admin/leads/${appointment.leadId}`}
+                      />
                     </td>
                   </tr>
                 );
