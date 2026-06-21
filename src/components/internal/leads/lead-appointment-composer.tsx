@@ -14,26 +14,77 @@ type LeadAppointmentProjectOption = {
   name: string;
 };
 
+type ExistingLeadAppointment = {
+  id: string;
+  projectId: string;
+  scheduledAt: string;
+  durationMinutes: number;
+  locationText: string;
+  note: string;
+  status: string;
+};
+
 type LeadAppointmentComposerProps = {
   leadId: string;
   projectOptions: LeadAppointmentProjectOption[];
+  existingAppointment?: ExistingLeadAppointment | null;
   disabled?: boolean;
 };
+
+function toDateInput(value?: string) {
+  if (!value) return "";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function toTimeInput(value?: string) {
+  if (!value) return "";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${hours}:${minutes}`;
+}
 
 export function LeadAppointmentComposer({
   leadId,
   projectOptions,
+  existingAppointment = null,
   disabled = false,
 }: LeadAppointmentComposerProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const [projectId, setProjectId] = useState(projectOptions[0]?.id ?? "");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [durationMinutes, setDurationMinutes] = useState("60");
-  const [locationText, setLocationText] = useState("");
-  const [note, setNote] = useState("");
+  const isEditMode = Boolean(existingAppointment?.id);
+
+  const [projectId, setProjectId] = useState(
+    existingAppointment?.projectId || projectOptions[0]?.id || "",
+  );
+  const [date, setDate] = useState(toDateInput(existingAppointment?.scheduledAt));
+  const [time, setTime] = useState(toTimeInput(existingAppointment?.scheduledAt));
+  const [durationMinutes, setDurationMinutes] = useState(
+    String(existingAppointment?.durationMinutes ?? 60),
+  );
+  const [locationText, setLocationText] = useState(
+    existingAppointment?.locationText ?? "",
+  );
+  const [note, setNote] = useState(existingAppointment?.note ?? "");
 
   const options = useMemo<AppSelectOption[]>(
     () =>
@@ -67,6 +118,7 @@ export function LeadAppointmentComposer({
 
     startTransition(async () => {
       const result = await postJson("/api/internal/leads/appointment", {
+        activityId: existingAppointment?.id ?? null,
         leadId,
         projectId,
         scheduledAt: scheduledAt.toISOString(),
@@ -80,19 +132,26 @@ export function LeadAppointmentComposer({
         return;
       }
 
-      setDate("");
-      setTime("");
-      setDurationMinutes("60");
-      setLocationText("");
-      setNote("");
+      appToast.success(
+        result.message ??
+          (isEditMode
+            ? "Viewing appointment updated."
+            : "Viewing appointment created."),
+      );
 
-      appToast.success(result.message ?? "Viewing appointment created.");
       router.refresh();
     });
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {isEditMode ? (
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-800">
+          Active viewing appointment found. Updating this form will edit the
+          scheduled appointment instead of creating a duplicate.
+        </div>
+      ) : null}
+
       <AppSelect
         value={projectId}
         options={options}
@@ -168,7 +227,13 @@ export function LeadAppointmentComposer({
         className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 text-sm font-black text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
       >
         <CalendarPlus className="size-4" />
-        {isPending ? "Creating..." : "Create Viewing Appointment"}
+        {isPending
+          ? isEditMode
+            ? "Updating..."
+            : "Creating..."
+          : isEditMode
+            ? "Update Viewing Appointment"
+            : "Create Viewing Appointment"}
       </button>
     </form>
   );

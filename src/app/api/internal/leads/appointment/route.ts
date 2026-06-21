@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 
@@ -7,6 +7,7 @@ import { errorJson, okJson, parseApiError } from "@/lib/api/json";
 import { requireRole } from "@/lib/auth/guards";
 
 const createLeadAppointmentSchema = z.object({
+  activityId: z.string().min(1).optional().nullable(),
   leadId: z.string().min(1, "Lead is required."),
   projectId: z.string().min(1, "Project is required."),
   scheduledAt: z.string().min(1, "Appointment date and time is required."),
@@ -14,6 +15,14 @@ const createLeadAppointmentSchema = z.object({
   locationText: z.string().trim().max(500).optional().default(""),
   note: z.string().trim().max(2000).optional().default(""),
 });
+
+function getMetadata(value: unknown): Record<string, unknown> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return {};
+  }
+
+  return value as Record<string, unknown>;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -59,7 +68,7 @@ export async function POST(request: NextRequest) {
     const isAgent = authContext.roleCode === "AGENT";
 
     if (isAgent && lead.currentAssigneeUserId !== currentUserId) {
-      return errorJson("Only the assigned agent can create appointment.", 403);
+      return errorJson("Only the assigned agent can create or update appointment.", 403);
     }
 
     const project = await db.query.projects.findFirst({
@@ -78,36 +87,124 @@ export async function POST(request: NextRequest) {
     const now = new Date();
     const projectName = project.displayName ?? project.name;
 
-    const insertedActivity = await db
-      .insert(schema.leadActivities)
-      .values({
-        leadId: lead.id,
-        actorUserId: currentUserId,
-        activityType: "VIEWING_APPOINTMENT",
-        title: "Viewing appointment scheduled",
-        body: [
-          `Project: ${projectName}`,
-          `Location: ${validated.locationText || "To be confirmed"}`,
-          validated.note ? `Note: ${validated.note}` : null,
-        ]
-          .filter(Boolean)
-          .join("\n"),
-        dueAt: scheduledAt,
-        completedAt: null,
-        visibilityScope: "INTERNAL",
-        metadata: {
-          appointmentStatus: "SCHEDULED",
-          projectId: project.id,
-          projectName,
-          locationText: validated.locationText || null,
-          durationMinutes: validated.durationMinutes,
-          note: validated.note || null,
-          source: "LEAD_DETAIL",
-        },
-      })
-      .returning({
-        id: schema.leadActivities.id,
-      });
+    const appointmentBody = [
+      `Project: ${projectName}`,
+      `Location: ${validated.locationText || "To be confirmed"}`,
+      validated.note ? `Note: ${validated.note}` : null,
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    const appointmentMetadata = {
+      appointmentStatus: "SCHEDULED",
+      projectId: project.id,
+      projectName,
+      locationText: validated.locationText || null,
+      durationMinutes: validated.durationMinutes,
+      note: validated.note || null,
+      source: "LEAD_DETAIL",
+    };
+
+    let activityId = validated.activityId ?? null;
+    let mode: "created" | "updated" = "created";
+
+    if (activityId) {
+      const existingAppointment = await db
+        .select({
+          id: schema.leadActivities.id,
+          leadId: schema.leadActivities.leadId,
+          metadata: schema.leadActivities.metadata,
+        })
+        .from(schema.leadActivities)
+        .where(
+          and(
+            eq(schema.leadActivities.id, activityId),
+            eq(schema.leadActivities.leadId, lead.id),
+            eq(schema.leadActivities.activityType, "VIEWING_APPOINTMENT"),
+            isNull(schema.leadActivities.deletedAt),
+          ),
+        )
+        .limit(1);
+
+      const existing = existingAppointment[0];
+
+      if (!existing) {
+        return errorJson("Existing viewing appointment not found.", 404);
+      }
+
+      const existingStatus =
+        getMetadata(existing.metadata).appointmentStatus ?? "SCHEDULED";
+
+      if (existingStatus !== "SCHEDULED") {
+        return errorJson(
+          "Only scheduled appointments can be updated. Create a new appointment or reopen it first.",
+          400,
+        );
+      }
+
+      await db
+        .update(schema.leadActivities)
+        .set({
+          title: "Viewing appointment scheduled",
+          body: appointmentBody,
+          dueAt: scheduledAt,
+          completedAt: null,
+          metadata: {
+            ...getMetadata(existing.metadata),
+            ...appointmentMetadata,
+            appointmentStatus: "SCHEDULED",
+            updatedFrom: "LEAD_DETAIL",
+            updatedAt: now.toISOString(),
+          },
+          updatedAt: now,
+        })
+        .where(eq(schema.leadActivities.id, activityId));
+
+      mode = "updated";
+    } else {
+      const insertedActivity = await db
+        .insert(schema.leadActivities)
+        .values({
+          leadId: lead.id,
+          actorUserId: currentUserId,
+          activityType: "VIEWING_APPOINTMENT",
+          title: "Viewing appointment scheduled",
+          body: appointmentBody,
+          dueAt: scheduledAt,
+          completedAt: null,
+          visibilityScope: "INTERNAL",
+          metadata: appointmentMetadata,
+        })
+        .returning({
+          id: schema.leadActivities.id,
+        });
+
+      activityId = insertedActivity[0]?.id ?? null;
+    }
+
+    await db.insert(schema.leadActivities).values({
+      leadId: lead.id,
+      actorUserId: currentUserId,
+      activityType:
+        mode === "created"
+          ? "VIEWING_APPOINTMENT_CREATED"
+          : "VIEWING_APPOINTMENT_UPDATED",
+      title:
+        mode === "created"
+          ? "Viewing appointment created"
+          : "Viewing appointment updated",
+      body:
+        mode === "created"
+          ? "A viewing appointment was scheduled."
+          : "The viewing appointment details were updated.",
+      visibilityScope: "INTERNAL",
+      metadata: {
+        appointmentActivityId: activityId,
+        projectId: project.id,
+        projectName,
+        scheduledAt: scheduledAt.toISOString(),
+      },
+    });
 
     await db
       .update(schema.leads)
@@ -131,8 +228,11 @@ export async function POST(request: NextRequest) {
     }
 
     return okJson({
-      message: "Viewing appointment created successfully.",
-      activityId: insertedActivity[0]?.id,
+      message:
+        mode === "created"
+          ? "Viewing appointment created successfully."
+          : "Viewing appointment updated successfully.",
+      activityId,
     });
   } catch (error) {
     return errorJson(parseApiError(error));

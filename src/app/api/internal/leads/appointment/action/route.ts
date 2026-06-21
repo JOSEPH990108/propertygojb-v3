@@ -23,23 +23,54 @@ function getActionConfig(action: "COMPLETE" | "CANCEL" | "REOPEN") {
   switch (action) {
     case "COMPLETE":
       return {
-        status: "COMPLETED",
+        appointmentStatus: "COMPLETED",
+        activityType: "APPOINTMENT_COMPLETED",
         title: "Viewing appointment completed",
         body: "Viewing appointment was marked as completed.",
       };
     case "CANCEL":
       return {
-        status: "CANCELLED",
+        appointmentStatus: "CANCELLED",
+        activityType: "APPOINTMENT_CANCELLED",
         title: "Viewing appointment cancelled",
         body: "Viewing appointment was cancelled.",
       };
     case "REOPEN":
       return {
-        status: "SCHEDULED",
+        appointmentStatus: "SCHEDULED",
+        activityType: "APPOINTMENT_REOPENED",
         title: "Viewing appointment reopened",
         body: "Viewing appointment was reopened as scheduled.",
       };
   }
+}
+
+function getNextLeadStatus({
+  action,
+  currentStatus,
+  assigneeUserId,
+}: {
+  action: "COMPLETE" | "CANCEL" | "REOPEN";
+  currentStatus: string | null;
+  assigneeUserId: string | null;
+}) {
+  if (action === "REOPEN") {
+    return "APPOINTMENT_SET";
+  }
+
+  if (action === "COMPLETE") {
+    return currentStatus === "APPOINTMENT_SET" ? "QUALIFIED" : currentStatus;
+  }
+
+  if (action === "CANCEL") {
+    if (currentStatus !== "APPOINTMENT_SET") {
+      return currentStatus;
+    }
+
+    return assigneeUserId ? "ASSIGNED" : "UNCONTACTED";
+  }
+
+  return currentStatus;
 }
 
 export async function POST(request: NextRequest) {
@@ -64,6 +95,7 @@ export async function POST(request: NextRequest) {
         activityId: schema.leadActivities.id,
         leadId: schema.leadActivities.leadId,
         metadata: schema.leadActivities.metadata,
+        currentStatus: schema.leads.currentStatus,
         leadAssigneeUserId: schema.leads.currentAssigneeUserId,
       })
       .from(schema.leadActivities)
@@ -93,13 +125,19 @@ export async function POST(request: NextRequest) {
     const config = getActionConfig(validated.action);
     const metadata = getMetadata(appointment.metadata);
 
+    const nextLeadStatus = getNextLeadStatus({
+      action: validated.action,
+      currentStatus: appointment.currentStatus,
+      assigneeUserId: appointment.leadAssigneeUserId,
+    });
+
     await db
       .update(schema.leadActivities)
       .set({
         completedAt: validated.action === "COMPLETE" ? now : null,
         metadata: {
           ...metadata,
-          appointmentStatus: config.status,
+          appointmentStatus: config.appointmentStatus,
           statusUpdatedAt: now.toISOString(),
           statusUpdatedByUserId: currentUserId,
         },
@@ -110,26 +148,41 @@ export async function POST(request: NextRequest) {
     await db.insert(schema.leadActivities).values({
       leadId: appointment.leadId,
       actorUserId: currentUserId,
-      activityType: `APPOINTMENT_${config.status}`,
+      activityType: config.activityType,
       title: config.title,
       body: config.body,
       visibilityScope: "INTERNAL",
       metadata: {
         appointmentActivityId: appointment.activityId,
-        appointmentStatus: config.status,
+        appointmentStatus: config.appointmentStatus,
       },
     });
 
     await db
       .update(schema.leads)
       .set({
+        currentStatus: nextLeadStatus,
         lastActivityAt: now,
         updatedAt: now,
       })
       .where(eq(schema.leads.id, appointment.leadId));
 
+    if (appointment.currentStatus !== nextLeadStatus) {
+      await db.insert(schema.leadStatusHistory).values({
+        leadId: appointment.leadId,
+        fromStatus: appointment.currentStatus,
+        toStatus: nextLeadStatus,
+        changedByUserId: currentUserId,
+        changedAt: now,
+        reasonCode: `VIEWING_APPOINTMENT_${config.appointmentStatus}`,
+        sourceEventType: "LEAD_APPOINTMENT_ACTION",
+      });
+    }
+
     return okJson({
       message: config.title,
+      leadStatus: nextLeadStatus,
+      appointmentStatus: config.appointmentStatus,
     });
   } catch (error) {
     return errorJson(parseApiError(error));

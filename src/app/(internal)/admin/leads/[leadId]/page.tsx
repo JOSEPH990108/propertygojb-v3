@@ -144,6 +144,9 @@ export default async function AdminLeadDetailPage({
         title: schema.leadActivities.title,
         body: schema.leadActivities.body,
         createdAt: schema.leadActivities.createdAt,
+        dueAt: schema.leadActivities.dueAt,
+        completedAt: schema.leadActivities.completedAt,
+        metadata: schema.leadActivities.metadata,
       })
       .from(schema.leadActivities)
       .where(eq(schema.leadActivities.leadId, leadId))
@@ -184,6 +187,41 @@ export default async function AdminLeadDetailPage({
         ]),
     ).values(),
   );
+
+  const latestViewingAppointment = activities.find(
+    (activity) => activity.activityType === "VIEWING_APPOINTMENT",
+  );
+
+  const latestViewingAppointmentMetadata =
+    latestViewingAppointment?.metadata &&
+    typeof latestViewingAppointment.metadata === "object" &&
+    !Array.isArray(latestViewingAppointment.metadata)
+      ? (latestViewingAppointment.metadata as {
+          projectId?: string;
+          durationMinutes?: number;
+          locationText?: string | null;
+          note?: string | null;
+          appointmentStatus?: string;
+        })
+      : {};
+
+  const latestViewingAppointmentStatus =
+    latestViewingAppointmentMetadata.appointmentStatus ?? "SCHEDULED";
+
+  const existingAppointment =
+    latestViewingAppointment?.dueAt &&
+    latestViewingAppointmentMetadata.projectId &&
+    latestViewingAppointmentStatus === "SCHEDULED"
+      ? {
+          id: latestViewingAppointment.id,
+          projectId: latestViewingAppointmentMetadata.projectId,
+          scheduledAt: latestViewingAppointment.dueAt.toISOString(),
+          durationMinutes: latestViewingAppointmentMetadata.durationMinutes ?? 60,
+          locationText: latestViewingAppointmentMetadata.locationText ?? "",
+          note: latestViewingAppointmentMetadata.note ?? "",
+          status: latestViewingAppointmentStatus,
+        }
+      : null;
 
   return (
     <div className="space-y-8 p-8">
@@ -350,7 +388,42 @@ export default async function AdminLeadDetailPage({
                   inquiry.projectName ??
                   "Project not linked";
 
-                return (
+                const latestViewingAppointment = activities.find(
+    (activity) => activity.activityType === "VIEWING_APPOINTMENT",
+  );
+
+  const latestViewingAppointmentMetadata =
+    latestViewingAppointment?.metadata &&
+    typeof latestViewingAppointment.metadata === "object" &&
+    !Array.isArray(latestViewingAppointment.metadata)
+      ? (latestViewingAppointment.metadata as {
+          projectId?: string;
+          durationMinutes?: number;
+          locationText?: string | null;
+          note?: string | null;
+          appointmentStatus?: string;
+        })
+      : {};
+
+  const latestViewingAppointmentStatus =
+    latestViewingAppointmentMetadata.appointmentStatus ?? "SCHEDULED";
+
+  const existingAppointment =
+    latestViewingAppointment?.dueAt &&
+    latestViewingAppointmentMetadata.projectId &&
+    latestViewingAppointmentStatus === "SCHEDULED"
+      ? {
+          id: latestViewingAppointment.id,
+          projectId: latestViewingAppointmentMetadata.projectId,
+          scheduledAt: latestViewingAppointment.dueAt.toISOString(),
+          durationMinutes: latestViewingAppointmentMetadata.durationMinutes ?? 60,
+          locationText: latestViewingAppointmentMetadata.locationText ?? "",
+          note: latestViewingAppointmentMetadata.note ?? "",
+          status: latestViewingAppointmentStatus,
+        }
+      : null;
+
+  return (
                   <div
                     key={inquiry.id}
                     className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
@@ -391,7 +464,7 @@ export default async function AdminLeadDetailPage({
 
           <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-xl font-black tracking-tight text-slate-950">
-              Create Viewing Appointment
+              Viewing Appointment
             </h2>
             <p className="mt-2 text-sm leading-6 text-slate-500">
               Schedule a site viewing using the existing lead activity timeline.
@@ -401,6 +474,7 @@ export default async function AdminLeadDetailPage({
               <LeadAppointmentComposer
                 leadId={lead.id}
                 projectOptions={projectOptions}
+                existingAppointment={existingAppointment}
               />
             </div>
           </section>
