@@ -12,6 +12,8 @@ import {
 
 import { LeadAssigneeSelect } from "@/components/admin/leads/lead-assignee-select";
 import { AppStatusBadge } from "@/components/common/app-status-badge";
+import { LeadNoteComposer } from "@/components/internal/leads/lead-note-composer";
+import { LeadStatusSelect } from "@/components/internal/leads/lead-status-select";
 import { db, schema } from "@/db";
 
 type AdminLeadDetailPageProps = {
@@ -258,6 +260,22 @@ export default async function AdminLeadDetailPage({
         <div className="space-y-8">
           <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-xl font-black tracking-tight text-slate-950">
+              Lead Status
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-slate-500">
+              Update the customer journey status after follow-up.
+            </p>
+
+            <div className="mt-5">
+              <LeadStatusSelect
+                leadId={lead.id}
+                currentStatus={lead.currentStatus ?? "NEW"}
+              />
+            </div>
+          </section>
+
+          <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 className="text-xl font-black tracking-tight text-slate-950">
               Assign Agent
             </h2>
             <p className="mt-2 text-sm leading-6 text-slate-500">
@@ -349,6 +367,20 @@ export default async function AdminLeadDetailPage({
               {inquiries.length === 0 ? (
                 <p className="text-sm text-slate-500">No inquiry found.</p>
               ) : null}
+            </div>
+          </section>
+
+          <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 className="text-xl font-black tracking-tight text-slate-950">
+              Add Follow-up Note
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-slate-500">
+              Keep internal notes for calls, WhatsApp replies, appointments, or
+              customer preferences.
+            </p>
+
+            <div className="mt-5">
+              <LeadNoteComposer leadId={lead.id} />
             </div>
           </section>
 

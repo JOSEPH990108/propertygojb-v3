@@ -12,6 +12,8 @@ import {
 
 import { LeadClaimButton } from "@/components/agent/leads/lead-claim-button";
 import { AppStatusBadge } from "@/components/common/app-status-badge";
+import { LeadNoteComposer } from "@/components/internal/leads/lead-note-composer";
+import { LeadStatusSelect } from "@/components/internal/leads/lead-status-select";
 import { db, schema } from "@/db";
 import { requireRole } from "@/lib/auth/guards";
 
@@ -109,6 +111,7 @@ export default async function AgentLeadDetailPage({
 
   const isAssignedToMe = lead.currentAssigneeUserId === currentUserId;
   const isOpenLead = !lead.currentAssigneeUserId;
+  const canManageLead = canSeeAll || isAssignedToMe;
 
   if (!canSeeAll && !isAssignedToMe && !isOpenLead) {
     notFound();
@@ -235,6 +238,39 @@ export default async function AgentLeadDetailPage({
       </section>
 
       <section className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="space-y-8">
+          <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 className="text-xl font-black tracking-tight text-slate-950">
+              Lead Status
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-slate-500">
+              Update status after contacting the customer.
+            </p>
+
+            <div className="mt-5">
+              <LeadStatusSelect
+                leadId={lead.id}
+                currentStatus={lead.currentStatus ?? "NEW"}
+                disabled={!canManageLead}
+              />
+            </div>
+          </section>
+
+          <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 className="text-xl font-black tracking-tight text-slate-950">
+              Add Follow-up Note
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-slate-500">
+              Add call notes, WhatsApp response notes, appointment interest, or
+              buyer preferences.
+            </p>
+
+            <div className="mt-5">
+              <LeadNoteComposer leadId={lead.id} disabled={!canManageLead} />
+            </div>
+          </section>
+        </div>
+
         <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-xl font-black tracking-tight text-slate-950">
             Inquiry History
