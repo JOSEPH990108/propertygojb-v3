@@ -16,6 +16,7 @@ import {
 
 import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { BookingStatusActionPanel } from "@/components/internal/bookings/booking-status-action-panel";
+import { BookingPaymentComposer } from "@/components/internal/bookings/booking-payment-composer";
 import {
   formatBookingStatus,
   formatDateTime,
@@ -402,6 +403,16 @@ export function BookingDetailView({
           <EmptyState>No participant record found.</EmptyState>
         )}
       </InfoCard>
+
+      {portalLabel === "Admin" ? (
+        <BookingPaymentComposer
+          bookingId={booking.id}
+          bookingFeeAmount={booking.bookingFeeAmount}
+          bookingFeePaidAmount={booking.bookingFeePaidAmount}
+          currency={booking.bookingFeeCurrency}
+          currentStatus={booking.status}
+        />
+      ) : null}
 
       <InfoCard icon={<CreditCard className="h-5 w-5" />} title="Payments">
         {payments.length > 0 ? (
