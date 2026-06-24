@@ -12,6 +12,7 @@ import {
 
 import { LeadAssigneeSelect } from "@/components/admin/leads/lead-assignee-select";
 import { LeadAppointmentComposer } from "@/components/internal/leads/lead-appointment-composer";
+import { LeadBookingComposer } from "@/components/internal/leads/lead-booking-composer";
 import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { LeadNoteComposer } from "@/components/internal/leads/lead-note-composer";
 import { LeadStatusSelect } from "@/components/internal/leads/lead-status-select";
@@ -188,6 +189,50 @@ export default async function AdminLeadDetailPage({
     ).values(),
   );
 
+
+
+  const availableUnits =
+    projectOptions.length > 0
+      ? await db
+          .select({
+            id: schema.units.id,
+            projectId: schema.units.projectId,
+            unitNo: schema.units.unitNo,
+            basePrice: schema.units.basePrice,
+            finalPrice: schema.units.finalPrice,
+            bookingStatusCode: schema.bookingStatuses.code,
+          })
+          .from(schema.units)
+          .leftJoin(
+            schema.bookingStatuses,
+            eq(schema.units.bookingStatusId, schema.bookingStatuses.id),
+          )
+          .where(isNull(schema.units.deletedAt))
+      : [];
+
+  const projectIds = new Set(projectOptions.map((project) => project.id));
+
+  const unitOptions = availableUnits
+    .filter(
+      (unit) =>
+        projectIds.has(unit.projectId) &&
+        (!unit.bookingStatusCode || unit.bookingStatusCode === "AVAILABLE"),
+    )
+    .map((unit) => {
+      const price = unit.finalPrice ?? unit.basePrice;
+      const priceLabel =
+        price === null || price === undefined
+          ? "Price TBC"
+          : `RM ${Number(price).toLocaleString("en-MY")}`;
+
+      return {
+        id: unit.id,
+        projectId: unit.projectId,
+        unitNo: unit.unitNo ?? "Unit",
+        priceLabel,
+      };
+    });
+
   const latestViewingAppointment = activities.find(
     (activity) => activity.activityType === "VIEWING_APPOINTMENT",
   );
@@ -222,6 +267,7 @@ export default async function AdminLeadDetailPage({
           status: latestViewingAppointmentStatus,
         }
       : null;
+
 
   return (
     <div className="space-y-8 p-8">
@@ -324,7 +370,7 @@ export default async function AdminLeadDetailPage({
             </p>
 
             <div className="mt-5">
-              <LeadStatusSelect
+          <LeadStatusSelect
                 leadId={lead.id}
                 currentStatus={lead.currentStatus ?? "NEW"}
               />
@@ -388,42 +434,7 @@ export default async function AdminLeadDetailPage({
                   inquiry.projectName ??
                   "Project not linked";
 
-                const latestViewingAppointment = activities.find(
-    (activity) => activity.activityType === "VIEWING_APPOINTMENT",
-  );
-
-  const latestViewingAppointmentMetadata =
-    latestViewingAppointment?.metadata &&
-    typeof latestViewingAppointment.metadata === "object" &&
-    !Array.isArray(latestViewingAppointment.metadata)
-      ? (latestViewingAppointment.metadata as {
-          projectId?: string;
-          durationMinutes?: number;
-          locationText?: string | null;
-          note?: string | null;
-          appointmentStatus?: string;
-        })
-      : {};
-
-  const latestViewingAppointmentStatus =
-    latestViewingAppointmentMetadata.appointmentStatus ?? "SCHEDULED";
-
-  const existingAppointment =
-    latestViewingAppointment?.dueAt &&
-    latestViewingAppointmentMetadata.projectId &&
-    latestViewingAppointmentStatus === "SCHEDULED"
-      ? {
-          id: latestViewingAppointment.id,
-          projectId: latestViewingAppointmentMetadata.projectId,
-          scheduledAt: latestViewingAppointment.dueAt.toISOString(),
-          durationMinutes: latestViewingAppointmentMetadata.durationMinutes ?? 60,
-          locationText: latestViewingAppointmentMetadata.locationText ?? "",
-          note: latestViewingAppointmentMetadata.note ?? "",
-          status: latestViewingAppointmentStatus,
-        }
-      : null;
-
-  return (
+                return (
                   <div
                     key={inquiry.id}
                     className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
@@ -477,7 +488,25 @@ export default async function AdminLeadDetailPage({
                 existingAppointment={existingAppointment}
               />
             </div>
-          </section>
+
+            </section>
+
+            <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+              <h2 className="text-xl font-black tracking-tight text-slate-950">
+                Create Booking
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-slate-500">
+                Reserve an available unit and create a draft booking from this lead.
+              </p>
+
+              <div className="mt-5">
+                <LeadBookingComposer
+                  leadId={lead.id}
+                  projectOptions={projectOptions}
+                  unitOptions={unitOptions}
+                />
+              </div>
+            </section>
 
           <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-xl font-black tracking-tight text-slate-950">

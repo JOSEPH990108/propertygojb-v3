@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { and, asc, desc, eq, ilike, isNull, or } from "drizzle-orm";
 import { CalendarClock, Clock3, MapPin, Search } from "lucide-react";
 

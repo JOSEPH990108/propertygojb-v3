@@ -45,6 +45,29 @@ function getActionConfig(action: "COMPLETE" | "CANCEL" | "REOPEN") {
   }
 }
 
+const leadStatusOptions = [
+  "NEW",
+  "UNCONTACTED",
+  "ASSIGNED",
+  "CONTACTED",
+  "QUALIFIED",
+  "NURTURING",
+  "APPOINTMENT_SET",
+  "LOST",
+  "SPAM",
+  "CLOSED",
+] as const;
+
+type LeadStatus = (typeof leadStatusOptions)[number];
+
+function isLeadStatus(value: string | null): value is LeadStatus {
+  return leadStatusOptions.includes(value as LeadStatus);
+}
+
+function normalizeLeadStatus(value: string | null): LeadStatus {
+  return isLeadStatus(value) ? value : "UNCONTACTED";
+}
+
 function getNextLeadStatus({
   action,
   currentStatus,
@@ -53,24 +76,28 @@ function getNextLeadStatus({
   action: "COMPLETE" | "CANCEL" | "REOPEN";
   currentStatus: string | null;
   assigneeUserId: string | null;
-}) {
+}): LeadStatus {
+  const normalizedCurrentStatus = normalizeLeadStatus(currentStatus);
+
   if (action === "REOPEN") {
     return "APPOINTMENT_SET";
   }
 
   if (action === "COMPLETE") {
-    return currentStatus === "APPOINTMENT_SET" ? "QUALIFIED" : currentStatus;
+    return normalizedCurrentStatus === "APPOINTMENT_SET"
+      ? "QUALIFIED"
+      : normalizedCurrentStatus;
   }
 
   if (action === "CANCEL") {
-    if (currentStatus !== "APPOINTMENT_SET") {
-      return currentStatus;
+    if (normalizedCurrentStatus !== "APPOINTMENT_SET") {
+      return normalizedCurrentStatus;
     }
 
     return assigneeUserId ? "ASSIGNED" : "UNCONTACTED";
   }
 
-  return currentStatus;
+  return normalizedCurrentStatus;
 }
 
 export async function POST(request: NextRequest) {
