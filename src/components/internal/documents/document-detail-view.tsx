@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { AppStatusBadge } from "@/components/common/app-status-badge";
+import { DocumentVerificationActionPanel } from "@/components/internal/documents/document-verification-action-panel";
 import {
   formatBookingStatus,
   formatDateTime,
@@ -239,6 +240,15 @@ export function DocumentDetailView({ detail, portal }: DocumentDetailViewProps) 
           </div>
         </div>
       </section>
+
+      {portal === "admin" ? (
+        <DocumentVerificationActionPanel
+          requestId={request.requestId}
+          requestStatus={request.requestStatus}
+          latestSubmissionId={latestSubmission?.id}
+          latestSubmissionStatus={latestSubmission?.submissionStatus}
+        />
+      ) : null}
 
       <section className="grid gap-8 xl:grid-cols-2">
         <InfoCard icon={<UserRound className="size-5" />} title="Customer">
