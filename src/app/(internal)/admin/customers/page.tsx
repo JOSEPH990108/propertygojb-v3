@@ -342,6 +342,14 @@ export default async function AdminCustomersPage({
                   ) : null}
 
                   <Link
+                    href={`/admin/customers/${customer.id}`}
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 text-sm font-black text-white shadow-sm transition hover:bg-slate-800"
+                  >
+                    Details
+                    <ArrowRight className="size-4" />
+                  </Link>
+
+                  <Link
                     href={`/admin/leads/${customer.id}`}
                     className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 text-sm font-black text-slate-700 transition hover:bg-slate-50"
                   >
