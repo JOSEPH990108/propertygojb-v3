@@ -44,6 +44,28 @@ export function getBookingStatusTone(
   }
 }
 
+export function getPaymentStatusTone(
+  value: string | null | undefined,
+): AppStatusBadgeTone {
+  switch (value) {
+    case "VERIFIED":
+    case "RECEIVED":
+      return "success";
+
+    case "REJECTED":
+      return "danger";
+
+    case "PENDING":
+      return "warning";
+
+    case "REFUNDED":
+      return "info";
+
+    default:
+      return "neutral";
+  }
+}
+
 export function formatDateTime(value: Date | null | undefined) {
   if (!value) {
     return "-";
