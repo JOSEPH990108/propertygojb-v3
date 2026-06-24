@@ -194,3 +194,23 @@ export async function getBookingDetailById(bookingId: string) {
     activities,
   };
 }
+
+export async function getActiveDocumentTypes() {
+  return db
+    .select({
+      id: schema.documentTypes.id,
+      code: schema.documentTypes.code,
+      name: schema.documentTypes.name,
+      category: schema.documentTypes.category,
+      isMandatoryDefault: schema.documentTypes.isMandatoryDefault,
+    })
+    .from(schema.documentTypes)
+    .where(
+      and(
+        eq(schema.documentTypes.isActive, true),
+        isNull(schema.documentTypes.deletedAt),
+      ),
+    )
+    .orderBy(asc(schema.documentTypes.category), asc(schema.documentTypes.name));
+}
+

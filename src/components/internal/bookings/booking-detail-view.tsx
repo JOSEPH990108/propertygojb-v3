@@ -17,6 +17,7 @@ import {
 import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { BookingStatusActionPanel } from "@/components/internal/bookings/booking-status-action-panel";
 import { BookingPaymentComposer } from "@/components/internal/bookings/booking-payment-composer";
+import { BookingDocumentRequestComposer } from "@/components/internal/bookings/booking-document-request-composer";
 import {
   formatBookingStatus,
   formatDateTime,
@@ -30,10 +31,19 @@ type BookingDetail = NonNullable<
   Awaited<ReturnType<typeof getBookingDetailById>>
 >;
 
+type DocumentTypeOption = {
+  id: string;
+  code: string;
+  name: string;
+  category: string;
+  isMandatoryDefault: boolean;
+};
+
 type BookingDetailViewProps = {
   detail: BookingDetail;
   backHref: string;
   portalLabel: "Admin" | "Agent";
+  documentTypes?: DocumentTypeOption[];
 };
 
 function getProjectName(booking: BookingDetail["booking"]) {
@@ -122,6 +132,7 @@ export function BookingDetailView({
   detail,
   backHref,
   portalLabel,
+  documentTypes = [],
 }: BookingDetailViewProps) {
   const { booking, units, participants, payments, statusHistory, activities } =
     detail;
@@ -411,6 +422,19 @@ export function BookingDetailView({
           bookingFeePaidAmount={booking.bookingFeePaidAmount}
           currency={booking.bookingFeeCurrency}
           currentStatus={booking.status}
+        />
+      ) : null}
+
+      {portalLabel === "Admin" ? (
+        <BookingDocumentRequestComposer
+          bookingId={booking.id}
+          currentStatus={booking.status}
+          documentTypes={documentTypes}
+          participants={participants.map((participant) => ({
+            id: participant.id,
+            fullName: participant.fullName,
+            role: participant.role,
+          }))}
         />
       ) : null}
 
