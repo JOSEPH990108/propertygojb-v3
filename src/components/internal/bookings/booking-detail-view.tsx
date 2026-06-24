@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { AppStatusBadge } from "@/components/common/app-status-badge";
+import { BookingStatusActionPanel } from "@/components/internal/bookings/booking-status-action-panel";
 import {
   formatBookingStatus,
   formatDateTime,
@@ -173,6 +174,13 @@ export function BookingDetailView({
           </div>
         </div>
       </section>
+
+      {portalLabel === "Admin" ? (
+        <BookingStatusActionPanel
+          bookingId={booking.id}
+          currentStatus={booking.status}
+        />
+      ) : null}
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
