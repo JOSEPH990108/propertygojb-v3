@@ -1,10 +1,16 @@
 import { PropertyInventoryView } from "@/components/internal/properties/property-inventory-view";
 import { requireRole } from "@/lib/auth/guards";
-import { getPropertyInventory } from "@/lib/properties/inventory";
+import {
+  getPropertyInventory,
+  getPropertyInventoryFilterOptions,
+} from "@/lib/properties/inventory";
 
-type AgentPropertiesPageProps = {
+type PropertiesPageProps = {
   searchParams?: Promise<{
     q?: string | string[];
+    project?: string | string[];
+    status?: string | string[];
+    lotType?: string | string[];
   }>;
 };
 
@@ -18,19 +24,28 @@ function getSearchValue(value: string | string[] | undefined) {
 
 export default async function AgentPropertiesPage({
   searchParams,
-}: AgentPropertiesPageProps) {
+}: PropertiesPageProps) {
   await requireRole(["AGENT", "SUPER_ADMIN"], "/agent/properties");
 
   const resolvedSearchParams = searchParams ? await searchParams : {};
-  const search = getSearchValue(resolvedSearchParams.q);
+  const filters = {
+    search: getSearchValue(resolvedSearchParams.q),
+    projectId: getSearchValue(resolvedSearchParams.project),
+    bookingStatusId: getSearchValue(resolvedSearchParams.status),
+    lotTypeId: getSearchValue(resolvedSearchParams.lotType),
+  };
 
-  const inventory = await getPropertyInventory({ search });
+  const [inventory, filterOptions] = await Promise.all([
+    getPropertyInventory(filters),
+    getPropertyInventoryFilterOptions(),
+  ]);
 
   return (
     <PropertyInventoryView
       portal="agent"
       inventory={inventory}
-      search={search}
+      filterOptions={filterOptions}
+      filters={filters}
     />
   );
 }

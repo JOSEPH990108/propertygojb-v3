@@ -6,10 +6,16 @@ import { db, schema } from "@/db";
 
 type GetPropertyInventoryOptions = {
   search?: string;
+  projectId?: string;
+  bookingStatusId?: string;
+  lotTypeId?: string;
 };
 
 export async function getPropertyInventory({
   search = "",
+  projectId = "",
+  bookingStatusId = "",
+  lotTypeId = "",
 }: GetPropertyInventoryOptions = {}) {
   const searchValue = search.trim();
   const searchPattern = `%${searchValue}%`;
@@ -61,6 +67,11 @@ export async function getPropertyInventory({
       and(
         isNull(schema.units.deletedAt),
         isNull(schema.projects.deletedAt),
+        projectId ? eq(schema.projects.id, projectId) : undefined,
+        bookingStatusId
+          ? eq(schema.bookingStatuses.id, bookingStatusId)
+          : undefined,
+        lotTypeId ? eq(schema.lotTypes.id, lotTypeId) : undefined,
         searchValue
           ? or(
               ilike(schema.units.unitNo, searchPattern),
@@ -255,4 +266,48 @@ export async function getBookingStatusOptions() {
     .from(schema.bookingStatuses)
     .orderBy(asc(schema.bookingStatuses.name));
 }
+
+export async function getPropertyInventoryFilterOptions() {
+  const [projects, bookingStatuses, lotTypes] = await Promise.all([
+    db
+      .select({
+        id: schema.projects.id,
+        name: schema.projects.name,
+        displayName: schema.projects.displayName,
+        slug: schema.projects.slug,
+      })
+      .from(schema.projects)
+      .where(isNull(schema.projects.deletedAt))
+      .orderBy(asc(schema.projects.name)),
+
+    db
+      .select({
+        id: schema.bookingStatuses.id,
+        code: schema.bookingStatuses.code,
+        name: schema.bookingStatuses.name,
+        color: schema.bookingStatuses.color,
+      })
+      .from(schema.bookingStatuses)
+      .orderBy(asc(schema.bookingStatuses.name)),
+
+    db
+      .select({
+        id: schema.lotTypes.id,
+        code: schema.lotTypes.code,
+        name: schema.lotTypes.name,
+      })
+      .from(schema.lotTypes)
+      .orderBy(asc(schema.lotTypes.name)),
+  ]);
+
+  return {
+    projects,
+    bookingStatuses,
+    lotTypes,
+  };
+}
+
+export type PropertyInventoryFilterOptions = Awaited<
+  ReturnType<typeof getPropertyInventoryFilterOptions>
+>;
 

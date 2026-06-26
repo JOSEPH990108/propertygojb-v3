@@ -7,19 +7,28 @@ import {
   Building2,
   Home,
   Layers3,
-  Search,
   Tags,
   Warehouse,
 } from "lucide-react";
 
 import { AppStatusBadge } from "@/components/common/app-status-badge";
+import { PropertyInventoryFilters } from "@/components/internal/properties/property-inventory-filters";
 import { formatMoney } from "@/lib/bookings/format";
-import type { PropertyInventory } from "@/lib/properties/inventory";
+import type {
+  PropertyInventory,
+  PropertyInventoryFilterOptions,
+} from "@/lib/properties/inventory";
 
 type PropertyInventoryViewProps = {
   portal: "admin" | "agent";
   inventory: PropertyInventory;
-  search?: string;
+  filterOptions: PropertyInventoryFilterOptions;
+  filters: {
+    search: string;
+    projectId: string;
+    bookingStatusId: string;
+    lotTypeId: string;
+  };
 };
 
 function getProjectName(project: {
@@ -108,44 +117,38 @@ function EmptyState({ children }: { children: ReactNode }) {
 export function PropertyInventoryView({
   portal,
   inventory,
-  search = "",
+  filterOptions,
+  filters,
 }: PropertyInventoryViewProps) {
   const accent = portal === "admin" ? "blue" : "emerald";
 
   return (
     <div className="space-y-8 p-8">
       <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
-        <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
-          <div>
-            <p
-              className={`text-sm font-black uppercase tracking-[0.28em] ${
-                accent === "blue" ? "text-blue-600" : "text-emerald-600"
-              }`}
-            >
-              {portal === "admin" ? "Admin Property Inventory" : "Agent Property Inventory"}
-            </p>
+        <div>
+          <p
+            className={`text-sm font-black uppercase tracking-[0.28em] ${
+              accent === "blue" ? "text-blue-600" : "text-emerald-600"
+            }`}
+          >
+            {portal === "admin" ? "Admin Property Inventory" : "Agent Property Inventory"}
+          </p>
 
-            <h1 className="mt-3 text-3xl font-black tracking-tight text-slate-950">
-              Properties
-            </h1>
+          <h1 className="mt-3 text-3xl font-black tracking-tight text-slate-950">
+            Properties
+          </h1>
 
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-500">
-              View project inventory, unit availability, layout information,
-              lot type, booking status, and pricing overview.
-            </p>
-          </div>
-
-          <form className="flex w-full max-w-md items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2">
-            <Search className="size-4 text-slate-400" />
-            <input
-              name="q"
-              defaultValue={search}
-              placeholder="Search project, unit, layout, status..."
-              className="w-full bg-transparent text-sm font-semibold outline-none placeholder:text-slate-400"
-            />
-          </form>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-500">
+            View project inventory, unit availability, layout information,
+            lot type, booking status, and pricing overview.
+          </p>
         </div>
       </section>
+
+      <PropertyInventoryFilters
+        filters={filters}
+        filterOptions={filterOptions}
+      />
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         <MetricCard
