@@ -155,6 +155,29 @@ function StatRow({
   );
 }
 
+function buildReportExportHref({
+  portal,
+  dateFromValue,
+  dateToValue,
+}: {
+  portal: "admin" | "agent";
+  dateFromValue: string;
+  dateToValue: string;
+}) {
+  const params = new URLSearchParams();
+  params.set("portal", portal);
+
+  if (dateFromValue) {
+    params.set("from", dateFromValue);
+  }
+
+  if (dateToValue) {
+    params.set("to", dateToValue);
+  }
+
+  return `/api/internal/reports/export?${params.toString()}`;
+}
+
 function EmptyState({ children }: { children: ReactNode }) {
   return (
     <div className="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm font-semibold text-slate-500">
@@ -223,6 +246,17 @@ export function ReportOverview({
             >
               Apply
             </button>
+
+            <Link
+              href={buildReportExportHref({
+                portal,
+                dateFromValue,
+                dateToValue,
+              })}
+              className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-black text-slate-700 transition hover:bg-slate-50"
+            >
+              Export CSV
+            </Link>
 
             <Link
               href={`/${portal}/reports`}
