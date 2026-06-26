@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { AppStatusBadge } from "@/components/common/app-status-badge";
+import { DocumentUploadComposer } from "@/components/internal/documents/document-upload-composer";
 import { DocumentVerificationActionPanel } from "@/components/internal/documents/document-verification-action-panel";
 import {
   formatBookingStatus,
@@ -60,6 +61,22 @@ function getDocumentStatusTone(
     default:
       return "neutral";
   }
+}
+
+function formatFileSize(value: number | null | undefined) {
+  if (!value) {
+    return "-";
+  }
+
+  if (value < 1024) {
+    return `${value} B`;
+  }
+
+  if (value < 1024 * 1024) {
+    return `${(value / 1024).toFixed(1)} KB`;
+  }
+
+  return `${(value / 1024 / 1024).toFixed(1)} MB`;
 }
 
 function getCustomerName(request: DocumentDetail["request"]) {
@@ -241,6 +258,12 @@ export function DocumentDetailView({ detail, portal }: DocumentDetailViewProps) 
         </div>
       </section>
 
+      <DocumentUploadComposer
+        requestId={request.requestId}
+        requestStatus={request.requestStatus}
+        latestSubmissionStatus={latestSubmission?.submissionStatus}
+      />
+
       {portal === "admin" ? (
         <DocumentVerificationActionPanel
           requestId={request.requestId}
@@ -344,8 +367,30 @@ export function DocumentDetailView({ detail, portal }: DocumentDetailViewProps) 
                 </div>
 
                 <div className="mt-4 grid gap-4 text-sm md:grid-cols-3">
-                  <Field label="File ID" value={submission.fileId ?? "-"} />
+                  <Field
+                    label="File"
+                    value={
+                      submission.fileUrl ? (
+                        <a
+                          href={submission.fileUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-black text-blue-700 hover:underline"
+                        >
+                          Open file
+                        </a>
+                      ) : (
+                        submission.fileId ?? "-"
+                      )
+                    }
+                  />
+                  <Field label="File Type" value={submission.fileMimeType ?? "-"} />
+                  <Field label="File Size" value={formatFileSize(submission.fileSize)} />
                   <Field label="Submission ID" value={submission.id} />
+                  <Field
+                    label="Uploaded By"
+                    value={submission.uploadedByUserId ?? "-"}
+                  />
                   <Field label="Created" value={formatDateTime(submission.createdAt)} />
                 </div>
 

@@ -82,9 +82,16 @@ export async function getDocumentRequestDetailById(requestId: string) {
         versionNo: schema.documentSubmissions.versionNo,
         notes: schema.documentSubmissions.notes,
         fileId: schema.documentSubmissions.fileId,
+        uploadedByUserId: schema.documentSubmissions.uploadedByUserId,
         createdAt: schema.documentSubmissions.createdAt,
+
+        fileUrl: schema.files.url,
+        fileKey: schema.files.key,
+        fileMimeType: schema.files.mimeType,
+        fileSize: schema.files.size,
       })
       .from(schema.documentSubmissions)
+      .leftJoin(schema.files, eq(schema.documentSubmissions.fileId, schema.files.id))
       .where(
         and(
           eq(schema.documentSubmissions.requestId, requestId),
