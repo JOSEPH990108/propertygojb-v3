@@ -26,6 +26,8 @@ import type { ReportOverview as ReportOverviewData } from "@/lib/reports/overvie
 type ReportOverviewProps = {
   portal: "admin" | "agent";
   report: ReportOverviewData;
+  dateFromValue?: string;
+  dateToValue?: string;
 };
 
 function formatStatus(value: string | null | undefined) {
@@ -161,7 +163,12 @@ function EmptyState({ children }: { children: ReactNode }) {
   );
 }
 
-export function ReportOverview({ portal, report }: ReportOverviewProps) {
+export function ReportOverview({
+  portal,
+  report,
+  dateFromValue = "",
+  dateToValue = "",
+}: ReportOverviewProps) {
   const accent = portal === "admin" ? "blue" : "emerald";
 
   return (
@@ -179,10 +186,52 @@ export function ReportOverview({ portal, report }: ReportOverviewProps) {
           Performance Overview
         </h1>
 
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-500">
-          Monitor leads, bookings, document progress, appointment activity, and
-          booking fee collection in one place.
-        </p>
+        <div className="mt-6 flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+          <p className="max-w-3xl text-sm leading-7 text-slate-500">
+            Monitor leads, bookings, document progress, appointment activity, and
+            booking fee collection in one place.
+          </p>
+
+          <form className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:flex-row sm:items-end">
+            <div className="space-y-1">
+              <label className="text-xs font-black uppercase tracking-wide text-slate-400">
+                From
+              </label>
+              <input
+                type="date"
+                name="from"
+                defaultValue={dateFromValue}
+                className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs font-black uppercase tracking-wide text-slate-400">
+                To
+              </label>
+              <input
+                type="date"
+                name="to"
+                defaultValue={dateToValue}
+                className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="inline-flex h-11 items-center justify-center rounded-xl bg-slate-950 px-5 text-sm font-black text-white shadow-sm transition hover:bg-slate-800"
+            >
+              Apply
+            </button>
+
+            <Link
+              href={`/${portal}/reports`}
+              className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-black text-slate-700 transition hover:bg-slate-50"
+            >
+              Reset
+            </Link>
+          </form>
+        </div>
       </section>
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">

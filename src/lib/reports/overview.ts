@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, desc, eq, isNull } from "drizzle-orm";
+import { and, desc, eq, gte, isNull, lte } from "drizzle-orm";
 
 import { db, schema } from "@/db";
 
@@ -10,6 +10,8 @@ type GetReportOverviewOptions = {
   portal: ReportPortal;
   currentUserId: string;
   canSeeAll: boolean;
+  dateFrom?: Date | null;
+  dateTo?: Date | null;
 };
 
 function toNumber(value: string | number | null | undefined) {
@@ -36,6 +38,8 @@ export async function getReportOverview({
   portal,
   currentUserId,
   canSeeAll,
+  dateFrom,
+  dateTo,
 }: GetReportOverviewOptions) {
   const canViewAll = portal === "admin" || canSeeAll;
 
@@ -55,6 +59,8 @@ export async function getReportOverview({
         .where(
           and(
             isNull(schema.leads.deletedAt),
+            dateFrom ? gte(schema.leads.createdAt, dateFrom) : undefined,
+            dateTo ? lte(schema.leads.createdAt, dateTo) : undefined,
             canViewAll
               ? undefined
               : eq(schema.leads.currentAssigneeUserId, currentUserId),
@@ -84,6 +90,8 @@ export async function getReportOverview({
         .where(
           and(
             isNull(schema.bookings.deletedAt),
+            dateFrom ? gte(schema.bookings.createdAt, dateFrom) : undefined,
+            dateTo ? lte(schema.bookings.createdAt, dateTo) : undefined,
             canViewAll
               ? undefined
               : eq(schema.bookings.assignedAgentUserId, currentUserId),
@@ -117,6 +125,8 @@ export async function getReportOverview({
           and(
             isNull(schema.documentRequests.deletedAt),
             isNull(schema.bookings.deletedAt),
+            dateFrom ? gte(schema.bookings.createdAt, dateFrom) : undefined,
+            dateTo ? lte(schema.bookings.createdAt, dateTo) : undefined,
             canViewAll
               ? undefined
               : eq(schema.bookings.assignedAgentUserId, currentUserId),
@@ -144,6 +154,8 @@ export async function getReportOverview({
           and(
             isNull(schema.leadActivities.deletedAt),
             eq(schema.leadActivities.activityType, "VIEWING_APPOINTMENT"),
+            dateFrom ? gte(schema.leadActivities.createdAt, dateFrom) : undefined,
+            dateTo ? lte(schema.leadActivities.createdAt, dateTo) : undefined,
             canViewAll
               ? undefined
               : eq(schema.leads.currentAssigneeUserId, currentUserId),
