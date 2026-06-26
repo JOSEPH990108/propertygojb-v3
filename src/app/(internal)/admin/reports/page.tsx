@@ -1,20 +1,15 @@
-import { InternalComingSoonPage } from "@/components/internal/shell/internal-coming-soon-page";
+import { ReportOverview } from "@/components/internal/reports/report-overview";
+import { requireRole } from "@/lib/auth/guards";
+import { getReportOverview } from "@/lib/reports/overview";
 
-export default function Page() {
-  return (
-    <InternalComingSoonPage
-      title="Reports & Analytics"
-      eyebrow="Admin Module"
-      description="View future sales, lead, booking, and agent performance reports."
-      icon="reports"
-      backHref="/admin"
-      backLabel="Back to Admin Dashboard"
-      features={[
-        "Lead performance overview",
-        "Booking conversion reports",
-        "Agent activity summary",
-        "Project sales analytics",
-      ]}
-    />
-  );
+export default async function AdminReportsPage() {
+  await requireRole(["ADMIN", "SUPER_ADMIN"], "/admin/reports");
+
+  const report = await getReportOverview({
+    portal: "admin",
+    currentUserId: "",
+    canSeeAll: true,
+  });
+
+  return <ReportOverview portal="admin" report={report} />;
 }
