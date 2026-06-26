@@ -149,3 +149,98 @@ export async function getPropertyInventory({
 }
 
 export type PropertyInventory = Awaited<ReturnType<typeof getPropertyInventory>>;
+
+export async function getPropertyUnitDetailById(unitId: string) {
+  const rows = await db
+    .select({
+      unitId: schema.units.id,
+      unitNo: schema.units.unitNo,
+      floor: schema.units.floor,
+      stack: schema.units.stack,
+      streetName: schema.units.streetName,
+      builtUpSqft: schema.units.builtUpSqft,
+      landAreaSqft: schema.units.landAreaSqft,
+      dimensionText: schema.units.dimensionText,
+      facing: schema.units.facing,
+      carparkCount: schema.units.carparkCount,
+      basePrice: schema.units.basePrice,
+      finalPrice: schema.units.finalPrice,
+      createdAt: schema.units.createdAt,
+      updatedAt: schema.units.updatedAt,
+
+      projectId: schema.projects.id,
+      projectSlug: schema.projects.slug,
+      projectName: schema.projects.name,
+      projectDisplayName: schema.projects.displayName,
+      projectTotalUnits: schema.projects.totalUnits,
+      isPublished: schema.projects.isPublished,
+
+      layoutId: schema.projectLayouts.id,
+      layoutCode: schema.projectLayouts.code,
+      layoutName: schema.projectLayouts.name,
+      bedrooms: schema.projectLayouts.bedrooms,
+      bathrooms: schema.projectLayouts.bathrooms,
+
+      bookingStatusId: schema.bookingStatuses.id,
+      bookingStatusCode: schema.bookingStatuses.code,
+      bookingStatusName: schema.bookingStatuses.name,
+      bookingStatusColor: schema.bookingStatuses.color,
+
+      lotTypeId: schema.lotTypes.id,
+      lotTypeCode: schema.lotTypes.code,
+      lotTypeName: schema.lotTypes.name,
+    })
+    .from(schema.units)
+    .innerJoin(schema.projects, eq(schema.units.projectId, schema.projects.id))
+    .leftJoin(schema.projectLayouts, eq(schema.units.layoutId, schema.projectLayouts.id))
+    .innerJoin(schema.bookingStatuses, eq(schema.units.bookingStatusId, schema.bookingStatuses.id))
+    .innerJoin(schema.lotTypes, eq(schema.units.lotTypeId, schema.lotTypes.id))
+    .where(
+      and(
+        eq(schema.units.id, unitId),
+        isNull(schema.units.deletedAt),
+        isNull(schema.projects.deletedAt),
+      ),
+    )
+    .limit(1);
+
+  const unit = rows[0];
+
+  if (!unit) {
+    return null;
+  }
+
+  const relatedBookings = await db
+    .select({
+      bookingId: schema.bookings.id,
+      bookingCode: schema.bookings.bookingCode,
+      status: schema.bookings.status,
+      bookingFeeAmount: schema.bookings.bookingFeeAmount,
+      bookingFeeCurrency: schema.bookings.bookingFeeCurrency,
+      bookingFeePaidAmount: schema.bookings.bookingFeePaidAmount,
+      createdAt: schema.bookings.createdAt,
+      customerName: schema.leads.fullName,
+      customerPhone: schema.leads.primaryPhoneE164,
+    })
+    .from(schema.bookingUnits)
+    .innerJoin(schema.bookings, eq(schema.bookingUnits.bookingId, schema.bookings.id))
+    .leftJoin(schema.leads, eq(schema.bookings.leadId, schema.leads.id))
+    .where(
+      and(
+        eq(schema.bookingUnits.unitId, unitId),
+        isNull(schema.bookings.deletedAt),
+      ),
+    )
+    .orderBy(desc(schema.bookings.createdAt))
+    .limit(10);
+
+  return {
+    unit,
+    relatedBookings,
+  };
+}
+
+export type PropertyUnitDetail = Awaited<
+  ReturnType<typeof getPropertyUnitDetailById>
+>;
+

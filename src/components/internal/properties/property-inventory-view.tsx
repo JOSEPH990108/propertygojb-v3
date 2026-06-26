@@ -387,13 +387,23 @@ export function PropertyInventoryView({
                   </td>
 
                   <td className="px-6 py-5 text-right">
-                    <Link
-                      href={`/${portal}/projects/${unit.projectId}`}
-                      className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 text-xs font-black text-slate-700 transition hover:bg-slate-50"
-                    >
-                      Project
-                      <ArrowRight className="size-3.5" />
-                    </Link>
+                    <div className="flex justify-end gap-2">
+                      <Link
+                        href={`/${portal}/properties/${unit.unitId}`}
+                        className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 text-xs font-black text-white shadow-sm transition hover:bg-slate-800"
+                      >
+                        Detail
+                        <ArrowRight className="size-3.5" />
+                      </Link>
+
+                      <Link
+                        href={`/${portal}/projects/${unit.projectId}`}
+                        className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 text-xs font-black text-slate-700 transition hover:bg-slate-50"
+                      >
+                        Project
+                        <ArrowRight className="size-3.5" />
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))}
