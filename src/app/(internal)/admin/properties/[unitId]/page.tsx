@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 import { PropertyUnitDetailView } from "@/components/internal/properties/property-unit-detail-view";
 import { requireRole } from "@/lib/auth/guards";
-import { getPropertyUnitDetailById } from "@/lib/properties/inventory";
+import { getBookingStatusOptions, getPropertyUnitDetailById } from "@/lib/properties/inventory";
 
 type AdminPropertyUnitDetailPageProps = {
   params: Promise<{
@@ -16,11 +16,20 @@ export default async function AdminPropertyUnitDetailPage({
   await requireRole(["ADMIN", "SUPER_ADMIN"], "/admin/properties");
 
   const { unitId } = await params;
-  const detail = await getPropertyUnitDetailById(unitId);
+  const [detail, statusOptions] = await Promise.all([
+    getPropertyUnitDetailById(unitId),
+    getBookingStatusOptions(),
+  ]);
 
   if (!detail) {
     notFound();
   }
 
-  return <PropertyUnitDetailView portal="admin" detail={detail} />;
+  return (
+    <PropertyUnitDetailView
+      portal="admin"
+      detail={detail}
+      statusOptions={statusOptions}
+    />
+  );
 }

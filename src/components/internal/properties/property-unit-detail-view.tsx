@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { AppStatusBadge } from "@/components/common/app-status-badge";
+import { PropertyUnitStatusActionPanel } from "@/components/internal/properties/property-unit-status-action-panel";
 import {
   formatBookingStatus,
   formatDateTime,
@@ -22,9 +23,17 @@ import {
 } from "@/lib/bookings/format";
 import type { PropertyUnitDetail } from "@/lib/properties/inventory";
 
+type BookingStatusOption = {
+  id: string;
+  code: string;
+  name: string;
+  color: string | null;
+};
+
 type PropertyUnitDetailViewProps = {
   portal: "admin" | "agent";
   detail: NonNullable<PropertyUnitDetail>;
+  statusOptions?: BookingStatusOption[];
 };
 
 function getStatusTone(
@@ -122,6 +131,7 @@ function EmptyState({ children }: { children: ReactNode }) {
 export function PropertyUnitDetailView({
   portal,
   detail,
+  statusOptions = [],
 }: PropertyUnitDetailViewProps) {
   const { unit, relatedBookings } = detail;
   const accent = portal === "admin" ? "blue" : "emerald";
@@ -229,6 +239,16 @@ export function PropertyUnitDetailView({
           </div>
         </div>
       </section>
+
+      {portal === "admin" ? (
+        <PropertyUnitStatusActionPanel
+          unitId={unit.unitId}
+          currentStatusId={unit.bookingStatusId}
+          currentStatusCode={unit.bookingStatusCode}
+          currentStatusName={unit.bookingStatusName}
+          statusOptions={statusOptions}
+        />
+      ) : null}
 
       <section className="grid gap-8 xl:grid-cols-2">
         <InfoCard icon={<Building2 className="size-5" />} title="Project">

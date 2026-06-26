@@ -244,3 +244,15 @@ export type PropertyUnitDetail = Awaited<
   ReturnType<typeof getPropertyUnitDetailById>
 >;
 
+export async function getBookingStatusOptions() {
+  return db
+    .select({
+      id: schema.bookingStatuses.id,
+      code: schema.bookingStatuses.code,
+      name: schema.bookingStatuses.name,
+      color: schema.bookingStatuses.color,
+    })
+    .from(schema.bookingStatuses)
+    .orderBy(asc(schema.bookingStatuses.name));
+}
+
