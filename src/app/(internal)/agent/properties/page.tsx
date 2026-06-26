@@ -2,7 +2,7 @@ import { PropertyInventoryView } from "@/components/internal/properties/property
 import { requireRole } from "@/lib/auth/guards";
 import { getPropertyInventory } from "@/lib/properties/inventory";
 
-type AdminPropertiesPageProps = {
+type AgentPropertiesPageProps = {
   searchParams?: Promise<{
     q?: string | string[];
   }>;
@@ -16,10 +16,10 @@ function getSearchValue(value: string | string[] | undefined) {
   return value?.trim() ?? "";
 }
 
-export default async function AdminPropertiesPage({
+export default async function AgentPropertiesPage({
   searchParams,
-}: AdminPropertiesPageProps) {
-  await requireRole(["ADMIN", "SUPER_ADMIN"], "/admin/properties");
+}: AgentPropertiesPageProps) {
+  await requireRole(["AGENT", "SUPER_ADMIN"], "/agent/properties");
 
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const search = getSearchValue(resolvedSearchParams.q);
@@ -28,7 +28,7 @@ export default async function AdminPropertiesPage({
 
   return (
     <PropertyInventoryView
-      portal="admin"
+      portal="agent"
       inventory={inventory}
       search={search}
     />
