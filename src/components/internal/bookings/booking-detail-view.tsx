@@ -18,6 +18,7 @@ import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { BookingStatusActionPanel } from "@/components/internal/bookings/booking-status-action-panel";
 import { BookingPaymentComposer } from "@/components/internal/bookings/booking-payment-composer";
 import { BookingDocumentRequestComposer } from "@/components/internal/bookings/booking-document-request-composer";
+import { BookingNoteComposer } from "@/components/internal/bookings/booking-note-composer";
 import {
   BookingApprovalReadinessPanel,
   getBookingApprovalReadiness,
@@ -512,7 +513,9 @@ export function BookingDetailView({
       </InfoCard>
 
       <section className="grid gap-6 xl:grid-cols-2">
-        <InfoCard icon={<History className="h-5 w-5" />} title="Status History">
+        <BookingNoteComposer bookingId={booking.id} />
+
+      <InfoCard icon={<History className="h-5 w-5" />} title="Status History">
           {statusHistory.length > 0 ? (
             <div className="space-y-4">
               {statusHistory.map((item) => (
