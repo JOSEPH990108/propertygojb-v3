@@ -54,9 +54,12 @@ function getStatusTone(
     case "OPEN":
       return "success";
     case "RESERVED":
+    case "BOOKING":
     case "BOOKED":
     case "PENDING":
       return "warning";
+    case "APPROVED":
+    case "SPA_SIGNED":
     case "SOLD":
     case "COMPLETED":
       return "danger";
@@ -213,15 +216,15 @@ export function PropertyInventoryView({
         <div className="mt-5 grid gap-4 xl:grid-cols-2">
           {inventory.projects.map((project) => {
             const available = project.units.filter((unit) =>
-              ["AVAILABLE", "READY", "OPEN"].includes(unit.bookingStatusCode),
+              ["AVAILABLE"].includes(unit.bookingStatusCode),
             ).length;
 
             const reserved = project.units.filter((unit) =>
-              ["RESERVED", "BOOKED", "PENDING"].includes(unit.bookingStatusCode),
+              ["RESERVED", "BOOKING"].includes(unit.bookingStatusCode),
             ).length;
 
             const sold = project.units.filter((unit) =>
-              ["SOLD", "COMPLETED"].includes(unit.bookingStatusCode),
+              ["APPROVED", "SPA_SIGNED", "SOLD"].includes(unit.bookingStatusCode),
             ).length;
 
             return (

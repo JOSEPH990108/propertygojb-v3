@@ -45,9 +45,12 @@ function getStatusTone(
     case "OPEN":
       return "success";
     case "RESERVED":
+    case "BOOKING":
     case "BOOKED":
     case "PENDING":
       return "warning";
+    case "APPROVED":
+    case "SPA_SIGNED":
     case "SOLD":
     case "COMPLETED":
       return "danger";

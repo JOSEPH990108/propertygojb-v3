@@ -232,8 +232,8 @@ export async function POST(request: NextRequest) {
 
       if (validated.nextStatus === "APPROVED") {
         const soldStatusId =
+          (await findBookingStatusId("APPROVED")) ??
           (await findBookingStatusId("SOLD")) ??
-          (await findBookingStatusId("BOOKED")) ??
           (await findBookingStatusId("RESERVED"));
 
         if (soldStatusId) {

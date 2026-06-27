@@ -43,9 +43,12 @@ function getStatusTone(
     case "OPEN":
       return "success";
     case "RESERVED":
+    case "BOOKING":
     case "BOOKED":
     case "PENDING":
       return "warning";
+    case "APPROVED":
+    case "SPA_SIGNED":
     case "SOLD":
     case "COMPLETED":
       return "danger";
@@ -56,9 +59,9 @@ function getStatusTone(
 
 function StatusDot({ statusCode }: { statusCode: string }) {
   const className =
-    statusCode === "AVAILABLE" || statusCode === "READY" || statusCode === "OPEN"
+    statusCode === "AVAILABLE"
       ? "bg-emerald-500"
-      : statusCode === "SOLD" || statusCode === "COMPLETED"
+      : statusCode === "APPROVED" || statusCode === "SPA_SIGNED" || statusCode === "SOLD"
         ? "bg-rose-500"
         : statusCode === "RESERVED" ||
             statusCode === "BOOKED" ||

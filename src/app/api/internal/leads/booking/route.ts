@@ -321,7 +321,7 @@ export async function POST(request: NextRequest) {
         .where(
           or(
             eq(schema.bookingStatuses.code, "RESERVED"),
-            eq(schema.bookingStatuses.code, "BOOKED"),
+            eq(schema.bookingStatuses.code, "BOOKING"),
           ),
         )
         .limit(1);
