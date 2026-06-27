@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { AppStatusBadge } from "@/components/common/app-status-badge";
+import { CustomerNoteComposer } from "@/components/internal/customers/customer-note-composer";
 import { db, schema } from "@/db";
 import { requireRole } from "@/lib/auth/guards";
 import {
@@ -445,6 +446,8 @@ export default async function AgentCustomerDetailPage({
           </div>
         </section>
       </section>
+
+      <CustomerNoteComposer customerId={customer.id} />
 
       <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="text-xl font-black tracking-tight text-slate-950">
