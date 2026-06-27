@@ -11,6 +11,7 @@ import {
 import { CustomerFollowUpCompleteButton } from "@/components/internal/customers/customer-follow-up-complete-button";
 import { formatDateTime } from "@/lib/bookings/format";
 import type {
+  CustomerFollowUpFilter,
   CustomerFollowUpPortal,
   CustomerFollowUps,
 } from "@/lib/customers/follow-ups";
@@ -19,7 +20,69 @@ type CustomerFollowUpCenterProps = {
   portal: CustomerFollowUpPortal;
   data: CustomerFollowUps;
   search: string;
+  filter: CustomerFollowUpFilter;
 };
+
+const followUpFilterOptions: {
+  value: CustomerFollowUpFilter;
+  label: string;
+  getCount: (data: CustomerFollowUps) => number;
+}[] = [
+  {
+    value: "all",
+    label: "All",
+    getCount: (data) => data.metrics.total,
+  },
+  {
+    value: "pending",
+    label: "Pending",
+    getCount: (data) => data.metrics.pending,
+  },
+  {
+    value: "overdue",
+    label: "Overdue",
+    getCount: (data) => data.metrics.overdue,
+  },
+  {
+    value: "completed",
+    label: "Completed",
+    getCount: (data) => data.metrics.completed,
+  },
+  {
+    value: "today",
+    label: "Today",
+    getCount: (data) => data.metrics.today,
+  },
+  {
+    value: "week",
+    label: "This Week",
+    getCount: (data) => data.metrics.week,
+  },
+];
+
+function buildFilterHref({
+  portal,
+  search,
+  filter,
+}: {
+  portal: CustomerFollowUpPortal;
+  search: string;
+  filter: CustomerFollowUpFilter;
+}) {
+  const params = new URLSearchParams();
+
+  if (search) {
+    params.set("q", search);
+  }
+
+  if (filter !== "all") {
+    params.set("filter", filter);
+  }
+
+  const queryString = params.toString();
+
+  return queryString ? `/${portal}/follow-ups?${queryString}` : `/${portal}/follow-ups`;
+}
 
 function getCustomerHref(portal: CustomerFollowUpPortal, leadId: string) {
   return `/${portal}/customers/${leadId}`;
@@ -53,6 +116,7 @@ export function CustomerFollowUpCenter({
   portal,
   data,
   search,
+  filter,
 }: CustomerFollowUpCenterProps) {
   const accent = portal === "admin" ? "blue" : "emerald";
 
@@ -93,8 +157,44 @@ export function CustomerFollowUpCenter({
               placeholder="Search customer, phone, note, agent..."
               className="w-full bg-transparent text-sm font-semibold outline-none placeholder:text-slate-400"
             />
+            {filter !== "all" ? (
+              <input type="hidden" name="filter" value={filter} />
+            ) : null}
           </form>
         </div>
+      </section>
+
+      <section className="flex flex-wrap gap-3 rounded-[2rem] border border-slate-200 bg-white p-4 shadow-sm">
+        {followUpFilterOptions.map((option) => {
+          const isActive = option.value === filter;
+
+          return (
+            <Link
+              key={option.value}
+              href={buildFilterHref({
+                portal,
+                search,
+                filter: option.value,
+              })}
+              className={`inline-flex items-center gap-2 rounded-2xl border px-4 py-2 text-sm font-black transition ${
+                isActive
+                  ? "border-slate-950 bg-slate-950 text-white"
+                  : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+              }`}
+            >
+              <span>{option.label}</span>
+              <span
+                className={`rounded-full px-2 py-0.5 text-xs ${
+                  isActive
+                    ? "bg-white/15 text-white"
+                    : "bg-slate-100 text-slate-500"
+                }`}
+              >
+                {option.getCount(data)}
+              </span>
+            </Link>
+          );
+        })}
       </section>
 
       <section className="grid gap-4 md:grid-cols-4">

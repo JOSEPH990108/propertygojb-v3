@@ -1,12 +1,25 @@
 import { CustomerFollowUpCenter } from "@/components/internal/customers/customer-follow-up-center";
 import { requireRole } from "@/lib/auth/guards";
-import { getCustomerFollowUps } from "@/lib/customers/follow-ups";
+import {
+  getCustomerFollowUps,
+  type CustomerFollowUpFilter,
+} from "@/lib/customers/follow-ups";
 
 type FollowUpsPageProps = {
   searchParams?: Promise<{
     q?: string | string[];
+    filter?: string | string[];
   }>;
 };
+
+const followUpFilters: CustomerFollowUpFilter[] = [
+  "all",
+  "pending",
+  "overdue",
+  "completed",
+  "today",
+  "week",
+];
 
 function getSearchValue(value: string | string[] | undefined) {
   if (Array.isArray(value)) {
@@ -16,6 +29,16 @@ function getSearchValue(value: string | string[] | undefined) {
   return value?.trim() ?? "";
 }
 
+function getFilterValue(value: string | string[] | undefined): CustomerFollowUpFilter {
+  const rawValue = getSearchValue(value);
+
+  if (followUpFilters.includes(rawValue as CustomerFollowUpFilter)) {
+    return rawValue as CustomerFollowUpFilter;
+  }
+
+  return "all";
+}
+
 export default async function AgentFollowUpsPage({
   searchParams,
 }: FollowUpsPageProps) {
@@ -23,6 +46,7 @@ export default async function AgentFollowUpsPage({
 
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const search = getSearchValue(resolvedSearchParams.q);
+  const filter = getFilterValue(resolvedSearchParams.filter);
 
   const currentUser = authContext.user as { id?: unknown };
   const currentUserId = typeof currentUser.id === "string" ? currentUser.id : "";
@@ -34,7 +58,15 @@ export default async function AgentFollowUpsPage({
     currentUserId,
     canSeeAll,
     search,
+    filter,
   });
 
-  return <CustomerFollowUpCenter portal="agent" data={data} search={search} />;
+  return (
+    <CustomerFollowUpCenter
+      portal="agent"
+      data={data}
+      search={search}
+      filter={filter}
+    />
+  );
 }

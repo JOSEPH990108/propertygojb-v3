@@ -43,6 +43,7 @@ export type InternalShellIconKey =
   | "bookings"
   | "customers"
   | "documents"
+  | "followUps"
   | "appointments"
   | "reports"
   | "settings"
