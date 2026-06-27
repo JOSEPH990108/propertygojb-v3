@@ -1,15 +1,17 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { FormEvent, useMemo, useState } from "react";
 
 import { usePathname, useRouter } from "next/navigation";
 
-import { Building2, Filter, Home, Search, Tags } from "lucide-react";
+import { Building2, Download, Filter, Home, Search, Tags } from "lucide-react";
 
 import { AppSelect, type AppSelectOption } from "@/components/common/app-select";
 import type { PropertyInventoryFilterOptions } from "@/lib/properties/inventory";
 
 type PropertyInventoryFiltersProps = {
+  portal: "admin" | "agent";
   filters: {
     search: string;
     projectId: string;
@@ -26,7 +28,7 @@ function buildOption({
 }: {
   value: string;
   label: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
 }): AppSelectOption {
   return {
     value,
@@ -39,7 +41,43 @@ function buildOption({
   };
 }
 
+function buildExportHref({
+  portal,
+  search,
+  projectId,
+  bookingStatusId,
+  lotTypeId,
+}: {
+  portal: "admin" | "agent";
+  search: string;
+  projectId: string;
+  bookingStatusId: string;
+  lotTypeId: string;
+}) {
+  const params = new URLSearchParams();
+  params.set("portal", portal);
+
+  if (search.trim()) {
+    params.set("q", search.trim());
+  }
+
+  if (projectId) {
+    params.set("project", projectId);
+  }
+
+  if (bookingStatusId) {
+    params.set("status", bookingStatusId);
+  }
+
+  if (lotTypeId) {
+    params.set("lotType", lotTypeId);
+  }
+
+  return `/api/internal/properties/export?${params.toString()}`;
+}
+
 export function PropertyInventoryFilters({
+  portal,
   filters,
   filterOptions,
 }: PropertyInventoryFiltersProps) {
@@ -143,7 +181,7 @@ export function PropertyInventoryFilters({
       onSubmit={applyFilters}
       className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm"
     >
-      <div className="grid gap-4 xl:grid-cols-[1.2fr_1fr_1fr_1fr_auto_auto] xl:items-end">
+      <div className="grid gap-4 xl:grid-cols-[1.2fr_1fr_1fr_1fr_auto_auto_auto] xl:items-end">
         <div className="space-y-2">
           <label className="text-xs font-black uppercase tracking-[0.18em] text-slate-400">
             Search

@@ -146,6 +146,7 @@ export function PropertyInventoryView({
       </section>
 
       <PropertyInventoryFilters
+        portal={portal}
         filters={filters}
         filterOptions={filterOptions}
       />
