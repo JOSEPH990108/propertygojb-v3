@@ -118,6 +118,77 @@ async function findBookingStatusId(code: string) {
   return rows[0]?.id ?? null;
 }
 
+function toAmount(value: string | number | null | undefined) {
+  const amount = Number(value ?? 0);
+
+  if (Number.isNaN(amount)) {
+    return 0;
+  }
+
+  return amount;
+}
+
+async function validateBookingApprovalReadiness(booking: {
+  id: string;
+  bookingCode: string;
+  bookingFeeAmount: string | number | null;
+  bookingFeePaidAmount: string | number | null;
+}) {
+  const bookingFeeAmount = toAmount(booking.bookingFeeAmount);
+  const bookingFeePaidAmount = toAmount(booking.bookingFeePaidAmount);
+
+  if (bookingFeeAmount > 0 && bookingFeePaidAmount < bookingFeeAmount) {
+    return {
+      ok: false,
+      message: `Booking ${booking.bookingCode} cannot be approved yet. Booking fee is not fully paid.`,
+    };
+  }
+
+  const unresolvedDocumentRequests = await db
+    .select({
+      id: schema.documentRequests.id,
+      requestStatus: schema.documentRequests.requestStatus,
+      documentTypeName: schema.documentTypes.name,
+      documentTypeCode: schema.documentTypes.code,
+    })
+    .from(schema.documentRequests)
+    .innerJoin(
+      schema.documentTypes,
+      eq(schema.documentRequests.documentTypeId, schema.documentTypes.id),
+    )
+    .where(
+      and(
+        eq(schema.documentRequests.bookingId, booking.id),
+        isNull(schema.documentRequests.deletedAt),
+        or(
+          eq(schema.documentRequests.requestStatus, "REQUESTED"),
+          eq(schema.documentRequests.requestStatus, "SUBMITTED"),
+          eq(schema.documentRequests.requestStatus, "REJECTED"),
+        ),
+      ),
+    )
+    .limit(5);
+
+  if (unresolvedDocumentRequests.length > 0) {
+    const documentNames = unresolvedDocumentRequests
+      .map((request) => request.documentTypeName ?? request.documentTypeCode)
+      .filter(Boolean)
+      .join(", ");
+
+    return {
+      ok: false,
+      message: documentNames
+        ? `Booking ${booking.bookingCode} cannot be approved yet. Pending documents: ${documentNames}.`
+        : `Booking ${booking.bookingCode} cannot be approved yet. Some documents are still pending.`,
+    };
+  }
+
+  return {
+    ok: true,
+    message: null,
+  };
+}
+
 export async function POST(request: NextRequest) {
   try {
     const authContext = await requireRole(
@@ -147,6 +218,8 @@ export async function POST(request: NextRequest) {
         bookingCode: true,
         status: true,
         leadId: true,
+        bookingFeeAmount: true,
+        bookingFeePaidAmount: true,
       },
     });
 
@@ -163,6 +236,14 @@ export async function POST(request: NextRequest) {
       booking.status !== "APPROVED"
     ) {
       return errorJson("Terminal booking status cannot be changed.", 400);
+    }
+
+    if (validated.nextStatus === "APPROVED") {
+      const readiness = await validateBookingApprovalReadiness(booking);
+
+      if (!readiness.ok) {
+        return errorJson(readiness.message ?? "Booking is not ready for approval.", 400);
+      }
     }
 
     const now = new Date();
