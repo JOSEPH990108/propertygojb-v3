@@ -204,6 +204,12 @@ export default async function AgentBookingsPage({
               className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
             />
           </form>
+          <a
+            href="/api/internal/bookings/export?portal=agent"
+            className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-black text-slate-700 transition hover:bg-slate-50"
+          >
+            Export CSV
+          </a>
         </div>
       </section>
 
