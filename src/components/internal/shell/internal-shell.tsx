@@ -2,9 +2,9 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import {
-  BarChart3,
+  usePathname,
+  useRouter } from "next/navigation"; import {   BarChart3,
   BriefcaseBusiness,
   Building2,
   CalendarCheck,
@@ -23,6 +23,7 @@ import {
   Warehouse,
   X,
   UploadCloud,
+  CalendarClock,
 } from "lucide-react";
 import { useState, useTransition } from "react";
 
@@ -75,6 +76,7 @@ const iconMap = {
   bookings: FileText,
   customers: UsersRound,
   documents: FileText,
+  followUps: CalendarClock,
   appointments: CalendarCheck,
   reports: BarChart3,
   settings: Settings,

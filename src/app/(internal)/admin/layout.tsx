@@ -20,6 +20,7 @@ const adminNavItems: InternalShellNavItem[] = [
   { href: "/admin/leads", label: "Leads", icon: "leads" },
   { href: "/admin/bookings", label: "Bookings", icon: "bookings" },
   { href: "/admin/customers", label: "Customers", icon: "customers" },
+  { href: "/admin/follow-ups", label: "Follow-Ups", icon: "followUps" },
   { href: "/admin/appointments", label: "Appointments", icon: "appointments" },
   { href: "/admin/reports", label: "Reports", icon: "reports" },
   { href: "/admin/settings", label: "Settings", icon: "settings" },

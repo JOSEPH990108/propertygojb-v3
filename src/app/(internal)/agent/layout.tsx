@@ -11,6 +11,7 @@ const agentNavItems: InternalShellNavItem[] = [
   { href: "/agent/leads", label: "Leads", icon: "leads" },
   { href: "/agent/bookings", label: "Bookings", icon: "bookings" },
   { href: "/agent/customers", label: "Customers", icon: "customers" },
+  { href: "/agent/follow-ups", label: "Follow-Ups", icon: "followUps" },
   { href: "/agent/documents", label: "Documents", icon: "documents" },
   { href: "/agent/appointments", label: "Appointments", icon: "appointments" },
   { href: "/agent/profile", label: "Profile", icon: "profile" },
