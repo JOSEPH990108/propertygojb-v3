@@ -287,6 +287,20 @@ export function PropertyInventoryFilters({
           Apply
         </button>
 
+        <a
+          href={buildExportHref({
+            portal,
+            search,
+            projectId,
+            bookingStatusId,
+            lotTypeId,
+          })}
+          className="inline-flex h-14 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 text-sm font-black text-slate-700 transition hover:bg-slate-50"
+        >
+          <Download className="size-4" />
+          Export
+        </a>
+
         <button
           type="button"
           onClick={resetFilters}

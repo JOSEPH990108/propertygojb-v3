@@ -7,7 +7,6 @@ import {
   Banknote,
   BriefcaseBusiness,
   CalendarClock,
-  ClipboardList,
   FileText,
   Target,
   TrendingUp,
