@@ -13,6 +13,17 @@ type BookingDetail = NonNullable<
   Awaited<ReturnType<typeof getBookingDetailById>>
 >;
 
+export type BookingApprovalReadiness = {
+  canApprove: boolean;
+  isPaymentReady: boolean;
+  isDocumentReady: boolean;
+  bookingFeeAmount: number;
+  bookingFeePaidAmount: number;
+  outstandingAmount: number;
+  unresolvedDocuments: BookingDetail["documentRequests"];
+  blockers: string[];
+};
+
 type BookingApprovalReadinessPanelProps = {
   detail: BookingDetail;
 };
@@ -54,9 +65,9 @@ function formatDocumentStatus(status: string | null) {
     .join(" ");
 }
 
-export function BookingApprovalReadinessPanel({
-  detail,
-}: BookingApprovalReadinessPanelProps) {
+export function getBookingApprovalReadiness(
+  detail: BookingDetail,
+): BookingApprovalReadiness {
   const { booking, documentRequests } = detail;
 
   const bookingFeeAmount = toAmount(booking.bookingFeeAmount);
@@ -71,6 +82,42 @@ export function BookingApprovalReadinessPanel({
 
   const isDocumentReady = unresolvedDocuments.length === 0;
   const canApprove = isPaymentReady && isDocumentReady;
+
+  const blockers = [
+    !isPaymentReady
+      ? `Booking fee is not fully paid. Outstanding: ${formatMoney(
+          outstandingAmount,
+          booking.bookingFeeCurrency,
+        )}.`
+      : null,
+    !isDocumentReady
+      ? `${unresolvedDocuments.length} document request(s) still need to be verified or waived.`
+      : null,
+  ].filter((blocker): blocker is string => Boolean(blocker));
+
+  return {
+    canApprove,
+    isPaymentReady,
+    isDocumentReady,
+    bookingFeeAmount,
+    bookingFeePaidAmount,
+    outstandingAmount,
+    unresolvedDocuments,
+    blockers,
+  };
+}
+
+export function BookingApprovalReadinessPanel({
+  detail,
+}: BookingApprovalReadinessPanelProps) {
+  const { booking, documentRequests } = detail;
+  const {
+    canApprove,
+    isPaymentReady,
+    isDocumentReady,
+    outstandingAmount,
+    unresolvedDocuments,
+  } = getBookingApprovalReadiness(detail);
 
   return (
     <section

@@ -18,7 +18,10 @@ import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { BookingStatusActionPanel } from "@/components/internal/bookings/booking-status-action-panel";
 import { BookingPaymentComposer } from "@/components/internal/bookings/booking-payment-composer";
 import { BookingDocumentRequestComposer } from "@/components/internal/bookings/booking-document-request-composer";
-import { BookingApprovalReadinessPanel } from "@/components/internal/bookings/booking-approval-readiness-panel";
+import {
+  BookingApprovalReadinessPanel,
+  getBookingApprovalReadiness,
+} from "@/components/internal/bookings/booking-approval-readiness-panel";
 import {
   formatBookingStatus,
   formatDateTime,
@@ -137,6 +140,7 @@ export function BookingDetailView({
 }: BookingDetailViewProps) {
   const { booking, units, participants, payments, statusHistory, activities } =
     detail;
+  const approvalReadiness = getBookingApprovalReadiness(detail);
 
   const timestampItems = [
     { label: "Created", value: booking.createdAt },
@@ -195,6 +199,7 @@ export function BookingDetailView({
           <BookingStatusActionPanel
             bookingId={booking.id}
             currentStatus={booking.status}
+            approvalReadiness={approvalReadiness}
           />
         </>
       ) : null}

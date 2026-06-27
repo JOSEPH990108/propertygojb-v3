@@ -18,6 +18,10 @@ import {
 type BookingStatusActionPanelProps = {
   bookingId: string;
   currentStatus: string;
+  approvalReadiness?: {
+    canApprove: boolean;
+    blockers: string[];
+  };
 };
 
 type BookingStatusResult = {
@@ -131,6 +135,7 @@ function StatusOptionContent({
 export function BookingStatusActionPanel({
   bookingId,
   currentStatus,
+  approvalReadiness,
 }: BookingStatusActionPanelProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -154,8 +159,13 @@ export function BookingStatusActionPanel({
   const selectedStatusDescription =
     statusDescriptions[nextStatus] ?? "Select the next booking status.";
 
+  const approvalBlockers = approvalReadiness?.blockers ?? [];
+  const isApprovalBlocked =
+    nextStatus === "APPROVED" && approvalReadiness?.canApprove === false;
+
   const canSubmit =
     Boolean(nextStatus) &&
+    !isApprovalBlocked &&
     nextStatus !== currentStatus &&
     !isTerminal &&
     !isPending &&
@@ -163,6 +173,13 @@ export function BookingStatusActionPanel({
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (isApprovalBlocked) {
+      appToast.error(
+        approvalBlockers[0] ?? "Booking is not ready for approval yet.",
+      );
+      return;
+    }
 
     if (!canSubmit) {
       appToast.error(
@@ -270,6 +287,17 @@ export function BookingStatusActionPanel({
                 />
               )}
             />
+
+            {isApprovalBlocked ? (
+              <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-bold text-amber-900">
+                <p>This booking is not ready for approval.</p>
+                <ul className="mt-2 list-disc space-y-1 pl-5">
+                  {approvalBlockers.map((blocker) => (
+                    <li key={blocker}>{blocker}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
           </div>
 
           <div className="space-y-2">
