@@ -158,6 +158,8 @@ export async function POST(request: NextRequest) {
       const existingUnitBookings = await tx
         .select({
           bookingId: schema.bookingUnits.bookingId,
+          bookingCode: schema.bookings.bookingCode,
+          bookingStatus: schema.bookings.status,
         })
         .from(schema.bookingUnits)
         .innerJoin(
@@ -169,12 +171,26 @@ export async function POST(request: NextRequest) {
             eq(schema.bookingUnits.unitId, unit.id),
             isNull(schema.bookingUnits.deletedAt),
             isNull(schema.bookings.deletedAt),
+            or(
+              eq(schema.bookings.status, "DRAFT"),
+              eq(schema.bookings.status, "SUBMITTED"),
+              eq(schema.bookings.status, "UNDER_REVIEW"),
+              eq(schema.bookings.status, "DOCS_PENDING"),
+              eq(schema.bookings.status, "DOCS_VERIFIED"),
+              eq(schema.bookings.status, "PAYMENT_PENDING"),
+              eq(schema.bookings.status, "PAYMENT_VERIFIED"),
+              eq(schema.bookings.status, "APPROVED"),
+            ),
           ),
         )
         .limit(1);
 
-      if (existingUnitBookings[0]) {
-        throw new Error("Selected unit already has an active booking.");
+      const existingUnitBooking = existingUnitBookings[0];
+
+      if (existingUnitBooking) {
+        throw new Error(
+          `Selected unit already has active booking ${existingUnitBooking.bookingCode}.`,
+        );
       }
 
       const bookingCode = await createUniqueBookingCode();
