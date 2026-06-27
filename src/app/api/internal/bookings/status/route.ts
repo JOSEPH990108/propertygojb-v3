@@ -1,4 +1,4 @@
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, isNull, or } from "drizzle-orm";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 
@@ -231,11 +231,12 @@ export async function POST(request: NextRequest) {
       }
 
       if (validated.nextStatus === "APPROVED") {
-        const bookedStatusId =
+        const soldStatusId =
+          (await findBookingStatusId("SOLD")) ??
           (await findBookingStatusId("BOOKED")) ??
           (await findBookingStatusId("RESERVED"));
 
-        if (bookedStatusId) {
+        if (soldStatusId) {
           const bookingUnits = await tx
             .select({
               unitId: schema.bookingUnits.unitId,
@@ -253,7 +254,8 @@ export async function POST(request: NextRequest) {
               tx
                 .update(schema.units)
                 .set({
-                  bookingStatusId: bookedStatusId,
+                  bookingStatusId: soldStatusId,
+                  updatedAt: now,
                 })
                 .where(eq(schema.units.id, bookingUnit.unitId)),
             ),
@@ -266,6 +268,18 @@ export async function POST(request: NextRequest) {
         validated.nextStatus === "CANCELLED" ||
         validated.nextStatus === "EXPIRED"
       ) {
+        const bookingUnits = await tx
+          .select({
+            unitId: schema.bookingUnits.unitId,
+          })
+          .from(schema.bookingUnits)
+          .where(
+            and(
+              eq(schema.bookingUnits.bookingId, booking.id),
+              isNull(schema.bookingUnits.deletedAt),
+            ),
+          );
+
         await tx
           .update(schema.bookingUnits)
           .set({
@@ -278,23 +292,45 @@ export async function POST(request: NextRequest) {
         const availableStatusId = await findBookingStatusId("AVAILABLE");
 
         if (availableStatusId) {
-          const bookingUnits = await tx
-            .select({
-              unitId: schema.bookingUnits.unitId,
-            })
-            .from(schema.bookingUnits)
-            .where(eq(schema.bookingUnits.bookingId, booking.id));
+          for (const bookingUnit of bookingUnits) {
+            const otherActiveBookings = await tx
+              .select({
+                bookingId: schema.bookingUnits.bookingId,
+              })
+              .from(schema.bookingUnits)
+              .innerJoin(
+                schema.bookings,
+                eq(schema.bookingUnits.bookingId, schema.bookings.id),
+              )
+              .where(
+                and(
+                  eq(schema.bookingUnits.unitId, bookingUnit.unitId),
+                  isNull(schema.bookingUnits.deletedAt),
+                  isNull(schema.bookings.deletedAt),
+                  or(
+                    eq(schema.bookings.status, "DRAFT"),
+                    eq(schema.bookings.status, "SUBMITTED"),
+                    eq(schema.bookings.status, "UNDER_REVIEW"),
+                    eq(schema.bookings.status, "DOCS_PENDING"),
+                    eq(schema.bookings.status, "DOCS_VERIFIED"),
+                    eq(schema.bookings.status, "PAYMENT_PENDING"),
+                    eq(schema.bookings.status, "PAYMENT_VERIFIED"),
+                    eq(schema.bookings.status, "APPROVED"),
+                  ),
+                ),
+              )
+              .limit(1);
 
-          await Promise.all(
-            bookingUnits.map((bookingUnit) =>
-              tx
+            if (!otherActiveBookings[0]) {
+              await tx
                 .update(schema.units)
                 .set({
                   bookingStatusId: availableStatusId,
+                  updatedAt: now,
                 })
-                .where(eq(schema.units.id, bookingUnit.unitId)),
-            ),
-          );
+                .where(eq(schema.units.id, bookingUnit.unitId));
+            }
+          }
         }
       }
     });
