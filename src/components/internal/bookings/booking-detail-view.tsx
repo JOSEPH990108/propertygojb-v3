@@ -18,6 +18,7 @@ import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { BookingStatusActionPanel } from "@/components/internal/bookings/booking-status-action-panel";
 import { BookingPaymentComposer } from "@/components/internal/bookings/booking-payment-composer";
 import { BookingDocumentRequestComposer } from "@/components/internal/bookings/booking-document-request-composer";
+import { BookingApprovalReadinessPanel } from "@/components/internal/bookings/booking-approval-readiness-panel";
 import {
   formatBookingStatus,
   formatDateTime,
@@ -188,10 +189,14 @@ export function BookingDetailView({
       </section>
 
       {portalLabel === "Admin" ? (
-        <BookingStatusActionPanel
-          bookingId={booking.id}
-          currentStatus={booking.status}
-        />
+        <>
+          <BookingApprovalReadinessPanel detail={detail} />
+
+          <BookingStatusActionPanel
+            bookingId={booking.id}
+            currentStatus={booking.status}
+          />
+        </>
       ) : null}
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">

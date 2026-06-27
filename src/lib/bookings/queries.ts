@@ -58,8 +58,14 @@ export async function getBookingDetailById(bookingId: string) {
     return null;
   }
 
-  const [units, participants, payments, statusHistory, activities] =
-    await Promise.all([
+  const [
+    units,
+    participants,
+    payments,
+    documentRequests,
+    statusHistory,
+    activities,
+  ] = await Promise.all([
       db
         .select({
           id: schema.bookingUnits.id,
@@ -146,6 +152,36 @@ export async function getBookingDetailById(bookingId: string) {
 
       db
         .select({
+          id: schema.documentRequests.id,
+          requestStatus: schema.documentRequests.requestStatus,
+          requestedAt: schema.documentRequests.requestedAt,
+          dueAt: schema.documentRequests.dueAt,
+          notes: schema.documentRequests.notes,
+
+          documentTypeId: schema.documentTypes.id,
+          documentTypeCode: schema.documentTypes.code,
+          documentTypeName: schema.documentTypes.name,
+          documentCategory: schema.documentTypes.category,
+          isMandatoryDefault: schema.documentTypes.isMandatoryDefault,
+        })
+        .from(schema.documentRequests)
+        .innerJoin(
+          schema.documentTypes,
+          eq(schema.documentRequests.documentTypeId, schema.documentTypes.id),
+        )
+        .where(
+          and(
+            eq(schema.documentRequests.bookingId, bookingId),
+            isNull(schema.documentRequests.deletedAt),
+          ),
+        )
+        .orderBy(
+          asc(schema.documentTypes.category),
+          asc(schema.documentTypes.name),
+        ),
+
+      db
+        .select({
           id: schema.bookingStatusHistory.id,
           fromStatus: schema.bookingStatusHistory.fromStatus,
           toStatus: schema.bookingStatusHistory.toStatus,
@@ -190,6 +226,7 @@ export async function getBookingDetailById(bookingId: string) {
     units,
     participants,
     payments,
+    documentRequests,
     statusHistory,
     activities,
   };
