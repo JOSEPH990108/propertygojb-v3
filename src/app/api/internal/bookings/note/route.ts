@@ -1,4 +1,3 @@
-import { eq } from "drizzle-orm";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 

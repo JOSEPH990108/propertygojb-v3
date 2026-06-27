@@ -246,6 +246,53 @@ export async function POST(request: NextRequest) {
         participantOrder: 1,
       });
 
+      const mandatoryDocumentTypes = await tx
+        .select({
+          id: schema.documentTypes.id,
+          name: schema.documentTypes.name,
+        })
+        .from(schema.documentTypes)
+        .where(
+          and(
+            eq(schema.documentTypes.isMandatoryDefault, true),
+            eq(schema.documentTypes.isActive, true),
+            isNull(schema.documentTypes.deletedAt),
+          ),
+        );
+
+      if (mandatoryDocumentTypes.length > 0) {
+        await tx.insert(schema.documentRequests).values(
+          mandatoryDocumentTypes.map((documentType) => ({
+            bookingId: booking.id,
+            participantId: null,
+            documentTypeId: documentType.id,
+            requestStatus: "REQUESTED" as const,
+            requestedByUserId: currentUserId,
+            requestedAt: now,
+            notes: "Automatically requested because this document type is mandatory by default.",
+          })),
+        );
+
+        await tx.insert(schema.bookingActivities).values({
+          bookingId: booking.id,
+          actorUserId: currentUserId,
+          activityType: "MANDATORY_DOCUMENTS_REQUESTED",
+          title: "Mandatory documents requested",
+          body: `${mandatoryDocumentTypes.length} mandatory document request(s) were created automatically.`,
+          visibilityScope: "INTERNAL",
+          activityAt: now,
+          metadata: {
+            source: "LEAD_BOOKING",
+            documentTypeIds: mandatoryDocumentTypes.map(
+              (documentType) => documentType.id,
+            ),
+            documentTypeNames: mandatoryDocumentTypes.map(
+              (documentType) => documentType.name,
+            ),
+          },
+        });
+      }
+
       await tx.insert(schema.bookingStatusHistory).values({
         bookingId: booking.id,
         fromStatus: null,
