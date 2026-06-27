@@ -77,6 +77,51 @@ function isReasonRequired(action: "UNDER_REVIEW" | "VERIFY" | "REJECT" | "WAIVE"
   return action === "REJECT" || action === "WAIVE";
 }
 
+type BookingStatus =
+  | "DRAFT"
+  | "SUBMITTED"
+  | "UNDER_REVIEW"
+  | "PAYMENT_PENDING"
+  | "PAYMENT_VERIFIED"
+  | "DOCS_PENDING"
+  | "DOCS_VERIFIED"
+  | "APPROVED"
+  | "REJECTED"
+  | "EXPIRED"
+  | "CANCELLED";
+
+function isClosedBookingStatus(status: string) {
+  return (
+    status === "APPROVED" ||
+    status === "REJECTED" ||
+    status === "EXPIRED" ||
+    status === "CANCELLED"
+  );
+}
+
+function isResolvedDocumentStatus(status: DocumentRequestStatus) {
+  return status === "VERIFIED" || status === "WAIVED";
+}
+
+function getNextBookingDocumentStatus(
+  currentStatus: string,
+  documentStatuses: DocumentRequestStatus[],
+): BookingStatus | null {
+  if (isClosedBookingStatus(currentStatus)) {
+    return null;
+  }
+
+  if (documentStatuses.length === 0) {
+    return null;
+  }
+
+  const areAllDocumentsResolved = documentStatuses.every((status) =>
+    isResolvedDocumentStatus(status),
+  );
+
+  return areAllDocumentsResolved ? "DOCS_VERIFIED" : "DOCS_PENDING";
+}
+
 export async function POST(request: NextRequest) {
   try {
     const authContext = await requireRole(
@@ -233,6 +278,61 @@ export async function POST(request: NextRequest) {
             submissionId,
             action: validated.action,
             reasonNote: validated.reasonNote || null,
+          },
+        });
+      }
+
+      const bookingDocumentRequests = await tx
+        .select({
+          requestStatus: schema.documentRequests.requestStatus,
+        })
+        .from(schema.documentRequests)
+        .where(
+          and(
+            eq(schema.documentRequests.bookingId, documentRequest.bookingId),
+            isNull(schema.documentRequests.deletedAt),
+          ),
+        );
+
+      const nextBookingStatus = getNextBookingDocumentStatus(
+        documentRequest.bookingStatus,
+        bookingDocumentRequests.map((item) => item.requestStatus),
+      );
+
+      if (nextBookingStatus && documentRequest.bookingStatus !== nextBookingStatus) {
+        await tx
+          .update(schema.bookings)
+          .set({
+            status: nextBookingStatus,
+            updatedAt: now,
+          })
+          .where(eq(schema.bookings.id, documentRequest.bookingId));
+
+        await tx.insert(schema.bookingStatusHistory).values({
+          bookingId: documentRequest.bookingId,
+          fromStatus: documentRequest.bookingStatus,
+          toStatus: nextBookingStatus,
+          changedByUserId: currentUserId,
+          changedAt: now,
+          reasonCode: "DOCUMENT_STATUS_SYNC",
+          reasonNote: `${documentRequest.documentTypeName}: ${config.title}`,
+          sourceEventType: "DOCUMENT_VERIFICATION",
+        });
+
+        await tx.insert(schema.bookingActivities).values({
+          bookingId: documentRequest.bookingId,
+          actorUserId: currentUserId,
+          activityType: "BOOKING_DOCUMENT_STATUS_SYNCED",
+          title: "Booking document status synced",
+          body: `Booking status changed to ${nextBookingStatus.replaceAll("_", " ").toLowerCase()} based on document verification.`,
+          visibilityScope: "INTERNAL",
+          activityAt: now,
+          metadata: {
+            documentRequestId: documentRequest.requestId,
+            submissionId,
+            documentTypeName: documentRequest.documentTypeName,
+            action: validated.action,
+            nextBookingStatus,
           },
         });
       }
