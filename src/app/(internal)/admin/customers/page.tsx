@@ -69,6 +69,24 @@ function getLeadStatusTone(
   }
 }
 
+
+function buildCustomerExportHref({
+  portal,
+  search,
+}: {
+  portal: "admin" | "agent";
+  search: string;
+}) {
+  const params = new URLSearchParams();
+  params.set("portal", portal);
+
+  if (search) {
+    params.set("q", search);
+  }
+
+  return `/api/internal/customers/export?${params.toString()}`;
+}
+
 function getCustomerName(customer: {
   fullName: string | null;
   phoneE164: string | null;
@@ -189,15 +207,27 @@ export default async function AdminCustomersPage({
             </p>
           </div>
 
-          <form className="flex w-full max-w-md items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2">
-            <Search className="size-4 text-slate-400" />
-            <input
-              name="q"
-              defaultValue={search}
-              placeholder="Search customer, phone, email, agent..."
-              className="w-full bg-transparent text-sm font-semibold outline-none placeholder:text-slate-400"
-            />
-          </form>
+          <div className="flex w-full max-w-xl flex-col gap-3 sm:flex-row">
+            <form className="flex min-w-0 flex-1 items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2">
+              <Search className="size-4 text-slate-400" />
+              <input
+                name="q"
+                defaultValue={search}
+                placeholder="Search customer, phone, email, agent..."
+                className="w-full bg-transparent text-sm font-semibold outline-none placeholder:text-slate-400"
+              />
+            </form>
+
+            <a
+              href={buildCustomerExportHref({
+                portal: "admin",
+                search,
+              })}
+              className="inline-flex h-12 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-black text-slate-700 transition hover:bg-slate-50"
+            >
+              Export CSV
+            </a>
+          </div>
         </div>
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">
