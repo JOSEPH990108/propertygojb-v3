@@ -67,32 +67,32 @@ function normalizeBookingStatus(value: string): BookingStatus {
 function getNextBookingStatus({
   currentStatus,
   markVerified,
+  isBookingFeeFullyPaid,
 }: {
   currentStatus: string;
   markVerified: boolean;
+  isBookingFeeFullyPaid: boolean;
 }): BookingStatus {
   const normalizedCurrentStatus = normalizeBookingStatus(currentStatus);
 
   if (
-    ["APPROVED", "REJECTED", "EXPIRED", "CANCELLED"].includes(
-      normalizedCurrentStatus,
-    )
+    [
+      "APPROVED",
+      "REJECTED",
+      "EXPIRED",
+      "CANCELLED",
+      "DOCS_PENDING",
+      "DOCS_VERIFIED",
+    ].includes(normalizedCurrentStatus)
   ) {
     return normalizedCurrentStatus;
   }
 
-  if (markVerified) {
+  if (markVerified && isBookingFeeFullyPaid) {
     return "PAYMENT_VERIFIED";
   }
 
-  if (
-    normalizedCurrentStatus === "DRAFT" ||
-    normalizedCurrentStatus === "SUBMITTED"
-  ) {
-    return "PAYMENT_PENDING";
-  }
-
-  return normalizedCurrentStatus;
+  return "PAYMENT_PENDING";
 }
 
 export async function POST(request: NextRequest) {
@@ -137,11 +137,15 @@ export async function POST(request: NextRequest) {
     const now = new Date();
     const receivedAt = parseReceivedAt(validated.receivedAt);
     const paymentStatus = validated.markVerified ? "VERIFIED" : "RECEIVED";
+    const bookingFeeAmount = toMoney(booking.bookingFeeAmount);
     const nextPaidAmount =
       toMoney(booking.bookingFeePaidAmount) + validated.amount;
+    const isBookingFeeFullyPaid =
+      bookingFeeAmount <= 0 || nextPaidAmount >= bookingFeeAmount;
     const nextStatus = getNextBookingStatus({
       currentStatus: booking.status,
       markVerified: validated.markVerified,
+      isBookingFeeFullyPaid,
     });
 
     await db.transaction(async (tx) => {
@@ -234,9 +238,12 @@ export async function POST(request: NextRequest) {
     });
 
     return okJson({
-      message: validated.markVerified
-        ? "Payment recorded and verified successfully."
-        : "Payment recorded successfully.",
+      message:
+        validated.markVerified && isBookingFeeFullyPaid
+          ? "Payment recorded and booking fee fully verified."
+          : validated.markVerified
+            ? "Payment recorded and verified, but booking fee is not fully paid yet."
+            : "Payment recorded successfully.",
       bookingId: booking.id,
       bookingCode: booking.bookingCode,
       status: nextStatus,
