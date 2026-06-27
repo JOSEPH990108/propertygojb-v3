@@ -141,6 +141,9 @@ export async function seedCoreLookups(db: DB) {
     .values([
       { code: "AVAILABLE", name: "Available" },
       { code: "RESERVED", name: "Reserved" },
+      { code: "BOOKING", name: "Booking" },
+      { code: "APPROVED", name: "Approved" },
+      { code: "SPA_SIGNED", name: "SPA Signed" },
       { code: "SOLD", name: "Sold" },
       { code: "CANCELLED", name: "Cancelled" },
     ])
