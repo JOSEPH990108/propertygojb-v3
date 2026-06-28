@@ -124,6 +124,7 @@ export async function seedCoreLookups(db: DB) {
       { code: "UPCOMING", name: "Upcoming" },
       { code: "SUBSALE", name: "Subsale" },
       { code: "FULLY_SOLD", name: "Fully Sold" },
+      { code: "COMING_SOON", name: "Coming Soon" },
     ])
     .onConflictDoNothing();
 

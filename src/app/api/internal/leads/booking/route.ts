@@ -45,6 +45,14 @@ async function createUniqueBookingCode() {
   throw new Error("Unable to generate booking code. Please try again.");
 }
 
+const defaultReservationExpiryDays = 3;
+
+function addDays(value: Date, days: number) {
+  const result = new Date(value);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const authContext = await requireRole(
@@ -132,6 +140,7 @@ export async function POST(request: NextRequest) {
     }
 
     const now = new Date();
+    const reservationExpiresAt = addDays(now, defaultReservationExpiryDays);
     const bookingFeeAmount = validated.bookingFeeAmount.toFixed(2);
     const reservedPrice = unit.finalPrice ?? unit.basePrice;
 
@@ -170,6 +179,7 @@ export async function POST(request: NextRequest) {
           and(
             eq(schema.bookingUnits.unitId, unit.id),
             isNull(schema.bookingUnits.deletedAt),
+            isNull(schema.bookingUnits.releasedAt),
             isNull(schema.bookings.deletedAt),
             or(
               eq(schema.bookings.status, "DRAFT"),
@@ -233,6 +243,7 @@ export async function POST(request: NextRequest) {
         reservedPrice,
         bookingFeeAllocatedAmount: bookingFeeAmount,
         reservationStartedAt: now,
+        reservationExpiresAt,
       });
 
       await tx.insert(schema.bookingParticipants).values({
