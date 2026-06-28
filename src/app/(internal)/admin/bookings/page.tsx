@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { AppStatusBadge } from "@/components/common/app-status-badge";
+import { BookingExpiryActionPanel } from "@/components/internal/bookings/booking-expiry-action-panel";
 import { db, schema } from "@/db";
 import {
   formatBookingStatus,
@@ -214,6 +215,8 @@ export default async function AdminBookingsPage({
           </a>
         </div>
       </section>
+
+      <BookingExpiryActionPanel />
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <MetricCard
