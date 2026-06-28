@@ -368,7 +368,13 @@ export async function POST(request: NextRequest) {
             releaseReason: validated.reasonNote || `Booking ${validated.nextStatus}`,
             updatedAt: now,
           })
-          .where(eq(schema.bookingUnits.bookingId, booking.id));
+          .where(
+            and(
+              eq(schema.bookingUnits.bookingId, booking.id),
+              isNull(schema.bookingUnits.deletedAt),
+              isNull(schema.bookingUnits.releasedAt),
+            ),
+          );
 
         const availableStatusId = await findBookingStatusId("AVAILABLE");
 
@@ -387,6 +393,7 @@ export async function POST(request: NextRequest) {
                 and(
                   eq(schema.bookingUnits.unitId, bookingUnit.unitId),
                   isNull(schema.bookingUnits.deletedAt),
+                  isNull(schema.bookingUnits.releasedAt),
                   isNull(schema.bookings.deletedAt),
                   or(
                     eq(schema.bookings.status, "DRAFT"),
