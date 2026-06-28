@@ -21,6 +21,11 @@ export const expirableBookingWorkflowStatuses = [
   "DOCS_VERIFIED",
   "PAYMENT_PENDING",
   "PAYMENT_VERIFIED",
+  "APPROVED",
+] as const;
+
+export const loSignExpirableBookingWorkflowStatuses = [
+  "LO_OBTAINED",
 ] as const;
 
 export const inactiveBookingWorkflowStatuses = [

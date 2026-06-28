@@ -6,6 +6,7 @@ import { db, schema } from "@/db";
 import {
   activeBookingWorkflowStatuses,
   expirableBookingWorkflowStatuses,
+  loSignExpirableBookingWorkflowStatuses,
 } from "@/lib/bookings/status";
 
 type ExpireOverdueBookingsOptions = {
@@ -16,6 +17,8 @@ type ExpireOverdueBookingsOptions = {
   sourceEventType?: string;
 };
 
+type ExpiryType = "RESERVATION" | "LO_SIGN";
+
 type ExpiredBookingResult = {
   bookingId: string;
   bookingCode: string;
@@ -24,6 +27,8 @@ type ExpiredBookingResult = {
   previousStatus: string;
   nextStatus: "EXPIRED";
   reservationExpiresAt: Date | null;
+  loSignDueAt: Date | null;
+  expiryType: ExpiryType;
   unitReleased: boolean;
   unitSetAvailable: boolean;
   dryRun: boolean;
@@ -45,6 +50,27 @@ function expirableBookingStatusFilter() {
   );
 }
 
+function loSignExpirableBookingStatusFilter() {
+  return or(
+    ...loSignExpirableBookingWorkflowStatuses.map((status) =>
+      eq(schema.bookings.status, status),
+    ),
+  );
+}
+
+function expiryCandidateFilter(now: Date) {
+  return or(
+    and(
+      expirableBookingStatusFilter(),
+      lt(schema.bookingUnits.reservationExpiresAt, now),
+    ),
+    and(
+      loSignExpirableBookingStatusFilter(),
+      lt(schema.bookingUnits.loSignDueAt, now),
+    ),
+  );
+}
+
 async function getAvailableUnitStatusId() {
   const rows = await db
     .select({
@@ -57,12 +83,49 @@ async function getAvailableUnitStatusId() {
   return rows[0]?.id ?? null;
 }
 
-function getExpiryReleaseReason(reservationExpiresAt: Date | null) {
-  if (!reservationExpiresAt) {
-    return "Booking reservation expired.";
+function getExpiryType(row: {
+  bookingStatus: string;
+  loSignDueAt: Date | null;
+}): ExpiryType {
+  if (row.bookingStatus === "LO_OBTAINED" && row.loSignDueAt) {
+    return "LO_SIGN";
   }
 
-  return `Booking reservation expired at ${reservationExpiresAt.toISOString()}.`;
+  return "RESERVATION";
+}
+
+function getExpiryReleaseReason({
+  expiryType,
+  reservationExpiresAt,
+  loSignDueAt,
+}: {
+  expiryType: ExpiryType;
+  reservationExpiresAt: Date | null;
+  loSignDueAt: Date | null;
+}) {
+  if (expiryType === "LO_SIGN") {
+    return loSignDueAt
+      ? `LO signing period expired at ${loSignDueAt.toISOString()}.`
+      : "LO signing period expired.";
+  }
+
+  return reservationExpiresAt
+    ? `Booking reservation expired at ${reservationExpiresAt.toISOString()}.`
+    : "Booking reservation expired.";
+}
+
+function getExpiryActivityBody(expiryType: ExpiryType) {
+  if (expiryType === "LO_SIGN") {
+    return "LO signing period expired and the reserved unit was released.";
+  }
+
+  return "Booking reservation expired and the reserved unit was released.";
+}
+
+function getExpiryReasonCode(expiryType: ExpiryType) {
+  return expiryType === "LO_SIGN"
+    ? "LO_SIGNING_PERIOD_EXPIRED"
+    : "RESERVATION_EXPIRED";
 }
 
 export async function expireOverdueBookings({
@@ -83,6 +146,7 @@ export async function expireOverdueBookings({
       leadId: schema.bookings.leadId,
       unitId: schema.bookingUnits.unitId,
       reservationExpiresAt: schema.bookingUnits.reservationExpiresAt,
+      loSignDueAt: schema.bookingUnits.loSignDueAt,
     })
     .from(schema.bookingUnits)
     .innerJoin(schema.bookings, eq(schema.bookingUnits.bookingId, schema.bookings.id))
@@ -90,9 +154,8 @@ export async function expireOverdueBookings({
       and(
         isNull(schema.bookingUnits.deletedAt),
         isNull(schema.bookingUnits.releasedAt),
-        lt(schema.bookingUnits.reservationExpiresAt, now),
         isNull(schema.bookings.deletedAt),
-        expirableBookingStatusFilter(),
+        expiryCandidateFilter(now),
       ),
     )
     .orderBy(asc(schema.bookingUnits.reservationExpiresAt))
@@ -110,6 +173,7 @@ export async function expireOverdueBookings({
             leadId: schema.bookings.leadId,
             unitId: schema.bookingUnits.unitId,
             reservationExpiresAt: schema.bookingUnits.reservationExpiresAt,
+            loSignDueAt: schema.bookingUnits.loSignDueAt,
           })
           .from(schema.bookingUnits)
           .innerJoin(
@@ -121,9 +185,8 @@ export async function expireOverdueBookings({
               eq(schema.bookingUnits.id, candidate.bookingUnitId),
               isNull(schema.bookingUnits.deletedAt),
               isNull(schema.bookingUnits.releasedAt),
-              lt(schema.bookingUnits.reservationExpiresAt, now),
               isNull(schema.bookings.deletedAt),
-              expirableBookingStatusFilter(),
+              expiryCandidateFilter(now),
             ),
           )
           .limit(1);
@@ -134,6 +197,13 @@ export async function expireOverdueBookings({
           return null;
         }
 
+        const expiryType = getExpiryType(current);
+        const releaseReason = getExpiryReleaseReason({
+          expiryType,
+          reservationExpiresAt: current.reservationExpiresAt,
+          loSignDueAt: current.loSignDueAt,
+        });
+
         if (dryRun) {
           return {
             bookingId: current.bookingId,
@@ -143,6 +213,8 @@ export async function expireOverdueBookings({
             previousStatus: current.bookingStatus,
             nextStatus: "EXPIRED",
             reservationExpiresAt: current.reservationExpiresAt,
+            loSignDueAt: current.loSignDueAt,
+            expiryType,
             unitReleased: false,
             unitSetAvailable: false,
             dryRun: true,
@@ -162,7 +234,7 @@ export async function expireOverdueBookings({
           .update(schema.bookingUnits)
           .set({
             releasedAt: now,
-            releaseReason: getExpiryReleaseReason(current.reservationExpiresAt),
+            releaseReason,
             updatedAt: now,
           })
           .where(eq(schema.bookingUnits.id, current.bookingUnitId));
@@ -207,8 +279,8 @@ export async function expireOverdueBookings({
           toStatus: "EXPIRED",
           changedByUserId: actorUserId,
           changedAt: now,
-          reasonCode: "RESERVATION_EXPIRED",
-          reasonNote: getExpiryReleaseReason(current.reservationExpiresAt),
+          reasonCode: getExpiryReasonCode(expiryType),
+          reasonNote: releaseReason,
           sourceEventType,
         });
 
@@ -217,7 +289,7 @@ export async function expireOverdueBookings({
           actorUserId,
           activityType: "BOOKING_EXPIRED",
           title: "Booking expired automatically",
-          body: "Booking reservation expired and the reserved unit was released.",
+          body: getExpiryActivityBody(expiryType),
           visibilityScope: "INTERNAL",
           activityAt: now,
           metadata: {
@@ -225,7 +297,10 @@ export async function expireOverdueBookings({
             unitId: current.unitId,
             previousStatus: current.bookingStatus,
             nextStatus: "EXPIRED",
-            reservationExpiresAt: current.reservationExpiresAt?.toISOString() ?? null,
+            reservationExpiresAt:
+              current.reservationExpiresAt?.toISOString() ?? null,
+            loSignDueAt: current.loSignDueAt?.toISOString() ?? null,
+            expiryType,
             sourceEventType,
           },
         });
@@ -236,7 +311,10 @@ export async function expireOverdueBookings({
             actorUserId,
             activityType: "BOOKING_EXPIRED",
             title: "Booking expired automatically",
-            body: `Booking ${current.bookingCode} reservation expired.`,
+            body:
+              expiryType === "LO_SIGN"
+                ? `Booking ${current.bookingCode} LO signing period expired.`
+                : `Booking ${current.bookingCode} reservation expired.`,
             visibilityScope: "INTERNAL",
             metadata: {
               bookingId: current.bookingId,
@@ -245,6 +323,8 @@ export async function expireOverdueBookings({
               unitId: current.unitId,
               reservationExpiresAt:
                 current.reservationExpiresAt?.toISOString() ?? null,
+              loSignDueAt: current.loSignDueAt?.toISOString() ?? null,
+              expiryType,
               sourceEventType,
             },
           });
@@ -258,6 +338,8 @@ export async function expireOverdueBookings({
           previousStatus: current.bookingStatus,
           nextStatus: "EXPIRED",
           reservationExpiresAt: current.reservationExpiresAt,
+          loSignDueAt: current.loSignDueAt,
+          expiryType,
           unitReleased: true,
           unitSetAvailable: shouldSetUnitAvailable,
           dryRun: false,
