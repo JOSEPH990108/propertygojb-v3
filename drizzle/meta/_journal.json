@@ -15,6 +15,13 @@
       "when": 1781678259757,
       "tag": "0001_brown_lady_mastermind",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782626517509,
+      "tag": "0002_absent_namor",
+      "breakpoints": true
     }
   ]
 }

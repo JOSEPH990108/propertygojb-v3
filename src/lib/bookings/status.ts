@@ -7,6 +7,10 @@ export const activeBookingWorkflowStatuses = [
   "PAYMENT_PENDING",
   "PAYMENT_VERIFIED",
   "APPROVED",
+  "LO_OBTAINED",
+  "LO_SIGNED",
+  "SPA_SIGNED",
+  "SOLD",
 ] as const;
 
 export const expirableBookingWorkflowStatuses = [
@@ -26,7 +30,7 @@ export const inactiveBookingWorkflowStatuses = [
 ] as const;
 
 export const terminalBookingWorkflowStatuses = [
-  "APPROVED",
+  "SOLD",
   "REJECTED",
   "EXPIRED",
   "CANCELLED",
@@ -37,6 +41,8 @@ export const unitStatusCodes = [
   "RESERVED",
   "BOOKING",
   "APPROVED",
+  "LO_OBTAINED",
+  "LO_SIGNED",
   "SPA_SIGNED",
   "SOLD",
   "CANCELLED",
@@ -44,7 +50,11 @@ export const unitStatusCodes = [
 
 export const unitStatusTransitionCandidates = {
   bookingCreated: ["BOOKING", "RESERVED"] as const,
-  bookingApproved: ["APPROVED", "SOLD", "RESERVED"] as const,
+  bookingApproved: ["APPROVED", "BOOKING", "RESERVED"] as const,
+  loObtained: ["LO_OBTAINED"] as const,
+  loSigned: ["LO_SIGNED"] as const,
+  spaSigned: ["SPA_SIGNED"] as const,
+  sold: ["SOLD"] as const,
   bookingReleased: ["AVAILABLE"] as const,
 };
 
@@ -68,10 +78,18 @@ export function isUnitReservedStatus(statusCode: string | null | undefined) {
   return statusCode === "RESERVED" || statusCode === "BOOKING";
 }
 
-export function isUnitSoldStatus(statusCode: string | null | undefined) {
+export function isUnitLockedStatus(statusCode: string | null | undefined) {
   return (
+    statusCode === "BOOKING" ||
+    statusCode === "RESERVED" ||
     statusCode === "APPROVED" ||
+    statusCode === "LO_OBTAINED" ||
+    statusCode === "LO_SIGNED" ||
     statusCode === "SPA_SIGNED" ||
     statusCode === "SOLD"
   );
+}
+
+export function isUnitSoldStatus(statusCode: string | null | undefined) {
+  return statusCode === "SPA_SIGNED" || statusCode === "SOLD";
 }
