@@ -19,6 +19,7 @@ import { BookingStatusActionPanel } from "@/components/internal/bookings/booking
 import { BookingPaymentComposer } from "@/components/internal/bookings/booking-payment-composer";
 import { BookingDocumentRequestComposer } from "@/components/internal/bookings/booking-document-request-composer";
 import { BookingNoteComposer } from "@/components/internal/bookings/booking-note-composer";
+import { BookingDocumentUploadPanel } from "@/components/internal/bookings/booking-document-upload-panel";
 import {
   BookingApprovalReadinessPanel,
   getBookingApprovalReadiness,
@@ -139,8 +140,15 @@ export function BookingDetailView({
   portalLabel,
   documentTypes = [],
 }: BookingDetailViewProps) {
-  const { booking, units, participants, payments, statusHistory, activities } =
-    detail;
+  const {
+    booking,
+    units,
+    participants,
+    payments,
+    statusHistory,
+    activities,
+    documentRequests,
+  } = detail;
   const approvalReadiness = getBookingApprovalReadiness(detail);
 
   const timestampItems = [
@@ -204,6 +212,13 @@ export function BookingDetailView({
           />
         </>
       ) : null}
+
+      <BookingDocumentUploadPanel
+        bookingStatus={booking.status}
+        documentRequests={documentRequests}
+        portalLabel={portalLabel}
+      />
+
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
