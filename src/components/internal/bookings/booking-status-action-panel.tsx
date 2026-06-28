@@ -39,11 +39,15 @@ const statusOptions = [
   "PAYMENT_PENDING",
   "PAYMENT_VERIFIED",
   "APPROVED",
+  "LO_OBTAINED",
+  "LO_SIGNED",
+  "SPA_SIGNED",
+  "SOLD",
   "REJECTED",
   "CANCELLED",
 ] as const;
 
-const terminalStatuses = ["APPROVED", "REJECTED", "EXPIRED", "CANCELLED"];
+const terminalStatuses = ["SOLD", "REJECTED", "EXPIRED", "CANCELLED"];
 
 const statusDescriptions: Record<string, string> = {
   SUBMITTED: "Send booking for internal review",
@@ -52,7 +56,11 @@ const statusDescriptions: Record<string, string> = {
   DOCS_VERIFIED: "Documents have been checked",
   PAYMENT_PENDING: "Waiting for booking fee payment",
   PAYMENT_VERIFIED: "Booking fee payment confirmed",
-  APPROVED: "Approve and lock this booking",
+  APPROVED: "Approve this booking internally",
+  LO_OBTAINED: "LO obtained; unit fully locked pending LO signing",
+  LO_SIGNED: "LO signed by customer",
+  SPA_SIGNED: "SPA signed by customer",
+  SOLD: "Mark final sale completed",
   REJECTED: "Reject this booking with reason",
   CANCELLED: "Cancel this booking with reason",
 };
@@ -85,6 +93,14 @@ function getAllowedNextStatuses(currentStatus: string) {
       return ["PAYMENT_VERIFIED", "DOCS_PENDING", "REJECTED", "CANCELLED"] as const;
     case "PAYMENT_VERIFIED":
       return ["DOCS_PENDING", "DOCS_VERIFIED", "APPROVED", "REJECTED", "CANCELLED"] as const;
+    case "APPROVED":
+      return ["LO_OBTAINED", "REJECTED", "CANCELLED"] as const;
+    case "LO_OBTAINED":
+      return ["LO_SIGNED", "REJECTED", "CANCELLED"] as const;
+    case "LO_SIGNED":
+      return ["SPA_SIGNED", "CANCELLED"] as const;
+    case "SPA_SIGNED":
+      return ["SOLD", "CANCELLED"] as const;
     default:
       return [] as const;
   }
@@ -102,6 +118,14 @@ function getSuggestedNextStatus(currentStatus: string) {
       return "PAYMENT_VERIFIED";
     case "PAYMENT_VERIFIED":
       return "APPROVED";
+    case "APPROVED":
+      return "LO_OBTAINED";
+    case "LO_OBTAINED":
+      return "LO_SIGNED";
+    case "LO_SIGNED":
+      return "SPA_SIGNED";
+    case "SPA_SIGNED":
+      return "SOLD";
     default:
       return "";
   }

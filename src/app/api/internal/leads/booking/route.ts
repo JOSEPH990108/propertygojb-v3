@@ -7,6 +7,7 @@ import { z } from "zod";
 import { db, schema } from "@/db";
 import { errorJson, okJson, parseApiError } from "@/lib/api/json";
 import { requireRole } from "@/lib/auth/guards";
+import { getBookingReservationExpiresAt } from "@/lib/bookings/config";
 
 const createLeadBookingSchema = z.object({
   leadId: z.string().min(1, "Lead is required."),
@@ -45,13 +46,6 @@ async function createUniqueBookingCode() {
   throw new Error("Unable to generate booking code. Please try again.");
 }
 
-const defaultReservationExpiryDays = 3;
-
-function addDays(value: Date, days: number) {
-  const result = new Date(value);
-  result.setDate(result.getDate() + days);
-  return result;
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -140,7 +134,7 @@ export async function POST(request: NextRequest) {
     }
 
     const now = new Date();
-    const reservationExpiresAt = addDays(now, defaultReservationExpiryDays);
+    const reservationExpiresAt = await getBookingReservationExpiresAt(now);
     const bookingFeeAmount = validated.bookingFeeAmount.toFixed(2);
     const reservedPrice = unit.finalPrice ?? unit.basePrice;
 

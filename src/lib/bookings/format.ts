@@ -6,6 +6,17 @@ export type AppStatusBadgeTone =
   | "neutral";
 
 export function formatBookingStatus(value: string | null | undefined) {
+  switch (value) {
+    case "LO_OBTAINED":
+      return "LO Obtained";
+    case "LO_SIGNED":
+      return "LO Signed";
+    case "SPA_SIGNED":
+      return "SPA Signed";
+    default:
+      break;
+  }
+
   if (!value) {
     return "Unknown";
   }
@@ -21,6 +32,10 @@ export function getBookingStatusTone(
 ): AppStatusBadgeTone {
   switch (value) {
     case "APPROVED":
+    case "LO_OBTAINED":
+    case "LO_SIGNED":
+    case "SPA_SIGNED":
+    case "SOLD":
     case "PAYMENT_VERIFIED":
     case "DOCS_VERIFIED":
       return "success";

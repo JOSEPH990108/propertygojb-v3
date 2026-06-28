@@ -5,6 +5,7 @@ import { z } from "zod";
 import { db, schema } from "@/db";
 import { errorJson, okJson, parseApiError } from "@/lib/api/json";
 import { requireRole } from "@/lib/auth/guards";
+import { getBookingLoSignDueAt } from "@/lib/bookings/config";
 
 const bookingStatusOptions = [
   "DRAFT",
@@ -15,6 +16,10 @@ const bookingStatusOptions = [
   "PAYMENT_PENDING",
   "PAYMENT_VERIFIED",
   "APPROVED",
+  "LO_OBTAINED",
+  "LO_SIGNED",
+  "SPA_SIGNED",
+  "SOLD",
   "REJECTED",
   "EXPIRED",
   "CANCELLED",
@@ -29,7 +34,7 @@ const updateBookingStatusSchema = z.object({
 type BookingStatus = (typeof bookingStatusOptions)[number];
 
 const terminalStatuses: BookingStatus[] = [
-  "APPROVED",
+  "SOLD",
   "REJECTED",
   "EXPIRED",
   "CANCELLED",
@@ -37,16 +42,67 @@ const terminalStatuses: BookingStatus[] = [
 
 const validStatusTransitions: Record<BookingStatus, BookingStatus[]> = {
   DRAFT: ["SUBMITTED", "CANCELLED", "EXPIRED"],
-  SUBMITTED: ["UNDER_REVIEW", "DOCS_PENDING", "PAYMENT_PENDING", "REJECTED", "CANCELLED", "EXPIRED"],
-  UNDER_REVIEW: ["DOCS_PENDING", "PAYMENT_PENDING", "REJECTED", "CANCELLED", "EXPIRED"],
-  DOCS_PENDING: ["DOCS_VERIFIED", "PAYMENT_PENDING", "REJECTED", "CANCELLED", "EXPIRED"],
-  DOCS_VERIFIED: ["PAYMENT_PENDING", "PAYMENT_VERIFIED", "APPROVED", "REJECTED", "CANCELLED", "EXPIRED"],
-  PAYMENT_PENDING: ["PAYMENT_VERIFIED", "DOCS_PENDING", "REJECTED", "CANCELLED", "EXPIRED"],
-  PAYMENT_VERIFIED: ["DOCS_PENDING", "DOCS_VERIFIED", "APPROVED", "REJECTED", "CANCELLED", "EXPIRED"],
-  APPROVED: [],
+  SUBMITTED: [
+    "UNDER_REVIEW",
+    "DOCS_PENDING",
+    "PAYMENT_PENDING",
+    "REJECTED",
+    "CANCELLED",
+    "EXPIRED",
+  ],
+  UNDER_REVIEW: [
+    "DOCS_PENDING",
+    "PAYMENT_PENDING",
+    "REJECTED",
+    "CANCELLED",
+    "EXPIRED",
+  ],
+  DOCS_PENDING: [
+    "DOCS_VERIFIED",
+    "PAYMENT_PENDING",
+    "REJECTED",
+    "CANCELLED",
+    "EXPIRED",
+  ],
+  DOCS_VERIFIED: [
+    "PAYMENT_PENDING",
+    "PAYMENT_VERIFIED",
+    "APPROVED",
+    "REJECTED",
+    "CANCELLED",
+    "EXPIRED",
+  ],
+  PAYMENT_PENDING: [
+    "PAYMENT_VERIFIED",
+    "DOCS_PENDING",
+    "REJECTED",
+    "CANCELLED",
+    "EXPIRED",
+  ],
+  PAYMENT_VERIFIED: [
+    "DOCS_PENDING",
+    "DOCS_VERIFIED",
+    "APPROVED",
+    "REJECTED",
+    "CANCELLED",
+    "EXPIRED",
+  ],
+  APPROVED: ["LO_OBTAINED", "REJECTED", "CANCELLED", "EXPIRED"],
+  LO_OBTAINED: ["LO_SIGNED", "REJECTED", "CANCELLED", "EXPIRED"],
+  LO_SIGNED: ["SPA_SIGNED", "CANCELLED"],
+  SPA_SIGNED: ["SOLD", "CANCELLED"],
+  SOLD: [],
   REJECTED: [],
   EXPIRED: [],
   CANCELLED: [],
+};
+
+const unitStatusCodeByBookingStatus: Partial<Record<BookingStatus, readonly string[]>> = {
+  APPROVED: ["APPROVED", "BOOKING", "RESERVED"],
+  LO_OBTAINED: ["LO_OBTAINED"],
+  LO_SIGNED: ["LO_SIGNED"],
+  SPA_SIGNED: ["SPA_SIGNED"],
+  SOLD: ["SOLD"],
 };
 
 function isBookingStatus(value: string): value is BookingStatus {
@@ -112,6 +168,30 @@ function getStatusActivity(status: BookingStatus) {
         title: "Booking approved",
         body: "Booking was approved.",
       };
+    case "LO_OBTAINED":
+      return {
+        activityType: "BOOKING_LO_OBTAINED",
+        title: "LO obtained",
+        body: "Loan offer was obtained and the unit is locked pending LO signing.",
+      };
+    case "LO_SIGNED":
+      return {
+        activityType: "BOOKING_LO_SIGNED",
+        title: "LO signed",
+        body: "Loan offer was signed.",
+      };
+    case "SPA_SIGNED":
+      return {
+        activityType: "BOOKING_SPA_SIGNED",
+        title: "SPA signed",
+        body: "SPA was signed.",
+      };
+    case "SOLD":
+      return {
+        activityType: "BOOKING_SOLD",
+        title: "Booking sold",
+        body: "Booking was marked as sold.",
+      };
     case "REJECTED":
       return {
         activityType: "BOOKING_REJECTED",
@@ -150,6 +230,18 @@ async function findBookingStatusId(code: string) {
     .limit(1);
 
   return rows[0]?.id ?? null;
+}
+
+async function findFirstBookingStatusId(codes: readonly string[]) {
+  for (const code of codes) {
+    const statusId = await findBookingStatusId(code);
+
+    if (statusId) {
+      return statusId;
+    }
+  }
+
+  return null;
 }
 
 function toAmount(value: string | number | null | undefined) {
@@ -270,6 +362,10 @@ async function validateBookingApprovalUnitAvailability(booking: {
             eq(schema.bookings.status, "PAYMENT_PENDING"),
             eq(schema.bookings.status, "PAYMENT_VERIFIED"),
             eq(schema.bookings.status, "APPROVED"),
+            eq(schema.bookings.status, "LO_OBTAINED"),
+            eq(schema.bookings.status, "LO_SIGNED"),
+            eq(schema.bookings.status, "SPA_SIGNED"),
+            eq(schema.bookings.status, "SOLD"),
           ),
         ),
       )
@@ -430,31 +526,99 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      if (validated.nextStatus === "APPROVED") {
-        const soldStatusId =
-          (await findBookingStatusId("APPROVED")) ??
-          (await findBookingStatusId("SOLD")) ??
-          (await findBookingStatusId("RESERVED"));
+      const targetUnitStatusCodes =
+        unitStatusCodeByBookingStatus[validated.nextStatus];
 
-        if (soldStatusId) {
-          const bookingUnits = await tx
-            .select({
-              unitId: schema.bookingUnits.unitId,
+      if (targetUnitStatusCodes) {
+        const targetUnitStatusId =
+          await findFirstBookingStatusId(targetUnitStatusCodes);
+
+        const bookingUnits = await tx
+          .select({
+            id: schema.bookingUnits.id,
+            unitId: schema.bookingUnits.unitId,
+          })
+          .from(schema.bookingUnits)
+          .where(
+            and(
+              eq(schema.bookingUnits.bookingId, booking.id),
+              isNull(schema.bookingUnits.deletedAt),
+              isNull(schema.bookingUnits.releasedAt),
+            ),
+          );
+
+        if (validated.nextStatus === "LO_OBTAINED") {
+          await tx
+            .update(schema.bookingUnits)
+            .set({
+              loObtainedAt: now,
+              loSignDueAt: await getBookingLoSignDueAt(now),
+              updatedAt: now,
             })
-            .from(schema.bookingUnits)
             .where(
               and(
                 eq(schema.bookingUnits.bookingId, booking.id),
                 isNull(schema.bookingUnits.deletedAt),
+                isNull(schema.bookingUnits.releasedAt),
               ),
             );
+        }
 
+        if (validated.nextStatus === "LO_SIGNED") {
+          await tx
+            .update(schema.bookingUnits)
+            .set({
+              loSignedAt: now,
+              updatedAt: now,
+            })
+            .where(
+              and(
+                eq(schema.bookingUnits.bookingId, booking.id),
+                isNull(schema.bookingUnits.deletedAt),
+                isNull(schema.bookingUnits.releasedAt),
+              ),
+            );
+        }
+
+        if (validated.nextStatus === "SPA_SIGNED") {
+          await tx
+            .update(schema.bookingUnits)
+            .set({
+              spaSignedAt: now,
+              updatedAt: now,
+            })
+            .where(
+              and(
+                eq(schema.bookingUnits.bookingId, booking.id),
+                isNull(schema.bookingUnits.deletedAt),
+                isNull(schema.bookingUnits.releasedAt),
+              ),
+            );
+        }
+
+        if (validated.nextStatus === "SOLD") {
+          await tx
+            .update(schema.bookingUnits)
+            .set({
+              soldAt: now,
+              updatedAt: now,
+            })
+            .where(
+              and(
+                eq(schema.bookingUnits.bookingId, booking.id),
+                isNull(schema.bookingUnits.deletedAt),
+                isNull(schema.bookingUnits.releasedAt),
+              ),
+            );
+        }
+
+        if (targetUnitStatusId) {
           await Promise.all(
             bookingUnits.map((bookingUnit) =>
               tx
                 .update(schema.units)
                 .set({
-                  bookingStatusId: soldStatusId,
+                  bookingStatusId: targetUnitStatusId,
                   updatedAt: now,
                 })
                 .where(eq(schema.units.id, bookingUnit.unitId)),
