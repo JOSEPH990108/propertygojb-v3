@@ -9,6 +9,16 @@ export const activeBookingWorkflowStatuses = [
   "APPROVED",
 ] as const;
 
+export const expirableBookingWorkflowStatuses = [
+  "DRAFT",
+  "SUBMITTED",
+  "UNDER_REVIEW",
+  "DOCS_PENDING",
+  "DOCS_VERIFIED",
+  "PAYMENT_PENDING",
+  "PAYMENT_VERIFIED",
+] as const;
+
 export const inactiveBookingWorkflowStatuses = [
   "REJECTED",
   "EXPIRED",
