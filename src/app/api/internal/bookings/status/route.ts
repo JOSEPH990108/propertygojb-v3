@@ -1,4 +1,4 @@
-import { and, eq, isNull, or } from "drizzle-orm";
+import { and, eq, isNull, ne, or } from "drizzle-orm";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 
@@ -223,6 +223,78 @@ async function validateBookingApprovalReadiness(booking: {
   };
 }
 
+async function validateBookingApprovalUnitAvailability(booking: {
+  id: string;
+  bookingCode: string;
+}) {
+  const bookingUnits = await db
+    .select({
+      unitId: schema.bookingUnits.unitId,
+      unitNo: schema.units.unitNo,
+    })
+    .from(schema.bookingUnits)
+    .leftJoin(schema.units, eq(schema.bookingUnits.unitId, schema.units.id))
+    .where(
+      and(
+        eq(schema.bookingUnits.bookingId, booking.id),
+        isNull(schema.bookingUnits.deletedAt),
+        isNull(schema.bookingUnits.releasedAt),
+      ),
+    );
+
+  for (const bookingUnit of bookingUnits) {
+    const activeConflicts = await db
+      .select({
+        bookingId: schema.bookings.id,
+        bookingCode: schema.bookings.bookingCode,
+        bookingStatus: schema.bookings.status,
+      })
+      .from(schema.bookingUnits)
+      .innerJoin(
+        schema.bookings,
+        eq(schema.bookingUnits.bookingId, schema.bookings.id),
+      )
+      .where(
+        and(
+          eq(schema.bookingUnits.unitId, bookingUnit.unitId),
+          ne(schema.bookingUnits.bookingId, booking.id),
+          isNull(schema.bookingUnits.deletedAt),
+          isNull(schema.bookingUnits.releasedAt),
+          isNull(schema.bookings.deletedAt),
+          or(
+            eq(schema.bookings.status, "DRAFT"),
+            eq(schema.bookings.status, "SUBMITTED"),
+            eq(schema.bookings.status, "UNDER_REVIEW"),
+            eq(schema.bookings.status, "DOCS_PENDING"),
+            eq(schema.bookings.status, "DOCS_VERIFIED"),
+            eq(schema.bookings.status, "PAYMENT_PENDING"),
+            eq(schema.bookings.status, "PAYMENT_VERIFIED"),
+            eq(schema.bookings.status, "APPROVED"),
+          ),
+        ),
+      )
+      .limit(1);
+
+    const conflict = activeConflicts[0];
+
+    if (conflict) {
+      const unitLabel = bookingUnit.unitNo
+        ? `Unit ${bookingUnit.unitNo}`
+        : "Selected unit";
+
+      return {
+        ok: false,
+        message: `${unitLabel} already has active booking ${conflict.bookingCode}. Release or cancel the conflicting booking before approving ${booking.bookingCode}.`,
+      };
+    }
+  }
+
+  return {
+    ok: true,
+    message: null,
+  };
+}
+
 export async function POST(request: NextRequest) {
   try {
     const authContext = await requireRole(
@@ -281,6 +353,15 @@ export async function POST(request: NextRequest) {
 
       if (!readiness.ok) {
         return errorJson(readiness.message ?? "Booking is not ready for approval.", 400);
+      }
+
+      const unitAvailability = await validateBookingApprovalUnitAvailability(booking);
+
+      if (!unitAvailability.ok) {
+        return errorJson(
+          unitAvailability.message ?? "Booking unit is not available for approval.",
+          400,
+        );
       }
     }
 
