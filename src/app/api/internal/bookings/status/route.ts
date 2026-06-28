@@ -28,7 +28,41 @@ const updateBookingStatusSchema = z.object({
 
 type BookingStatus = (typeof bookingStatusOptions)[number];
 
-const terminalStatuses: BookingStatus[] = ["APPROVED", "REJECTED", "EXPIRED", "CANCELLED"];
+const terminalStatuses: BookingStatus[] = [
+  "APPROVED",
+  "REJECTED",
+  "EXPIRED",
+  "CANCELLED",
+];
+
+const validStatusTransitions: Record<BookingStatus, BookingStatus[]> = {
+  DRAFT: ["SUBMITTED", "CANCELLED", "EXPIRED"],
+  SUBMITTED: ["UNDER_REVIEW", "DOCS_PENDING", "PAYMENT_PENDING", "REJECTED", "CANCELLED", "EXPIRED"],
+  UNDER_REVIEW: ["DOCS_PENDING", "PAYMENT_PENDING", "REJECTED", "CANCELLED", "EXPIRED"],
+  DOCS_PENDING: ["DOCS_VERIFIED", "PAYMENT_PENDING", "REJECTED", "CANCELLED", "EXPIRED"],
+  DOCS_VERIFIED: ["PAYMENT_PENDING", "PAYMENT_VERIFIED", "APPROVED", "REJECTED", "CANCELLED", "EXPIRED"],
+  PAYMENT_PENDING: ["PAYMENT_VERIFIED", "DOCS_PENDING", "REJECTED", "CANCELLED", "EXPIRED"],
+  PAYMENT_VERIFIED: ["DOCS_PENDING", "DOCS_VERIFIED", "APPROVED", "REJECTED", "CANCELLED", "EXPIRED"],
+  APPROVED: [],
+  REJECTED: [],
+  EXPIRED: [],
+  CANCELLED: [],
+};
+
+function isBookingStatus(value: string): value is BookingStatus {
+  return bookingStatusOptions.includes(value as BookingStatus);
+}
+
+function canTransitionBookingStatus(
+  currentStatus: string,
+  nextStatus: BookingStatus,
+) {
+  if (!isBookingStatus(currentStatus)) {
+    return false;
+  }
+
+  return validStatusTransitions[currentStatus].includes(nextStatus);
+}
 
 function isReasonRequired(status: BookingStatus) {
   return status === "REJECTED" || status === "CANCELLED";
@@ -231,11 +265,15 @@ export async function POST(request: NextRequest) {
       return errorJson("Booking already has this status.", 400);
     }
 
-    if (
-      terminalStatuses.includes(booking.status as BookingStatus) &&
-      booking.status !== "APPROVED"
-    ) {
+    if (terminalStatuses.includes(booking.status as BookingStatus)) {
       return errorJson("Terminal booking status cannot be changed.", 400);
+    }
+
+    if (!canTransitionBookingStatus(booking.status, validated.nextStatus)) {
+      return errorJson(
+        `Cannot change booking status from ${booking.status} to ${validated.nextStatus}.`,
+        400,
+      );
     }
 
     if (validated.nextStatus === "APPROVED") {

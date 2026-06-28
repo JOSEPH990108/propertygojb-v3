@@ -57,6 +57,39 @@ const statusDescriptions: Record<string, string> = {
   CANCELLED: "Cancel this booking with reason",
 };
 
+function getAllowedNextStatuses(currentStatus: string) {
+  switch (currentStatus) {
+    case "DRAFT":
+      return ["SUBMITTED", "CANCELLED"] as const;
+    case "SUBMITTED":
+      return [
+        "UNDER_REVIEW",
+        "DOCS_PENDING",
+        "PAYMENT_PENDING",
+        "REJECTED",
+        "CANCELLED",
+      ] as const;
+    case "UNDER_REVIEW":
+      return ["DOCS_PENDING", "PAYMENT_PENDING", "REJECTED", "CANCELLED"] as const;
+    case "DOCS_PENDING":
+      return ["DOCS_VERIFIED", "PAYMENT_PENDING", "REJECTED", "CANCELLED"] as const;
+    case "DOCS_VERIFIED":
+      return [
+        "PAYMENT_PENDING",
+        "PAYMENT_VERIFIED",
+        "APPROVED",
+        "REJECTED",
+        "CANCELLED",
+      ] as const;
+    case "PAYMENT_PENDING":
+      return ["PAYMENT_VERIFIED", "DOCS_PENDING", "REJECTED", "CANCELLED"] as const;
+    case "PAYMENT_VERIFIED":
+      return ["DOCS_PENDING", "DOCS_VERIFIED", "APPROVED", "REJECTED", "CANCELLED"] as const;
+    default:
+      return [] as const;
+  }
+}
+
 function getSuggestedNextStatus(currentStatus: string) {
   switch (currentStatus) {
     case "DRAFT":
@@ -145,15 +178,21 @@ export function BookingStatusActionPanel({
   const [reasonNote, setReasonNote] = useState("");
 
   const isTerminal = terminalStatuses.includes(currentStatus);
+  const allowedNextStatuses = useMemo(
+    () => [...getAllowedNextStatuses(currentStatus)],
+    [currentStatus],
+  );
 
   const options = useMemo<AppSelectOption[]>(
     () =>
-      statusOptions.map((status) => ({
-        value: status,
-        label: formatBookingStatus(status),
-        leading: <StatusDot status={status} />,
-      })),
-    [],
+      statusOptions
+        .filter((status) => allowedNextStatuses.includes(status))
+        .map((status) => ({
+          value: status,
+          label: formatBookingStatus(status),
+          leading: <StatusDot status={status} />,
+        })),
+    [allowedNextStatuses],
   );
 
   const selectedStatusDescription =
