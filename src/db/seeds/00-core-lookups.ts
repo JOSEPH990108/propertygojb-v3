@@ -124,6 +124,7 @@ export async function seedCoreLookups(db: DB) {
       { code: "UPCOMING", name: "Upcoming" },
       { code: "SUBSALE", name: "Subsale" },
       { code: "FULLY_SOLD", name: "Fully Sold" },
+      { code: "COMING_SOON", name: "Coming Soon" },
     ])
     .onConflictDoNothing();
 
@@ -141,6 +142,11 @@ export async function seedCoreLookups(db: DB) {
     .values([
       { code: "AVAILABLE", name: "Available" },
       { code: "RESERVED", name: "Reserved" },
+      { code: "BOOKING", name: "Booking" },
+      { code: "APPROVED", name: "Approved" },
+      { code: "LO_OBTAINED", name: "LO Obtained" },
+      { code: "LO_SIGNED", name: "LO Signed" },
+      { code: "SPA_SIGNED", name: "SPA Signed" },
       { code: "SOLD", name: "Sold" },
       { code: "CANCELLED", name: "Cancelled" },
     ])

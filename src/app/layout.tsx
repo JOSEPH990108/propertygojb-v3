@@ -1,3 +1,4 @@
+import { AppConfirmProvider } from "@/components/common/app-confirm-provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
@@ -25,7 +26,8 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased`}>
         {children}
         <AppToastProvider />
-      </body>
+                <AppConfirmProvider />
+        </body>
     </html>
   );
 }
