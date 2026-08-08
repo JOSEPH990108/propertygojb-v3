@@ -79,6 +79,7 @@ export const otpPurposeEnum = pgEnum("otp_purpose", [
   "LOGIN",
   "REGISTER",
   "PASSWORD_RESET",
+  "PHONE_CHANGE",
 ]);
 
 export const otpChannelEnum = pgEnum("otp_channel", [

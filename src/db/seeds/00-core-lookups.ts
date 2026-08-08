@@ -187,6 +187,8 @@ export async function seedCoreLookups(db: DB) {
       { code: "END", name: "End" },
       { code: "EU", name: "End Unit" },
       { code: "EUL", name: "End Unit (Extra Land)" },
+      { code: "CITY_VIEW", name: "City View" },
+      { code: "SEA_VIEW", name: "Sea View" },
     ])
     .onConflictDoNothing();
 

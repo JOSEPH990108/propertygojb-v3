@@ -40,7 +40,7 @@ const projectImportUnitSchema = z.object({
   unitNo: z.string().trim().min(1).max(50),
   layoutCode: z.string().trim().optional().nullable(),
   lotType: lookupRefSchema,
-  bookingStatus: lookupRefSchema.default("AVAILABLE"),
+  bookingStatus: optionalLookupRefSchema,
   floor: z.coerce.number().int().optional().nullable(),
   stack: z.string().trim().optional().nullable(),
   streetName: z.string().trim().optional().nullable(),
@@ -62,6 +62,35 @@ const nearbyPlaceSchema = z.object({
   category: z.string().trim().min(1).max(50).default("OTHER"),
   distanceKm: z.coerce.number().min(0).optional().nullable(),
   sortOrder: z.coerce.number().int().min(0).default(0),
+});
+
+const availabilityPlanSchema = z.object({
+  towerCode: z.string().trim().min(1).max(50),
+  plan: z.object({
+    physicalStacks: z.array(z.string().trim().min(1)).optional(),
+    viewGroups: z.array(z.array(z.string().trim().min(1)).min(1)).optional(),
+    floorOverrides: z
+      .record(
+        z.string().trim().min(1),
+        z.object({
+          mergedFootprints: z
+            .array(z.array(z.string().trim().min(1)).min(1))
+            .optional(),
+          serviceBlocks: z
+            .array(
+              z.object({
+                label: z.string().trim().min(1),
+                stacks: z.array(z.string().trim().min(1)).min(1),
+              }),
+            )
+            .optional(),
+          unitStackToPhysicalStack: z
+            .record(z.string().trim().min(1), z.string().trim().min(1))
+            .optional(),
+        }),
+      )
+      .optional(),
+  }),
 });
 
 export const projectImportSchema = z.object({
@@ -89,6 +118,7 @@ export const projectImportSchema = z.object({
   amenities: z.array(z.string().trim().min(1)).default([]),
   tags: z.array(z.string().trim().min(1)).default([]),
   nearbyPlaces: z.array(nearbyPlaceSchema).default([]),
+  availabilityPlans: z.array(availabilityPlanSchema).default([]),
 });
 
 export type LookupRef = z.infer<typeof lookupRefSchema>;
