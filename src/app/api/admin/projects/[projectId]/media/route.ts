@@ -4,12 +4,15 @@ import { z } from "zod";
 
 import { db, schema } from "@/db";
 import { errorJson, okJson, parseApiError } from "@/lib/api/json";
-import { requireRole } from "@/lib/auth/guards";
+import { writeAuditLog } from "@/lib/audit/log";
+import { externalImageUrlSchema } from "@/lib/admin/project-content-validation";
+import { authorizeApiRoles } from "@/lib/auth/api-guards";
+import { revalidatePublicProjectData } from "@/lib/public/project-revalidation";
 
 const optionalId = z
   .string()
   .trim()
-  .optional()
+  .nullish()
   .transform((value) => {
     const trimmedValue = value?.trim();
 
@@ -34,7 +37,9 @@ const optionalText = (max: number) =>
 const mediaActionSchema = z.discriminatedUnion("action", [
   z.object({
     action: z.literal("create"),
-    url: z.string().trim().url("Image URL must be valid.").max(1000),
+    url: externalImageUrlSchema.refine((value): value is string => Boolean(value), {
+      message: "Image URL is required.",
+    }),
     mediaTypeId: optionalId,
     caption: optionalText(300),
     sortOrder: z.coerce.number().int().min(0).max(999999).default(0),
@@ -135,7 +140,14 @@ export async function POST(
   context: { params: Promise<{ projectId: string }> },
 ) {
   try {
-    await requireRole(["ADMIN", "SUPER_ADMIN"], "/admin/projects");
+    const authorization = await authorizeApiRoles(["ADMIN", "SUPER_ADMIN"]);
+
+    if (!authorization.ok) {
+      return errorJson(authorization.message, authorization.status);
+    }
+
+    const { authContext } = authorization;
+    const currentUser = authContext.user as { id?: string };
 
     const { projectId } = await context.params;
     const projectExists = await assertProjectExists(projectId);
@@ -147,19 +159,52 @@ export async function POST(
     const body = await request.json();
     const validated = mediaActionSchema.parse(body);
 
+    async function auditMedia(params: {
+      actionType: string;
+      changeSummary: string;
+      beforeJson?: unknown;
+      afterJson?: unknown;
+    }) {
+      await writeAuditLog({
+        actionType: params.actionType,
+        entityType: "PROJECT_MEDIA",
+        entityId: projectId,
+        actorUserId: currentUser.id,
+        actorRoleId: authContext.roleId,
+        sourceApp: "ADMIN_PORTAL",
+        changeSummary: params.changeSummary,
+        beforeJson: params.beforeJson,
+        afterJson: params.afterJson,
+        request,
+      });
+
+      await revalidatePublicProjectData();
+    }
+
     if (validated.action === "create") {
       const fileId = await getOrCreateExternalFile(validated.url);
 
-      await db.insert(schema.projectMedia).values({
-        projectId,
-        fileId,
-        mediaTypeId: validated.mediaTypeId,
-        caption: validated.caption,
-        sortOrder: validated.sortOrder,
+      const inserted = await db
+        .insert(schema.projectMedia)
+        .values({
+          projectId,
+          fileId,
+          mediaTypeId: validated.mediaTypeId,
+          caption: validated.caption,
+          sortOrder: validated.sortOrder,
+        })
+        .returning({ id: schema.projectMedia.id });
+
+      await auditMedia({
+        actionType: "CREATE_PROJECT_MEDIA",
+        changeSummary: "Added an external image to the project media library.",
+        afterJson: { id: inserted[0]?.id, fileId, ...validated },
       });
 
       return okJson({
         message: "Project media added successfully.",
+        mediaId: inserted[0]?.id,
+        fileId,
       });
     }
 
@@ -173,6 +218,10 @@ export async function POST(
     }
 
     if (validated.action === "update") {
+      const before = await db.query.projectMedia.findFirst({
+        where: (table, { eq }) => eq(table.id, validated.mediaId),
+      });
+
       await db
         .update(schema.projectMedia)
         .set({
@@ -183,19 +232,54 @@ export async function POST(
         })
         .where(eq(schema.projectMedia.id, validated.mediaId));
 
+      await auditMedia({
+        actionType: "UPDATE_PROJECT_MEDIA",
+        changeSummary: "Updated project media presentation details.",
+        beforeJson: before,
+        afterJson: validated,
+      });
+
       return okJson({
         message: "Project media updated successfully.",
       });
     }
 
-    await db
-      .delete(schema.projectMedia)
-      .where(
-        and(
-          eq(schema.projectMedia.id, validated.mediaId),
-          eq(schema.projectMedia.projectId, projectId),
-        ),
-      );
+    const before = await db.query.projectMedia.findFirst({
+      where: (table, { and, eq }) =>
+        and(eq(table.id, validated.mediaId), eq(table.projectId, projectId)),
+    });
+
+    if (!before) {
+      return errorJson("Project media not found.", 404);
+    }
+
+    await db.transaction(async (tx) => {
+      await tx
+        .delete(schema.projectMedia)
+        .where(
+          and(
+            eq(schema.projectMedia.id, validated.mediaId),
+            eq(schema.projectMedia.projectId, projectId),
+          ),
+        );
+
+      await tx
+        .update(schema.projects)
+        .set({ ogImageFileId: null, updatedAt: new Date() })
+        .where(
+          and(
+            eq(schema.projects.id, projectId),
+            eq(schema.projects.ogImageFileId, before.fileId),
+          ),
+        );
+    });
+
+    await auditMedia({
+      actionType: "REMOVE_PROJECT_MEDIA",
+      changeSummary: "Removed an image from the project media library.",
+      beforeJson: before,
+      afterJson: { removed: true, ogImageSelectionCleared: true },
+    });
 
     return okJson({
       message: "Project media removed successfully.",

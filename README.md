@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Realtime Public Project Updates
 
-## Getting Started
+To publish project visibility and content updates to customers immediately, create a free Ably app and add its API key to your deployment environment:
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```env
+ABLY_API_KEY="your-ably-api-key"
+NEXT_PUBLIC_ABLY_ENABLED="true"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`ABLY_API_KEY` remains server-only. Public browsers receive short-lived tokens restricted to subscribing to the `public-projects` channel. When Ably is not configured, public pages use a visibility-aware 60-second version check instead.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# PropertyGoJB
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+PropertyGoJB is one Next.js application with three product surfaces:
 
-## Learn More
+- **External website and customer account**: project discovery, enquiries, bookings, and profile.
+- **Agent portal**: operational lead, booking, customer, document, and appointment workflows.
+- **Admin portal**: catalog, users, agents, CRM, governance, reporting, and settings.
 
-To learn more about Next.js, take a look at the following resources:
+## Local Setup
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Copy `.env.example` to `.env.local` and provide a PostgreSQL connection plus a strong Better Auth secret.
+2. Install dependencies with `npm install`.
+3. Apply migrations with `npm run db:migrate`.
+4. Seed required lookup data with `npm run db:seed`.
+5. Start development with `npm run dev`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The public site is available at `http://localhost:3000`. Admin and agent access depend on the assigned database role.
 
-## Deploy on Vercel
+## Validation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Run these before merging:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run typecheck
+npm run lint
+npm run test
+npm run build
+```
+
+## Architecture Rules
+
+- Keep production catalog, inventory, lead, and booking data in PostgreSQL. Do not copy database records into mock files.
+- Put static public presentation copy in `src/config/public-content.ts`.
+- Put brand, canonical URL, contact, and provider configuration in `src/config/app.ts` and `src/config/public-site.ts`.
+- Reuse `src/components/common/` across systems when behavior is genuinely shared. Keep role-specific workflows in their own component trees.
+- Record meaningful business mutations with `src/lib/audit/log.ts`. Page views and campaign events belong in the consented analytics layer.
+- Use semantic theme classes (`bg-background`, `text-foreground`, `bg-card`, `text-muted-foreground`) for new UI.
+- Use `AppReveal` for viewport motion. It automatically respects reduced-motion preferences.
+
+See [docs/EXTERNAL_WEBSITE.md](docs/EXTERNAL_WEBSITE.md) for extension and marketing guidance and [docs/EXTERNAL_QA.md](docs/EXTERNAL_QA.md) for evidence-based completion gates.

@@ -1,243 +1,135 @@
-import Image from "next/image";
 import Link from "next/link";
-import { and, asc, eq, inArray, isNull } from "drizzle-orm";
-import { ArrowRight, Building2, Home, MapPin, Sparkles } from "lucide-react";
+import { ArrowRight, Building2, Sparkles } from "lucide-react";
 
-import { db, schema } from "@/db";
+import { AppReveal } from "@/components/common/app-reveal";
+import { PublicProjectCard } from "@/components/public/public-project-card";
+import { PublicProjectsFilters } from "@/components/public/public-projects-filters";
+import {
+  buildPublicProjectFilterOptions,
+  filterPublicProjects,
+  getPublicProjectCatalog,
+} from "@/lib/public/projects";
+import { buildPublicPageMetadata } from "@/lib/public/seo";
 
-function formatPrice(value: string | null | undefined) {
-  if (!value) {
-    return "Contact for price";
-  }
+type ProjectsPageProps = {
+  searchParams?: Promise<{
+    q?: string;
+    regionId?: string;
+    areaId?: string;
+    statusId?: string;
+    propertyTypeId?: string;
+  }>;
+};
 
-  const amount = Number(value);
+export const metadata = buildPublicPageMetadata({
+  title: "Projects",
+  description:
+    "Browse all published PropertyGoJB projects with search and location filters.",
+  path: "/projects",
+  socialTitle: "PropertyGoJB Projects",
+});
 
-  if (!Number.isFinite(amount) || amount <= 0) {
-    return "Contact for price";
-  }
-
-  return `From RM ${amount.toLocaleString("en-MY", {
-    maximumFractionDigits: 0,
-  })}`;
-}
-
-function getMinPrice(
-  units: {
-    projectId: string;
-    basePrice: string;
-    finalPrice: string | null;
-  }[],
-  projectId: string,
-) {
-  const prices = units
-    .filter((unit) => unit.projectId === projectId)
-    .map((unit) => Number(unit.finalPrice ?? unit.basePrice))
-    .filter((price) => Number.isFinite(price) && price > 0);
-
-  if (prices.length === 0) {
-    return null;
-  }
-
-  return String(Math.min(...prices));
-}
-
-export default async function ProjectsPage() {
-  const projects = await db
-    .select({
-      id: schema.projects.id,
-      slug: schema.projects.slug,
-      name: schema.projects.name,
-      displayName: schema.projects.displayName,
-      totalUnits: schema.projects.totalUnits,
-      isHotDeal: schema.projects.isHotDeal,
-      developerName: schema.developers.legalName,
-      propertyTypeName: schema.propertyTypes.name,
-      tenureName: schema.tenureTypes.name,
-      regionName: schema.regions.name,
-      areaName: schema.areas.name,
-    })
-    .from(schema.projects)
-    .innerJoin(schema.developers, eq(schema.projects.developerId, schema.developers.id))
-    .leftJoin(schema.propertyTypes, eq(schema.projects.propertyTypeId, schema.propertyTypes.id))
-    .leftJoin(schema.tenureTypes, eq(schema.projects.tenureTypeId, schema.tenureTypes.id))
-    .leftJoin(schema.regions, eq(schema.projects.regionId, schema.regions.id))
-    .leftJoin(schema.areas, eq(schema.projects.areaId, schema.areas.id))
-    .where(
-      and(
-        eq(schema.projects.isPublished, true),
-        isNull(schema.projects.deletedAt),
-      ),
-    )
-    .orderBy(asc(schema.projects.name));
-
-  const projectIds = projects.map((project) => project.id);
-
-  const [mediaItems, units] =
-    projectIds.length > 0
-      ? await Promise.all([
-          db
-            .select({
-              projectId: schema.projectMedia.projectId,
-              url: schema.files.url,
-              key: schema.files.key,
-              caption: schema.projectMedia.caption,
-            })
-            .from(schema.projectMedia)
-            .innerJoin(schema.files, eq(schema.projectMedia.fileId, schema.files.id))
-            .where(inArray(schema.projectMedia.projectId, projectIds))
-            .orderBy(asc(schema.projectMedia.sortOrder), asc(schema.projectMedia.createdAt)),
-
-          db
-            .select({
-              projectId: schema.units.projectId,
-              basePrice: schema.units.basePrice,
-              finalPrice: schema.units.finalPrice,
-            })
-            .from(schema.units)
-            .where(inArray(schema.units.projectId, projectIds)),
-        ])
-      : [[], []];
-
-  const firstMediaByProject = new Map<string, (typeof mediaItems)[number]>();
-
-  for (const media of mediaItems) {
-    if (!firstMediaByProject.has(media.projectId)) {
-      firstMediaByProject.set(media.projectId, media);
-    }
-  }
+export default async function ProjectsPage({ searchParams }: ProjectsPageProps) {
+  const params = searchParams ? await searchParams : {};
+  const catalog = await getPublicProjectCatalog();
+  const filteredProjects = filterPublicProjects(catalog, {
+    q: params.q,
+    regionId: params.regionId,
+    areaId: params.areaId,
+    statusId: params.statusId,
+    propertyTypeId: params.propertyTypeId,
+  });
+  const { regionOptions, areaOptions, statusOptions, propertyTypeOptions } =
+    buildPublicProjectFilterOptions(catalog);
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-900 to-blue-600 px-6 py-20 text-white">
-        <div className="absolute -right-20 -top-20 size-80 rounded-full bg-white/10 blur-3xl" />
-        <div className="mx-auto max-w-7xl">
+    <div className="bg-muted/40">
+      <section className="relative overflow-hidden bg-slate-950 text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.32),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.08),transparent_28%)]" />
+        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
           <p className="text-sm font-black uppercase tracking-[0.28em] text-blue-100">
             PropertyGoJB
           </p>
           <h1 className="mt-4 max-w-3xl text-4xl font-black tracking-tight sm:text-5xl">
-            Explore New Launch Projects in Johor Bahru
+            Explore published projects in Johor Bahru
           </h1>
           <p className="mt-5 max-w-2xl text-sm leading-7 text-blue-100 sm:text-base">
-            Browse available projects, layouts, unit prices, and project details
-            directly from the live database.
+            Search by project name, location, status, or type, then open each project for detailed layouts, unit availability, and enquiry options.
           </p>
+
+          <div className="mt-10 flex flex-wrap gap-3 text-sm font-bold text-white/80">
+            <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur">
+              {catalog.length} published projects
+            </span>
+            <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur">
+              {catalog.reduce((sum, project) => sum + project.availableUnitCount, 0)} available units
+            </span>
+            <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur">
+              {catalog.filter((project) => project.isHotDeal).length} hot deals
+            </span>
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-12">
-        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <PublicProjectsFilters
+          filters={{
+            q: params.q ?? "",
+            regionId: params.regionId ?? "",
+            areaId: params.areaId ?? "",
+            statusId: params.statusId ?? "",
+            propertyTypeId: params.propertyTypeId ?? "",
+          }}
+          regionOptions={regionOptions}
+          areaOptions={areaOptions}
+          statusOptions={statusOptions}
+          propertyTypeOptions={propertyTypeOptions}
+        />
+
+        <AppReveal className="mt-8 flex items-end justify-between gap-6">
           <div>
-            <h2 className="text-2xl font-black tracking-tight text-slate-950">
+            <h2 className="text-2xl font-black tracking-tight text-foreground sm:text-3xl">
               Available Projects
             </h2>
-            <p className="mt-2 text-sm text-slate-500">
-              Showing published projects only.
+            <p className="mt-2 text-sm text-muted-foreground">
+              Showing {filteredProjects.length} project{filteredProjects.length === 1 ? "" : "s"} matching your filters.
             </p>
           </div>
 
-          <span className="inline-flex w-fit rounded-full bg-blue-50 px-4 py-2 text-sm font-black text-blue-700 ring-1 ring-blue-100">
-            {projects.length} Project(s)
-          </span>
-        </div>
+          <div className="hidden items-center gap-2 text-sm font-black text-blue-700 md:inline-flex">
+            <Sparkles className="size-4" />
+            Live database results
+          </div>
+        </AppReveal>
 
-        {projects.length === 0 ? (
-          <div className="rounded-[2rem] border border-dashed border-slate-300 bg-white p-12 text-center shadow-sm">
-            <Sparkles className="mx-auto size-10 text-slate-300" />
-            <h3 className="mt-4 text-xl font-black text-slate-950">
-              Projects updating soon
+        {filteredProjects.length === 0 ? (
+          <AppReveal className="mt-8 rounded-[2rem] border border-dashed border-border bg-background p-12 text-center shadow-sm">
+            <Building2 className="mx-auto size-10 text-muted-foreground/50" />
+            <h3 className="mt-4 text-xl font-black text-foreground">
+              No projects match the current filters
             </h3>
-            <p className="mt-2 text-sm text-slate-500">
-              Publish a project from Admin Project Detail to show it here.
+            <p className="mt-2 text-sm text-muted-foreground">
+              Clear the filters or try a different location and project type.
             </p>
-          </div>
+          </AppReveal>
         ) : (
-          <div className="grid gap-6 lg:grid-cols-3">
-            {projects.map((project) => {
-              const media = firstMediaByProject.get(project.id);
-              const imageUrl = media?.url ?? media?.key ?? null;
-              const minPrice = getMinPrice(units, project.id);
-              const projectName = project.displayName ?? project.name;
-              const location =
-                [project.areaName, project.regionName].filter(Boolean).join(", ") ||
-                "Location updating soon";
-
-              return (
-                <Link
-                  key={project.id}
-                  href={`/projects/${project.slug}`}
-                  className="group overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl"
-                >
-                  <div className="relative h-56 bg-slate-100">
-                    {imageUrl ? (
-                      <Image
-                        src={imageUrl}
-                        alt={media?.caption ?? projectName}
-                        fill
-                        unoptimized
-                        sizes="(min-width: 1024px) 33vw, 100vw"
-                        className="object-cover transition duration-500 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="flex h-full items-center justify-center bg-gradient-to-br from-blue-50 to-slate-100">
-                        <Building2 className="size-14 text-blue-200" />
-                      </div>
-                    )}
-
-                    {project.isHotDeal ? (
-                      <span className="absolute left-4 top-4 rounded-full bg-red-600 px-3 py-1 text-xs font-black uppercase tracking-wide text-white shadow-lg">
-                        Hot Deal
-                      </span>
-                    ) : null}
-                  </div>
-
-                  <div className="p-6">
-                    <h3 className="text-xl font-black tracking-tight text-slate-950">
-                      {projectName}
-                    </h3>
-
-                    <p className="mt-2 text-sm font-semibold text-slate-500">
-                      {project.developerName ?? "Developer updating soon"}
-                    </p>
-
-                    <div className="mt-5 space-y-3 text-sm text-slate-600">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="size-4 text-blue-600" />
-                        <span>{location}</span>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <Home className="size-4 text-blue-600" />
-                        <span>
-                          {project.propertyTypeName ?? "Property type updating soon"}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <Building2 className="size-4 text-blue-600" />
-                        <span>
-                          {project.tenureName ?? "Tenure updating soon"} ·{" "}
-                          {project.totalUnits || 0} units
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="mt-6 flex items-center justify-between">
-                      <p className="text-lg font-black text-blue-700">
-                        {formatPrice(minPrice)}
-                      </p>
-
-                      <span className="inline-flex items-center gap-2 text-sm font-black text-slate-950 transition group-hover:text-blue-700">
-                        View Details
-                        <ArrowRight className="size-4 transition group-hover:translate-x-1" />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+          <AppReveal delay={0.08} className="mt-8 grid gap-6 lg:grid-cols-3">
+            {filteredProjects.map((project) => (
+              <PublicProjectCard key={project.id} project={project} />
+            ))}
+          </AppReveal>
         )}
+
+        <div className="mt-10 flex justify-center">
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-3 text-sm font-black text-foreground shadow-sm transition hover:bg-accent"
+          >
+            Need help choosing a project?
+            <ArrowRight className="size-4" />
+          </Link>
+        </div>
       </section>
-    </main>
+    </div>
   );
 }

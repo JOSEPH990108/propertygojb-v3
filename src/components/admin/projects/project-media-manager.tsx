@@ -251,13 +251,14 @@ export function ProjectMediaManager({
           Add Media
         </h2>
         <p className="mt-1 text-sm text-slate-500">
-          For now, add media by image URL. Upload/R2 integration can come later.
+          Add a public HTTPS JPG, PNG, WebP, or GIF URL. Binary uploads require the future R2/S3 storage integration.
         </p>
 
         <div className="mt-6 grid gap-4 xl:grid-cols-[1.8fr_1fr_1.2fr_0.5fr_auto] xl:items-end">
           <label className="space-y-2">
             <span className="text-sm font-bold text-slate-700">Image URL</span>
             <Input
+              type="url"
               value={url}
               onChange={(event) => setUrl(event.target.value)}
               placeholder="https://example.com/project-image.jpg"

@@ -4,7 +4,8 @@ import { z } from "zod";
 
 import { db, schema } from "@/db";
 import { errorJson, okJson, parseApiError } from "@/lib/api/json";
-import { requireRole } from "@/lib/auth/guards";
+import { authorizeApiRoles } from "@/lib/auth/api-guards";
+import { revalidatePublicProjectData } from "@/lib/public/project-revalidation";
 
 const optionalId = z
   .string()
@@ -49,7 +50,6 @@ const updateProjectSchema = z.object({
   totalUnits: z.coerce.number().int().min(0).max(100000).default(0),
   launchYear: z.coerce.number().int().min(1900).max(2100).nullable().optional(),
   isHotDeal: z.boolean().default(false),
-  isPublished: z.boolean().default(false),
 });
 
 export async function POST(
@@ -57,7 +57,11 @@ export async function POST(
   context: { params: Promise<{ projectId: string }> },
 ) {
   try {
-    await requireRole(["ADMIN", "SUPER_ADMIN"], "/admin/projects");
+    const authorization = await authorizeApiRoles(["ADMIN", "SUPER_ADMIN"]);
+
+    if (!authorization.ok) {
+      return errorJson(authorization.message, authorization.status);
+    }
 
     const { projectId } = await context.params;
     const body = await request.json();
@@ -173,10 +177,11 @@ export async function POST(
         totalUnits: validated.totalUnits,
         launchYear: validated.launchYear ?? null,
         isHotDeal: validated.isHotDeal,
-        isPublished: validated.isPublished,
         updatedAt: new Date(),
       })
       .where(eq(schema.projects.id, projectId));
+
+    await revalidatePublicProjectData();
 
     return okJson({
       projectId,

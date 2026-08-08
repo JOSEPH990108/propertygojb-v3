@@ -1,4 +1,5 @@
 import { AppConfirmProvider } from "@/components/common/app-confirm-provider";
+import { AppThemeProvider } from "@/components/common/app-theme-provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
@@ -22,11 +23,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
-        {children}
-        <AppToastProvider />
-                <AppConfirmProvider />
+        <AppThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+          <AppToastProvider />
+          <AppConfirmProvider />
+        </AppThemeProvider>
         </body>
     </html>
   );

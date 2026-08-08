@@ -5,6 +5,7 @@ import { z } from "zod";
 import { db, schema } from "@/db";
 import { errorJson, okJson, parseApiError } from "@/lib/api/json";
 import { requireRole } from "@/lib/auth/guards";
+import { revalidatePublicProjectData } from "@/lib/public/project-revalidation";
 
 const optionalId = z
   .string()
@@ -188,6 +189,8 @@ export async function POST(
         .delete(schema.projectLayouts)
         .where(eq(schema.projectLayouts.id, validated.layoutId));
 
+      await revalidatePublicProjectData();
+
       return okJson({
         message: "Project layout removed successfully.",
       });
@@ -240,6 +243,8 @@ export async function POST(
         ...payload,
       });
 
+      await revalidatePublicProjectData();
+
       return okJson({
         message: "Project layout created successfully.",
       });
@@ -261,6 +266,8 @@ export async function POST(
         updatedAt: new Date(),
       })
       .where(eq(schema.projectLayouts.id, validated.layoutId));
+
+    await revalidatePublicProjectData();
 
     return okJson({
       message: "Project layout updated successfully.",

@@ -4,7 +4,14 @@ import { z } from "zod";
 
 import { db, schema } from "@/db";
 import { errorJson, okJson, parseApiError } from "@/lib/api/json";
-import { requireRole } from "@/lib/auth/guards";
+import { writeAuditLog } from "@/lib/audit/log";
+import { authorizeApiRoles } from "@/lib/auth/api-guards";
+import {
+  canonicalUrlSchema,
+  heroVideoUrlSchema,
+  publishScheduleSchema,
+} from "@/lib/admin/project-content-validation";
+import { revalidatePublicProjectData } from "@/lib/public/project-revalidation";
 
 function slugify(value: string) {
   return value
@@ -34,6 +41,31 @@ const nullableDecimal = z.preprocess(
 );
 
 const contentActionSchema = z.discriminatedUnion("action", [
+  z.object({
+    action: z.literal("update-marketing"),
+    metaTitle: optionalText(70),
+    metaDescription: optionalText(180),
+    canonicalUrl: canonicalUrlSchema,
+    ogTitle: optionalText(100),
+    ogDescription: optionalText(300),
+    heroVideoUrl: heroVideoUrlSchema,
+    highlights: z.array(z.string().trim().min(1).max(200)).max(12),
+    faqs: z
+      .array(
+        z.object({
+          question: z.string().trim().min(1).max(200),
+          answer: z.string().trim().min(1).max(1200),
+        }),
+      )
+      .max(20),
+  }),
+  publishScheduleSchema.extend({
+    action: z.literal("update-publication"),
+  }),
+  z.object({
+    action: z.literal("set-og-image"),
+    fileId: z.string().trim().min(1).nullable(),
+  }),
   z.object({
     action: z.literal("create-nearby"),
     name: z.string().trim().min(1, "Nearby place name is required.").max(200),
@@ -113,7 +145,14 @@ export async function POST(
   context: { params: Promise<{ projectId: string }> },
 ) {
   try {
-    await requireRole(["ADMIN", "SUPER_ADMIN"], "/admin/projects");
+    const authorization = await authorizeApiRoles(["ADMIN", "SUPER_ADMIN"]);
+
+    if (!authorization.ok) {
+      return errorJson(authorization.message, authorization.status);
+    }
+
+    const { authContext } = authorization;
+    const currentUser = authContext.user as { id?: string };
 
     const { projectId } = await context.params;
     const projectExists = await assertProjectExists(projectId);
@@ -125,13 +164,163 @@ export async function POST(
     const body = await request.json();
     const validated = contentActionSchema.parse(body);
 
+    async function auditMutation(params: {
+      actionType: string;
+      changeSummary: string;
+      beforeJson?: unknown;
+      afterJson?: unknown;
+    }) {
+      await writeAuditLog({
+        actionType: params.actionType,
+        entityType: "PROJECT",
+        entityId: projectId,
+        actorUserId: currentUser.id,
+        actorRoleId: authContext.roleId,
+        sourceApp: "ADMIN_PORTAL",
+        changeSummary: params.changeSummary,
+        beforeJson: params.beforeJson,
+        afterJson: params.afterJson,
+        request,
+      });
+
+      await revalidatePublicProjectData();
+    }
+
+    if (validated.action === "update-marketing") {
+      const before = await db.query.projects.findFirst({
+        where: (table, { eq }) => eq(table.id, projectId),
+        columns: {
+          metaTitle: true,
+          metaDescription: true,
+          canonicalUrl: true,
+          ogTitle: true,
+          ogDescription: true,
+          heroVideoUrl: true,
+          highlightsJson: true,
+          faqJson: true,
+        },
+      });
+
+      const after = {
+        metaTitle: validated.metaTitle,
+        metaDescription: validated.metaDescription,
+        canonicalUrl: validated.canonicalUrl,
+        ogTitle: validated.ogTitle,
+        ogDescription: validated.ogDescription,
+        heroVideoUrl: validated.heroVideoUrl,
+        highlightsJson: validated.highlights,
+        faqJson: validated.faqs,
+      };
+
+      await db
+        .update(schema.projects)
+        .set({ ...after, updatedAt: new Date() })
+        .where(eq(schema.projects.id, projectId));
+
+      await auditMutation({
+        actionType: "UPDATE_CONTENT",
+        changeSummary: "Updated public project SEO and marketing content.",
+        beforeJson: before,
+        afterJson: after,
+      });
+
+      return okJson({ message: "Marketing content updated successfully." });
+    }
+
+    if (validated.action === "update-publication") {
+      if (
+        validated.isPublished &&
+        validated.publishedAt &&
+        new Date(validated.publishedAt).getTime() <= Date.now()
+      ) {
+        return errorJson("Scheduled publication must be in the future.", 400);
+      }
+
+      const before = await db.query.projects.findFirst({
+        where: (table, { eq }) => eq(table.id, projectId),
+        columns: { isPublished: true, publishedAt: true },
+      });
+      const publishedAt = validated.isPublished
+        ? validated.publishedAt
+          ? new Date(validated.publishedAt)
+          : new Date()
+        : null;
+      const after = {
+        isPublished: validated.isPublished,
+        publishedAt,
+      };
+
+      await db
+        .update(schema.projects)
+        .set({ ...after, updatedAt: new Date() })
+        .where(eq(schema.projects.id, projectId));
+
+      await auditMutation({
+        actionType: "UPDATE_PUBLICATION",
+        changeSummary: validated.isPublished
+          ? publishedAt && publishedAt.getTime() > Date.now()
+            ? "Scheduled public project publication."
+            : "Published project on the public website."
+          : "Moved public project back to draft.",
+        beforeJson: before,
+        afterJson: after,
+      });
+
+      return okJson({ message: "Publication settings updated successfully." });
+    }
+
+    if (validated.action === "set-og-image") {
+      if (validated.fileId) {
+        const selectedMedia = await db.query.projectMedia.findFirst({
+          where: (table, { and, eq }) =>
+            and(eq(table.projectId, projectId), eq(table.fileId, validated.fileId as string)),
+          columns: { fileId: true },
+        });
+
+        if (!selectedMedia) {
+          return errorJson("Choose an image from this project's media library.", 400);
+        }
+      }
+
+      const before = await db.query.projects.findFirst({
+        where: (table, { eq }) => eq(table.id, projectId),
+        columns: { ogImageFileId: true },
+      });
+      const after = { ogImageFileId: validated.fileId };
+
+      await db
+        .update(schema.projects)
+        .set({ ...after, updatedAt: new Date() })
+        .where(eq(schema.projects.id, projectId));
+
+      await auditMutation({
+        actionType: "UPDATE_OG_IMAGE",
+        changeSummary: validated.fileId
+          ? "Selected the public social sharing image."
+          : "Removed the custom social sharing image.",
+        beforeJson: before,
+        afterJson: after,
+      });
+
+      return okJson({ message: "Social sharing image updated successfully." });
+    }
+
     if (validated.action === "create-nearby") {
-      await db.insert(schema.projectNearbyPlaces).values({
-        projectId,
-        name: validated.name,
-        category: validated.category,
-        distanceKm: toOptionalDecimal(validated.distanceKm),
-        sortOrder: validated.sortOrder,
+      const inserted = await db
+        .insert(schema.projectNearbyPlaces)
+        .values({
+          projectId,
+          name: validated.name,
+          category: validated.category,
+          distanceKm: toOptionalDecimal(validated.distanceKm),
+          sortOrder: validated.sortOrder,
+        })
+        .returning({ id: schema.projectNearbyPlaces.id });
+
+      await auditMutation({
+        actionType: "CREATE_NEARBY_PLACE",
+        changeSummary: "Added a nearby place to public project content.",
+        afterJson: { id: inserted[0]?.id, ...validated },
       });
 
       return okJson({ message: "Nearby place created successfully." });
@@ -147,6 +336,10 @@ export async function POST(
         return errorJson("Nearby place not found.", 404);
       }
 
+      const before = await db.query.projectNearbyPlaces.findFirst({
+        where: (table, { eq }) => eq(table.id, validated.nearbyId),
+      });
+
       await db
         .update(schema.projectNearbyPlaces)
         .set({
@@ -158,10 +351,26 @@ export async function POST(
         })
         .where(eq(schema.projectNearbyPlaces.id, validated.nearbyId));
 
+      await auditMutation({
+        actionType: "UPDATE_NEARBY_PLACE",
+        changeSummary: "Updated a nearby place in public project content.",
+        beforeJson: before,
+        afterJson: validated,
+      });
+
       return okJson({ message: "Nearby place updated successfully." });
     }
 
     if (validated.action === "remove-nearby") {
+      const before = await db.query.projectNearbyPlaces.findFirst({
+        where: (table, { and, eq }) =>
+          and(eq(table.id, validated.nearbyId), eq(table.projectId, projectId)),
+      });
+
+      if (!before) {
+        return errorJson("Nearby place not found.", 404);
+      }
+
       await db
         .delete(schema.projectNearbyPlaces)
         .where(
@@ -170,6 +379,12 @@ export async function POST(
             eq(schema.projectNearbyPlaces.projectId, projectId),
           ),
         );
+
+      await auditMutation({
+        actionType: "REMOVE_NEARBY_PLACE",
+        changeSummary: "Removed a nearby place from public project content.",
+        beforeJson: before,
+      });
 
       return okJson({ message: "Nearby place removed successfully." });
     }
@@ -193,6 +408,14 @@ export async function POST(
         });
       }
 
+
+      await auditMutation({
+        actionType: "ATTACH_AMENITY",
+        changeSummary: "Attached an amenity to public project content.",
+        beforeJson: { attached: Boolean(existing), amenityId: validated.amenityId },
+        afterJson: { attached: true, amenityId: validated.amenityId },
+      });
+
       return okJson({ message: "Amenity attached successfully." });
     }
 
@@ -205,6 +428,13 @@ export async function POST(
             eq(schema.projectAmenities.amenityId, validated.amenityId),
           ),
         );
+
+      await auditMutation({
+        actionType: "DETACH_AMENITY",
+        changeSummary: "Detached an amenity from public project content.",
+        beforeJson: { attached: true, amenityId: validated.amenityId },
+        afterJson: { attached: false, amenityId: validated.amenityId },
+      });
 
       return okJson({ message: "Amenity detached successfully." });
     }
@@ -240,6 +470,12 @@ export async function POST(
         amenityId: inserted[0].id,
       });
 
+      await auditMutation({
+        actionType: "CREATE_AMENITY",
+        changeSummary: "Created and attached an amenity to public project content.",
+        afterJson: { id: inserted[0].id, ...validated },
+      });
+
       return okJson({ message: "Amenity created and attached successfully." });
     }
 
@@ -259,6 +495,14 @@ export async function POST(
         });
       }
 
+
+      await auditMutation({
+        actionType: "ATTACH_TAG",
+        changeSummary: "Attached a tag to public project content.",
+        beforeJson: { attached: Boolean(existing), tagId: validated.tagId },
+        afterJson: { attached: true, tagId: validated.tagId },
+      });
+
       return okJson({ message: "Tag attached successfully." });
     }
 
@@ -271,6 +515,13 @@ export async function POST(
             eq(schema.projectTags.tagId, validated.tagId),
           ),
         );
+
+      await auditMutation({
+        actionType: "DETACH_TAG",
+        changeSummary: "Detached a tag from public project content.",
+        beforeJson: { attached: true, tagId: validated.tagId },
+        afterJson: { attached: false, tagId: validated.tagId },
+      });
 
       return okJson({ message: "Tag detached successfully." });
     }
@@ -303,6 +554,12 @@ export async function POST(
     await db.insert(schema.projectTags).values({
       projectId,
       tagId: inserted[0].id,
+    });
+
+    await auditMutation({
+      actionType: "CREATE_TAG",
+      changeSummary: "Created and attached a tag to public project content.",
+      afterJson: { id: inserted[0].id, ...validated },
     });
 
     return okJson({ message: "Tag created and attached successfully." });

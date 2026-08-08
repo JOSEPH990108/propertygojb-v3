@@ -145,7 +145,6 @@ export function ProjectEditForm({
     project.launchYear ? String(project.launchYear) : "",
   );
   const [isHotDeal, setIsHotDeal] = useState(project.isHotDeal);
-  const [isPublished, setIsPublished] = useState(project.isPublished);
 
   const filteredPropertyTypes = useMemo(() => {
     if (!propertyCategoryId) {
@@ -176,6 +175,10 @@ export function ProjectEditForm({
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    if (!canSubmit || isPending) {
+      return;
+    }
+
     startTransition(async () => {
       const result = await postJson<{ projectId: string; slug: string }>(
         `/api/admin/projects/${project.id}`,
@@ -195,7 +198,6 @@ export function ProjectEditForm({
           totalUnits: Number(totalUnits) || 0,
           launchYear: launchYear ? Number(launchYear) : null,
           isHotDeal,
-          isPublished,
         },
       );
 
@@ -210,7 +212,7 @@ export function ProjectEditForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form id="project-edit-form" onSubmit={handleSubmit} className="space-y-6">
       <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
@@ -222,8 +224,8 @@ export function ProjectEditForm({
             </p>
           </div>
 
-          <AppStatusBadge tone={isPublished ? "success" : "warning"}>
-            {isPublished ? "Published" : "Draft"}
+          <AppStatusBadge tone={project.isPublished ? "success" : "warning"}>
+            {project.isPublished ? "Published" : "Draft"}
           </AppStatusBadge>
         </div>
 
@@ -432,42 +434,20 @@ export function ProjectEditForm({
             />
           </label>
 
-          <label className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <div className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
             <div>
-              <p className="font-bold text-slate-950">Published</p>
+              <p className="font-bold text-slate-950">Public visibility</p>
               <p className="mt-1 text-sm text-slate-500">
-                Make project visible to public project listing.
+                Publication and scheduling are managed in Project Content.
               </p>
             </div>
-
-            <input
-              type="checkbox"
-              checked={isPublished}
-              onChange={(event) => setIsPublished(event.target.checked)}
-              className="size-5"
-            />
-          </label>
+            <AppStatusBadge tone={project.isPublished ? "success" : "neutral"}>
+              {project.isPublished ? "Published" : "Draft"}
+            </AppStatusBadge>
+          </div>
         </div>
       </section>
 
-      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-        <AppButton
-          type="button"
-          variant="secondary"
-          onClick={() => router.push("/admin/projects")}
-          className="h-12 rounded-2xl px-6"
-        >
-          Back to Projects
-        </AppButton>
-
-        <AppButton
-          type="submit"
-          disabled={!canSubmit || isPending}
-          className="h-12 rounded-2xl px-6"
-        >
-          {isPending ? "Saving..." : "Save Changes"}
-        </AppButton>
-      </div>
     </form>
   );
 }
