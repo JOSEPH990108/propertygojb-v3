@@ -55,6 +55,10 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    if (!role) {
+      throw new Error("CUSTOMER role is required before public registration.");
+    }
+
     const now = new Date();
     const userId = randomUUID();
     const accountId = randomUUID();
@@ -71,7 +75,7 @@ export async function POST(request: NextRequest) {
         emailVerified: false,
         phoneNumber: phone.phoneNumber,
         phoneNumberVerified: true,
-        roleId: role?.id,
+        roleId: role.id,
         createdAt: now,
         updatedAt: now,
       });
