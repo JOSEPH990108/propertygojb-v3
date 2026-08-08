@@ -147,8 +147,9 @@ export function LeadAppointmentComposer({
     <form onSubmit={handleSubmit} className="space-y-4">
       {isEditMode ? (
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-800">
-          Active viewing appointment found. Updating this form will edit the
-          scheduled appointment instead of creating a duplicate.
+          {existingAppointment?.status === "REQUESTED"
+            ? "Customer preferred time loaded. Review the details and save to confirm this appointment."
+            : "Active viewing appointment found. Updating this form will edit the scheduled appointment instead of creating a duplicate."}
         </div>
       ) : null}
 
@@ -232,7 +233,9 @@ export function LeadAppointmentComposer({
             ? "Updating..."
             : "Creating..."
           : isEditMode
-            ? "Update Viewing Appointment"
+            ? existingAppointment?.status === "REQUESTED"
+              ? "Confirm Viewing Appointment"
+              : "Update Viewing Appointment"
             : "Create Viewing Appointment"}
       </button>
     </form>

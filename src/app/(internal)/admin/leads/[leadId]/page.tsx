@@ -256,7 +256,7 @@ export default async function AdminLeadDetailPage({
   const existingAppointment =
     latestViewingAppointment?.dueAt &&
     latestViewingAppointmentMetadata.projectId &&
-    latestViewingAppointmentStatus === "SCHEDULED"
+    ["REQUESTED", "SCHEDULED"].includes(latestViewingAppointmentStatus)
       ? {
           id: latestViewingAppointment.id,
           projectId: latestViewingAppointmentMetadata.projectId,
