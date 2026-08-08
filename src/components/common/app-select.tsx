@@ -27,6 +27,8 @@ export type AppSelectOption = {
 };
 
 type AppSelectProps = {
+  id?: string;
+  ariaLabelledBy?: string;
   value: string;
   options: AppSelectOption[];
   onValueChange: (value: string) => void;
@@ -42,6 +44,8 @@ type AppSelectProps = {
 };
 
 export function AppSelect({
+  id,
+  ariaLabelledBy,
   value,
   options,
   onValueChange,
@@ -61,11 +65,13 @@ export function AppSelect({
     <Popover>
       <PopoverTrigger asChild>
         <Button
+          id={id}
+          aria-labelledby={ariaLabelledBy}
           disabled={disabled}
           type="button"
           variant="outline"
           className={cn(
-            "h-12 justify-between rounded-2xl border-slate-200 bg-white/80 px-4 font-medium text-slate-900 shadow-sm hover:bg-white",
+            "h-12 justify-between rounded-2xl border-border bg-background px-4 font-medium text-foreground shadow-sm hover:bg-accent",
             triggerClassName,
             className,
           )}
@@ -84,9 +90,8 @@ export function AppSelect({
       <PopoverContent
         align="start"
         className={cn(
-          "w-[var(--radix-popover-trigger-width)] min-w-64 rounded-2xl border-slate-200 bg-white/95 p-2 shadow-2xl backdrop-blur-xl",
+              "w-[var(--radix-popover-trigger-width)] min-w-64 rounded-2xl border-border bg-popover/95 p-2 text-popover-foreground shadow-2xl backdrop-blur-xl",
           contentClassName,
-  disabled,
         )}
       >
         <Command>
@@ -122,7 +127,7 @@ export function AppSelect({
                       <div className="min-w-0 flex-1">
                         <p className="truncate font-semibold">{option.label}</p>
                         {option.description ? (
-                          <p className="truncate text-xs text-slate-500">
+                          <p className="truncate text-xs text-muted-foreground">
                             {option.description}
                           </p>
                         ) : null}
