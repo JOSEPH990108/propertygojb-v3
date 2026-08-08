@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Smartphone } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { AuthCard } from "@/components/auth/auth-card";
 import { AuthPageShell } from "@/components/auth/auth-page-shell";
@@ -28,6 +28,7 @@ const countryCodeOptions: AppSelectOption[] = [
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [countryCode, setCountryCode] = useState("+60");
   const [mobile, setMobile] = useState("");
@@ -67,7 +68,16 @@ export function LoginForm() {
       }
 
       appToast.success("Login successful.");
-      router.push("/auth-redirect");
+      const requestedPath = searchParams.get("next");
+      const safeNextPath =
+        requestedPath?.startsWith("/") && !requestedPath.startsWith("//")
+          ? requestedPath
+          : null;
+      router.push(
+        safeNextPath
+          ? `/auth-redirect?next=${encodeURIComponent(safeNextPath)}`
+          : "/auth-redirect",
+      );
       router.refresh();
     });
   }

@@ -26,6 +26,19 @@ function getBetterAuthBaseUrl() {
   throw new Error("BETTER_AUTH_URL is required in production.");
 }
 
+async function getCustomerRoleId() {
+  const role = await db.query.roles.findFirst({
+    where: (table, { eq }) => eq(table.code, "CUSTOMER"),
+    columns: { id: true },
+  });
+
+  if (!role) {
+    throw new Error("CUSTOMER role is required before public registration.");
+  }
+
+  return role.id;
+}
+
 export const auth = betterAuth({
   appName: "PropertyGoJB",
   basePath: "/api/auth",
@@ -41,6 +54,32 @@ export const auth = betterAuth({
       verification: schema.verification,
     },
   }),
+
+  user: {
+    additionalFields: {
+      roleId: {
+        type: "string",
+        required: false,
+        input: false,
+        returned: false,
+      },
+    },
+  },
+
+  databaseHooks: {
+    user: {
+      create: {
+        async before(user) {
+          return {
+            data: {
+              ...user,
+              roleId: await getCustomerRoleId(),
+            },
+          };
+        },
+      },
+    },
+  },
 
   emailAndPassword: {
     enabled: true,

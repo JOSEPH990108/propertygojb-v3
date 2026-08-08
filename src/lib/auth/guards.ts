@@ -43,6 +43,7 @@ export function getRoleHomePath(roleCode?: GuardRoleCode): string {
     case "AGENT":
       return routes.agent.dashboard;
     case "CUSTOMER":
+      return routes.public.account;
     default:
       return routes.public.home;
   }

@@ -5,6 +5,7 @@ export const routes = {
     bookViewing: "/book-viewing",
     contact: "/contact",
     about: "/about",
+    account: "/account",
   },
 
   auth: {
