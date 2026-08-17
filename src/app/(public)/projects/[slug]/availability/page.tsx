@@ -3,12 +3,18 @@ import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 
 import { PublicHighRiseAvailability } from "@/components/public/public-high-rise-availability";
+import { PublicLandedAvailability } from "@/components/public/public-landed-availability";
 import { getPublicProjectBySlug } from "@/lib/public/projects";
 
 const supportedSlugs = new Set([
+  "avenia-l4ai",
+  "green-one-phase-1",
   "elmora-condominium",
+  "paragon-signature-suites",
   "sunway-lakehills",
   "sunway-lakehills-phase-1",
+  "vistara-residence",
+  "riveria-garden-wawari-elora",
 ]);
 
 export default async function ProjectAvailabilityPage({
@@ -28,6 +34,15 @@ export default async function ProjectAvailabilityPage({
     notFound();
   }
 
+  const hasLandedSitePlan = detail.availabilityPlans.some((availabilityPlan) =>
+    Boolean(
+      availabilityPlan.plan &&
+        typeof availabilityPlan.plan === "object" &&
+        !Array.isArray(availabilityPlan.plan) &&
+        "sitePlan" in availabilityPlan.plan,
+    ),
+  );
+
   return (
     <div className="bg-[#f4f7fb]">
       <div className="mx-auto max-w-[96rem] px-4 pt-6 sm:px-6 lg:px-8">
@@ -39,12 +54,21 @@ export default async function ProjectAvailabilityPage({
           Back to {detail.project.displayName ?? detail.project.name}
         </Link>
       </div>
-      <PublicHighRiseAvailability
-        projectName={detail.project.displayName ?? detail.project.name}
-        units={detail.units}
-        layouts={detail.layouts}
-        availabilityPlans={detail.availabilityPlans}
-      />
+      {hasLandedSitePlan ? (
+        <PublicLandedAvailability
+          projectName={detail.project.displayName ?? detail.project.name}
+          units={detail.units}
+          layouts={detail.layouts}
+          availabilityPlans={detail.availabilityPlans}
+        />
+      ) : (
+        <PublicHighRiseAvailability
+          projectName={detail.project.displayName ?? detail.project.name}
+          units={detail.units}
+          layouts={detail.layouts}
+          availabilityPlans={detail.availabilityPlans}
+        />
+      )}
     </div>
   );
 }

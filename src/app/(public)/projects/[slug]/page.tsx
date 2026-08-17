@@ -253,7 +253,7 @@ export default async function ProjectDetailPage({
             </div>
           </section>
 
-          {["elmora-condominium", "sunway-lakehills", "sunway-lakehills-phase-1"].includes(project.slug) ? (
+          {["elmora-condominium", "paragon-signature-suites", "sunway-lakehills", "sunway-lakehills-phase-1"].includes(project.slug) ? (
             <Link
               href={`/projects/${project.slug}/availability`}
               className="inline-flex w-full items-center justify-between border border-blue-200 bg-blue-50 px-6 py-5 text-blue-950 transition hover:border-blue-400 hover:bg-blue-100"

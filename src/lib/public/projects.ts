@@ -90,16 +90,19 @@ export type PublicProjectDetail = {
     layoutId: string | null;
     floor: number | null;
     stack: string | null;
+    blockCode: string | null;
     basePrice: string;
     finalPrice: string | null;
     builtUpSqft: string | null;
     landAreaSqft: string | null;
     dimensionText: string | null;
     facing: string | null;
+    facingTypeName: string | null;
     bookingStatusCode: string | null;
     bookingStatusName: string | null;
     lotTypeName: string | null;
     positionTypeName: string | null;
+    viewTypeName: string | null;
   }[];
   amenities: { id: string; name: string }[];
   tags: { id: string; name: string }[];
@@ -393,21 +396,26 @@ export const getPublicProjectBySlug = cache(async (slug: string): Promise<Public
         layoutId: schema.units.layoutId,
         floor: schema.units.floor,
         stack: schema.units.stack,
+        blockCode: schema.units.blockCode,
         basePrice: schema.units.basePrice,
         finalPrice: schema.units.finalPrice,
         builtUpSqft: schema.units.builtUpSqft,
         landAreaSqft: schema.units.landAreaSqft,
         dimensionText: schema.units.dimensionText,
-        facing: schema.units.facing,
+        facing: schema.unitFacings.name,
+        facingTypeName: schema.unitFacings.name,
         bookingStatusCode: schema.bookingStatuses.code,
         bookingStatusName: schema.bookingStatuses.name,
         lotTypeName: schema.lotTypes.name,
         positionTypeName: schema.unitPositions.name,
+        viewTypeName: schema.unitViews.name,
       })
       .from(schema.units)
       .leftJoin(schema.bookingStatuses, eq(schema.units.bookingStatusId, schema.bookingStatuses.id))
       .leftJoin(schema.lotTypes, eq(schema.units.lotTypeId, schema.lotTypes.id))
       .leftJoin(schema.unitPositions, eq(schema.units.positionTypeId, schema.unitPositions.id))
+      .leftJoin(schema.unitFacings, eq(schema.units.facingTypeId, schema.unitFacings.id))
+      .leftJoin(schema.unitViews, eq(schema.units.viewTypeId, schema.unitViews.id))
       .where(eq(schema.units.projectId, projectData.id))
       .orderBy(asc(schema.units.displaySequence), asc(schema.units.unitNo)),
     db
