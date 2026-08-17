@@ -1,0 +1,3492 @@
+{
+  "version": 1,
+  "type": "project-import",
+  "mode": "upsert",
+  "project": {
+    "name": "Vistara Residence",
+    "slug": "vistara-residence",
+    "developerName": "Marcus Group",
+    "propertyCategory": {
+      "code": "LANDED",
+      "name": "Landed"
+    },
+    "propertyType": {
+      "code": "CLUSTER_HOUSE",
+      "name": "Cluster House"
+    },
+    "tenureType": {
+      "code": "LEASEHOLD_99",
+      "name": "Leasehold 99"
+    },
+    "projectStatus": {
+      "code": "COMING_SOON",
+      "name": "Coming Soon"
+    },
+    "totalUnits": 120,
+    "isPublished": true,
+    "location": {
+      "country": "Malaysia",
+      "state": "Johor",
+      "region": "Johor Bahru",
+      "area": "Taman Bukit Skudai",
+      "address": "Taman Bukit Skudai"
+    }
+  },
+  "layouts": [
+    {
+      "code": "A1",
+      "name": "Type A1",
+      "layoutType": {
+        "code": "CLUSTER",
+        "name": "Cluster"
+      },
+      "builtUpSqft": 3155.76,
+      "bedrooms": 4,
+      "bathrooms": 4
+    },
+    {
+      "code": "A2",
+      "name": "Type A2",
+      "layoutType": {
+        "code": "CLUSTER",
+        "name": "Cluster"
+      },
+      "builtUpSqft": 3155.76,
+      "bedrooms": 4,
+      "bathrooms": 4
+    }
+  ],
+  "units": [
+    {
+      "unitNo": "170313",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 1,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "52 ft x 70 ft",
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
+      "basePrice": 1477480,
+      "finalPrice": 1359281.6
+    },
+    {
+      "unitNo": "170314",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 2,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170315",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 3,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170316",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 4,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170317",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 5,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170318",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 6,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170319",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 7,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170320",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 8,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170321",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 9,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170322",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 10,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170323",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 11,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170324",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 12,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "58 ft x 70 ft",
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
+      "basePrice": 1542480,
+      "finalPrice": 1419081.6
+    },
+    {
+      "unitNo": "170325",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 13,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "52 ft x 70 ft",
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
+      "basePrice": 1477480,
+      "finalPrice": 1359281.6
+    },
+    {
+      "unitNo": "170326",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 14,
+      "builtUpSqft": 3156,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170327",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 15,
+      "builtUpSqft": 3156,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170328",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 16,
+      "builtUpSqft": 3156,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170329",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 17,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170330",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 18,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170331",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 19,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170332",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 20,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170333",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 21,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170334",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 22,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170335",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 23,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170336",
+      "layoutCode": "A2",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 24,
+      "builtUpSqft": 3048.34,
+      "dimensionText": "58 ft x 70 ft",
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
+      "basePrice": 1519480,
+      "finalPrice": 1397921.6
+    },
+    {
+      "unitNo": "170337",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 25,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "52 ft x 70 ft",
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170338",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 26,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170339",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 27,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170340",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 28,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170341",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 29,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170342",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 30,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170343",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 31,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170344",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 32,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170345",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 33,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170346",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 34,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170347",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 35,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170348",
+      "layoutCode": "A2",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 36,
+      "builtUpSqft": 3048.34,
+      "dimensionText": "58 ft x 70 ft",
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
+      "basePrice": 1502480,
+      "finalPrice": 1382281.6
+    },
+    {
+      "unitNo": "170349",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 37,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "52 ft x 70 ft",
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
+      "basePrice": 1477480,
+      "finalPrice": 1359281.6
+    },
+    {
+      "unitNo": "170350",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 38,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170351",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 39,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170352",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 40,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170353",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 41,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170354",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 42,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170355",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 43,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170356",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 44,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170357",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 45,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170358",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 46,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170359",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 47,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170360",
+      "layoutCode": "A2",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 48,
+      "builtUpSqft": 3048.34,
+      "dimensionText": "58 ft x 70 ft",
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
+      "basePrice": 1512480,
+      "finalPrice": 1391481.6
+    },
+    {
+      "unitNo": "170361",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 49,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "52 ft x 70 ft",
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
+      "basePrice": 1477480,
+      "finalPrice": 1359281.6
+    },
+    {
+      "unitNo": "170362",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 50,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170363",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 51,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170364",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 52,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170365",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 53,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170366",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 54,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170367",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 55,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170368",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 56,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170369",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 57,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170370",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 58,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170371",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 59,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170372",
+      "layoutCode": "A2",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 60,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "58 ft x 70 ft",
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170373",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "SPA_SIGNED",
+        "name": "SPA Signed"
+      },
+      "displaySequence": 61,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "52 ft x 70 ft",
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
+      "basePrice": 1477480,
+      "finalPrice": 1359281.6
+    },
+    {
+      "unitNo": "170374",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 62,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170375",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 63,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170376",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 64,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170377",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 65,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170378",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 66,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170379",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 67,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170380",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 68,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170381",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 69,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170382",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 70,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170383",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 71,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170384",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 72,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "58 ft x 70 ft",
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170385",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 73,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "52 ft x 70 ft",
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
+      "basePrice": 1477480,
+      "finalPrice": 1359281.6
+    },
+    {
+      "unitNo": "170386",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 74,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170387",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 75,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170388",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 76,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170389",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 77,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170390",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 78,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170391",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 79,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170392",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 80,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170393",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 81,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170394",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 82,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170395",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 83,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170396",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 84,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "58 ft x 70 ft",
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
+      "basePrice": 1540480,
+      "finalPrice": 1417241.6
+    },
+    {
+      "unitNo": "170397",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 85,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "52 ft x 70 ft",
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170398",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 86,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170399",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 87,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170400",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 88,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170401",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 89,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170402",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 90,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170403",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 91,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170404",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 92,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170405",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 93,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170406",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 94,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170407",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 95,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170408",
+      "layoutCode": "A2",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 96,
+      "builtUpSqft": 3048.34,
+      "dimensionText": "58 ft x 70 ft",
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
+      "basePrice": 1520480,
+      "finalPrice": 1398841.6
+    },
+    {
+      "unitNo": "170409",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 97,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "52 ft x 70 ft",
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
+      "basePrice": 1477480,
+      "finalPrice": 1359281.6
+    },
+    {
+      "unitNo": "170410",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 98,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170411",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 99,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170412",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 100,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170413",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 101,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170414",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 102,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170415",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 103,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170416",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 104,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170417",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 105,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170418",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 106,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170419",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 107,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170420",
+      "layoutCode": "A2",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 108,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "58 ft x 70 ft",
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170421",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 109,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "52 ft x 70 ft",
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170422",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 110,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170423",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 111,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170424",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "BUMIPUTERA",
+        "name": "Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 112,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170425",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 113,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170426",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 114,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170427",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "UNAVAILABLE",
+        "name": "Unavailable"
+      },
+      "displaySequence": 115,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 0,
+      "finalPrice": null
+    },
+    {
+      "unitNo": "170428",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 116,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170429",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 117,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170430",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 118,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170431",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "BOOKING",
+        "name": "Booking"
+      },
+      "displaySequence": 119,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "32 ft x 70 ft",
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
+      "basePrice": 1283480,
+      "finalPrice": 1180801.6
+    },
+    {
+      "unitNo": "170432",
+      "layoutCode": "A1",
+      "lotType": {
+        "code": "NON_BUMIPUTERA",
+        "name": "Non-Bumiputera"
+      },
+      "bookingStatus": {
+        "code": "AVAILABLE",
+        "name": "Available"
+      },
+      "displaySequence": 120,
+      "builtUpSqft": 3155.76,
+      "dimensionText": "58 ft x 70 ft",
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
+      "basePrice": 1552480,
+      "finalPrice": 1428281.6
+    }
+  ],
+  "amenities": [
+    "Gated Community"
+  ],
+  "tags": [
+    "Free MOT",
+    "8% Rebate",
+    "Free Legal Fee SPA & LA"
+  ],
+  "nearbyPlaces": [],
+  "availabilityPlans": [
+    {
+      "towerCode": "SITE_PLAN",
+      "plan": {
+        "sitePlan": {
+          "zoneCode": "VISTARA",
+          "title": "Vistara Residence Live Site Plan",
+          "tabs": [
+            {
+              "code": "ALL",
+              "label": "All residences",
+              "layoutCodes": [
+                "A1",
+                "A2"
+              ]
+            }
+          ],
+          "rowGroups": [
+            {
+              "code": "BLOCK_1",
+              "label": "Block 1",
+              "rows": [
+                [
+                  "170324",
+                  "170336"
+                ],
+                [
+                  "170323",
+                  "170335"
+                ],
+                [
+                  "170322",
+                  "170334"
+                ],
+                [
+                  "170321",
+                  "170333"
+                ],
+                [
+                  "170320",
+                  "170332"
+                ],
+                [
+                  "170319",
+                  "170331"
+                ],
+                [
+                  "170318",
+                  "170330"
+                ],
+                [
+                  "170317",
+                  "170329"
+                ],
+                [
+                  "170316",
+                  "170328"
+                ],
+                [
+                  "170315",
+                  "170327"
+                ],
+                [
+                  "170314",
+                  "170326"
+                ],
+                [
+                  "170313",
+                  "170325"
+                ]
+              ]
+            },
+            {
+              "code": "BLOCK_2",
+              "label": "Block 2",
+              "rows": [
+                [
+                  "170348",
+                  "170360"
+                ],
+                [
+                  "170347",
+                  "170359"
+                ],
+                [
+                  "170346",
+                  "170358"
+                ],
+                [
+                  "170345",
+                  "170357"
+                ],
+                [
+                  "170344",
+                  "170356"
+                ],
+                [
+                  "170343",
+                  "170355"
+                ],
+                [
+                  "170342",
+                  "170354"
+                ],
+                [
+                  "170341",
+                  "170353"
+                ],
+                [
+                  "170340",
+                  "170352"
+                ],
+                [
+                  "170339",
+                  "170351"
+                ],
+                [
+                  "170338",
+                  "170350"
+                ],
+                [
+                  "170337",
+                  "170349"
+                ]
+              ]
+            },
+            {
+              "code": "BLOCK_3",
+              "label": "Block 3",
+              "rows": [
+                [
+                  "170372",
+                  "170384"
+                ],
+                [
+                  "170371",
+                  "170383"
+                ],
+                [
+                  "170370",
+                  "170382"
+                ],
+                [
+                  "170369",
+                  "170381"
+                ],
+                [
+                  "170368",
+                  "170380"
+                ],
+                [
+                  "170367",
+                  "170379"
+                ],
+                [
+                  "170366",
+                  "170378"
+                ],
+                [
+                  "170365",
+                  "170377"
+                ],
+                [
+                  "170364",
+                  "170376"
+                ],
+                [
+                  "170363",
+                  "170375"
+                ],
+                [
+                  "170362",
+                  "170374"
+                ],
+                [
+                  "170361",
+                  "170373"
+                ]
+              ]
+            },
+            {
+              "code": "BLOCK_4",
+              "label": "Block 4",
+              "rows": [
+                [
+                  "170396",
+                  "170408"
+                ],
+                [
+                  "170395",
+                  "170407"
+                ],
+                [
+                  "170394",
+                  "170406"
+                ],
+                [
+                  "170393",
+                  "170405"
+                ],
+                [
+                  "170392",
+                  "170404"
+                ],
+                [
+                  "170391",
+                  "170403"
+                ],
+                [
+                  "170390",
+                  "170402"
+                ],
+                [
+                  "170389",
+                  "170401"
+                ],
+                [
+                  "170388",
+                  "170400"
+                ],
+                [
+                  "170387",
+                  "170399"
+                ],
+                [
+                  "170386",
+                  "170398"
+                ],
+                [
+                  "170385",
+                  "170397"
+                ]
+              ]
+            },
+            {
+              "code": "BLOCK_5",
+              "label": "Block 5",
+              "rows": [
+                [
+                  "170420",
+                  "170432"
+                ],
+                [
+                  "170419",
+                  "170431"
+                ],
+                [
+                  "170418",
+                  "170430"
+                ],
+                [
+                  "170417",
+                  "170429"
+                ],
+                [
+                  "170416",
+                  "170428"
+                ],
+                [
+                  "170415",
+                  "170427"
+                ],
+                [
+                  "170414",
+                  "170426"
+                ],
+                [
+                  "170413",
+                  "170425"
+                ],
+                [
+                  "170412",
+                  "170424"
+                ],
+                [
+                  "170411",
+                  "170423"
+                ],
+                [
+                  "170410",
+                  "170422"
+                ],
+                [
+                  "170409",
+                  "170421"
+                ]
+              ]
+            }
+          ],
+          "maps": [
+            {
+              "tabCode": "ALL",
+              "markerRadius": 12,
+              "hitRadius": 22,
+              "lots": [
+                {
+                  "unitNo": "170324",
+                  "xNorm": 0,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170336",
+                  "xNorm": 0.041666666666666664,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170323",
+                  "xNorm": 0.08333333333333333,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170335",
+                  "xNorm": 0.125,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170322",
+                  "xNorm": 0.16666666666666666,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170334",
+                  "xNorm": 0.20833333333333334,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170321",
+                  "xNorm": 0.25,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170333",
+                  "xNorm": 0.2916666666666667,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170320",
+                  "xNorm": 0.3333333333333333,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170332",
+                  "xNorm": 0.375,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170319",
+                  "xNorm": 0.4166666666666667,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170331",
+                  "xNorm": 0.4583333333333333,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170318",
+                  "xNorm": 0.5,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170330",
+                  "xNorm": 0.5416666666666666,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170317",
+                  "xNorm": 0.5833333333333334,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170329",
+                  "xNorm": 0.625,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170316",
+                  "xNorm": 0.6666666666666666,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170328",
+                  "xNorm": 0.7083333333333334,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170315",
+                  "xNorm": 0.75,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170327",
+                  "xNorm": 0.7916666666666666,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170314",
+                  "xNorm": 0.8333333333333334,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170326",
+                  "xNorm": 0.875,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170313",
+                  "xNorm": 0.9166666666666666,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170325",
+                  "xNorm": 0.9583333333333334,
+                  "yNorm": 0
+                },
+                {
+                  "unitNo": "170348",
+                  "xNorm": 0,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170360",
+                  "xNorm": 0.041666666666666664,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170347",
+                  "xNorm": 0.08333333333333333,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170359",
+                  "xNorm": 0.125,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170346",
+                  "xNorm": 0.16666666666666666,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170358",
+                  "xNorm": 0.20833333333333334,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170345",
+                  "xNorm": 0.25,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170357",
+                  "xNorm": 0.2916666666666667,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170344",
+                  "xNorm": 0.3333333333333333,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170356",
+                  "xNorm": 0.375,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170343",
+                  "xNorm": 0.4166666666666667,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170355",
+                  "xNorm": 0.4583333333333333,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170342",
+                  "xNorm": 0.5,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170354",
+                  "xNorm": 0.5416666666666666,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170341",
+                  "xNorm": 0.5833333333333334,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170353",
+                  "xNorm": 0.625,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170340",
+                  "xNorm": 0.6666666666666666,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170352",
+                  "xNorm": 0.7083333333333334,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170339",
+                  "xNorm": 0.75,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170351",
+                  "xNorm": 0.7916666666666666,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170338",
+                  "xNorm": 0.8333333333333334,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170350",
+                  "xNorm": 0.875,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170337",
+                  "xNorm": 0.9166666666666666,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170349",
+                  "xNorm": 0.9583333333333334,
+                  "yNorm": 0.2
+                },
+                {
+                  "unitNo": "170372",
+                  "xNorm": 0,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170384",
+                  "xNorm": 0.041666666666666664,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170371",
+                  "xNorm": 0.08333333333333333,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170383",
+                  "xNorm": 0.125,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170370",
+                  "xNorm": 0.16666666666666666,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170382",
+                  "xNorm": 0.20833333333333334,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170369",
+                  "xNorm": 0.25,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170381",
+                  "xNorm": 0.2916666666666667,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170368",
+                  "xNorm": 0.3333333333333333,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170380",
+                  "xNorm": 0.375,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170367",
+                  "xNorm": 0.4166666666666667,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170379",
+                  "xNorm": 0.4583333333333333,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170366",
+                  "xNorm": 0.5,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170378",
+                  "xNorm": 0.5416666666666666,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170365",
+                  "xNorm": 0.5833333333333334,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170377",
+                  "xNorm": 0.625,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170364",
+                  "xNorm": 0.6666666666666666,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170376",
+                  "xNorm": 0.7083333333333334,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170363",
+                  "xNorm": 0.75,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170375",
+                  "xNorm": 0.7916666666666666,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170362",
+                  "xNorm": 0.8333333333333334,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170374",
+                  "xNorm": 0.875,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170361",
+                  "xNorm": 0.9166666666666666,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170373",
+                  "xNorm": 0.9583333333333334,
+                  "yNorm": 0.4
+                },
+                {
+                  "unitNo": "170396",
+                  "xNorm": 0,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170408",
+                  "xNorm": 0.041666666666666664,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170395",
+                  "xNorm": 0.08333333333333333,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170407",
+                  "xNorm": 0.125,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170394",
+                  "xNorm": 0.16666666666666666,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170406",
+                  "xNorm": 0.20833333333333334,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170393",
+                  "xNorm": 0.25,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170405",
+                  "xNorm": 0.2916666666666667,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170392",
+                  "xNorm": 0.3333333333333333,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170404",
+                  "xNorm": 0.375,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170391",
+                  "xNorm": 0.4166666666666667,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170403",
+                  "xNorm": 0.4583333333333333,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170390",
+                  "xNorm": 0.5,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170402",
+                  "xNorm": 0.5416666666666666,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170389",
+                  "xNorm": 0.5833333333333334,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170401",
+                  "xNorm": 0.625,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170388",
+                  "xNorm": 0.6666666666666666,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170400",
+                  "xNorm": 0.7083333333333334,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170387",
+                  "xNorm": 0.75,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170399",
+                  "xNorm": 0.7916666666666666,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170386",
+                  "xNorm": 0.8333333333333334,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170398",
+                  "xNorm": 0.875,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170385",
+                  "xNorm": 0.9166666666666666,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170397",
+                  "xNorm": 0.9583333333333334,
+                  "yNorm": 0.6
+                },
+                {
+                  "unitNo": "170420",
+                  "xNorm": 0,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170432",
+                  "xNorm": 0.041666666666666664,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170419",
+                  "xNorm": 0.08333333333333333,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170431",
+                  "xNorm": 0.125,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170418",
+                  "xNorm": 0.16666666666666666,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170430",
+                  "xNorm": 0.20833333333333334,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170417",
+                  "xNorm": 0.25,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170429",
+                  "xNorm": 0.2916666666666667,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170416",
+                  "xNorm": 0.3333333333333333,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170428",
+                  "xNorm": 0.375,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170415",
+                  "xNorm": 0.4166666666666667,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170427",
+                  "xNorm": 0.4583333333333333,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170414",
+                  "xNorm": 0.5,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170426",
+                  "xNorm": 0.5416666666666666,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170413",
+                  "xNorm": 0.5833333333333334,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170425",
+                  "xNorm": 0.625,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170412",
+                  "xNorm": 0.6666666666666666,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170424",
+                  "xNorm": 0.7083333333333334,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170411",
+                  "xNorm": 0.75,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170423",
+                  "xNorm": 0.7916666666666666,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170410",
+                  "xNorm": 0.8333333333333334,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170422",
+                  "xNorm": 0.875,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170409",
+                  "xNorm": 0.9166666666666666,
+                  "yNorm": 0.8
+                },
+                {
+                  "unitNo": "170421",
+                  "xNorm": 0.9583333333333334,
+                  "yNorm": 0.8
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

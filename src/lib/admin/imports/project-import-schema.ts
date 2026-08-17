@@ -44,12 +44,15 @@ const projectImportUnitSchema = z.object({
   floor: z.coerce.number().int().optional().nullable(),
   stack: z.string().trim().optional().nullable(),
   streetName: z.string().trim().optional().nullable(),
+  blockCode: z.string().trim().max(50).optional().nullable(),
   displaySequence: z.coerce.number().int().min(0).default(0),
   builtUpSqft: z.coerce.number().min(0).optional().nullable(),
   landAreaSqft: z.coerce.number().min(0).optional().nullable(),
   dimensionText: z.string().trim().optional().nullable(),
   facing: z.string().trim().optional().nullable(),
+  facingType: optionalLookupRefSchema,
   positionType: optionalLookupRefSchema,
+  viewType: optionalLookupRefSchema,
   carparkCount: z.coerce.number().int().min(0).default(1),
   carparkLotNo: z.string().trim().optional().nullable(),
   carparkType: z.string().trim().optional().nullable(),
@@ -62,6 +65,47 @@ const nearbyPlaceSchema = z.object({
   category: z.string().trim().min(1).max(50).default("OTHER"),
   distanceKm: z.coerce.number().min(0).optional().nullable(),
   sortOrder: z.coerce.number().int().min(0).default(0),
+});
+
+const landedSitePlanSchema = z.object({
+  zoneCode: z.string().trim().min(1).max(50),
+  title: z.string().trim().min(1).max(120),
+  tabs: z
+    .array(
+      z.object({
+        code: z.string().trim().min(1).max(50),
+        label: z.string().trim().min(1).max(120),
+        layoutCodes: z.array(z.string().trim().min(1).max(50)).min(1),
+      }),
+    )
+    .min(1),
+  maps: z
+    .array(
+      z.object({
+        tabCode: z.string().trim().min(1).max(50),
+        markerRadius: z.coerce.number().positive().max(100).default(12),
+        hitRadius: z.coerce.number().positive().max(100).default(22),
+        lots: z
+          .array(
+            z.object({
+              unitNo: z.string().trim().min(1).max(50),
+              xNorm: z.coerce.number().min(0).max(1),
+              yNorm: z.coerce.number().min(0).max(1),
+            }),
+          )
+          .min(1),
+      }),
+    )
+    .optional(),
+  rowGroups: z
+    .array(
+      z.object({
+        code: z.string().trim().min(1).max(50),
+        label: z.string().trim().min(1).max(120),
+        rows: z.array(z.array(z.string().trim().min(1).max(50)).min(1).max(30)).min(1),
+      }),
+    )
+    .optional(),
 });
 
 const availabilityPlanSchema = z.object({
@@ -90,6 +134,7 @@ const availabilityPlanSchema = z.object({
         }),
       )
       .optional(),
+    sitePlan: landedSitePlanSchema.optional(),
   }),
 });
 

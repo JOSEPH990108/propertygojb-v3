@@ -25,9 +25,8 @@
     },
     "totalUnits": 165,
     "launchYear": 2026,
-    "completionText": null,
     "isHotDeal": false,
-    "isPublished": false,
+    "isPublished": true,
     "location": {
       "country": "Malaysia",
       "state": "Johor",
@@ -47,12 +46,7 @@
       "builtUpSqft": 2219,
       "bedrooms": 4,
       "bathrooms": 4,
-      "studyRooms": 0,
-      "hasBalcony": false,
-      "hasYard": false,
-      "isDualKey": false,
-      "ceilingHeightM": null,
-      "furnishingStatus": "UNFURNISHED"
+      "studyRooms": 0
     },
     {
       "code": "A1",
@@ -64,12 +58,7 @@
       "builtUpSqft": 2219,
       "bedrooms": 4,
       "bathrooms": 4,
-      "studyRooms": 0,
-      "hasBalcony": false,
-      "hasYard": false,
-      "isDualKey": false,
-      "ceilingHeightM": null,
-      "furnishingStatus": "UNFURNISHED"
+      "studyRooms": 0
     },
     {
       "code": "A2",
@@ -81,12 +70,7 @@
       "builtUpSqft": 2345,
       "bedrooms": 4,
       "bathrooms": 4,
-      "studyRooms": 0,
-      "hasBalcony": false,
-      "hasYard": false,
-      "isDualKey": false,
-      "ceilingHeightM": null,
-      "furnishingStatus": "UNFURNISHED"
+      "studyRooms": 0
     }
   ],
   "units": [
@@ -97,21 +81,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 1,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1091800,
-      "finalPrice": null
+      "finalPrice": 1091800
     },
     {
       "unitNo": "233010",
@@ -120,21 +110,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 2,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233011",
@@ -143,21 +139,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 3,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233012",
@@ -166,21 +168,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 4,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233013",
@@ -189,21 +197,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 5,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233014",
@@ -212,21 +226,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 6,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233015",
@@ -235,21 +255,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 7,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233016",
@@ -258,21 +284,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 8,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233017",
@@ -281,21 +313,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 9,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233018",
@@ -304,21 +342,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 10,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233019",
@@ -327,21 +371,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 11,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1091800,
-      "finalPrice": null
+      "finalPrice": 1091800
     },
     {
       "unitNo": "233020",
@@ -350,21 +400,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 12,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1091800,
-      "finalPrice": null
+      "finalPrice": 1091800
     },
     {
       "unitNo": "233021",
@@ -373,21 +429,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 13,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233022",
@@ -396,21 +458,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 14,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233023",
@@ -419,21 +487,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 15,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233024",
@@ -442,21 +516,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 16,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233025",
@@ -465,21 +545,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 17,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233026",
@@ -488,21 +574,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 18,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233027",
@@ -511,21 +603,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 19,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233028",
@@ -534,21 +632,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 20,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233029",
@@ -557,21 +661,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 21,
       "builtUpSqft": 2345,
       "landAreaSqft": 2918,
       "dimensionText": "42' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1594800,
-      "finalPrice": null
+      "finalPrice": 1594800
     },
     {
       "unitNo": "233030",
@@ -580,21 +690,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 22,
       "builtUpSqft": 2345,
       "landAreaSqft": 2918,
       "dimensionText": "42' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1594800,
-      "finalPrice": null
+      "finalPrice": 1594800
     },
     {
       "unitNo": "233031",
@@ -603,21 +719,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 23,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233032",
@@ -626,21 +748,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 24,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233033",
@@ -649,21 +777,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 25,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233034",
@@ -672,21 +806,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 26,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233035",
@@ -695,21 +835,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 27,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233036",
@@ -718,21 +864,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 28,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233037",
@@ -741,21 +893,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 29,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233038",
@@ -764,21 +922,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 30,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233039",
@@ -787,21 +951,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 31,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233040",
@@ -810,21 +980,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 32,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1091800,
-      "finalPrice": null
+      "finalPrice": 1091800
     },
     {
       "unitNo": "233041",
@@ -833,21 +1009,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 33,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1091800,
-      "finalPrice": null
+      "finalPrice": 1091800
     },
     {
       "unitNo": "233042",
@@ -856,21 +1038,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 34,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233043",
@@ -879,21 +1067,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 35,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233044",
@@ -902,21 +1096,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 36,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233045",
@@ -925,21 +1125,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 37,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233046",
@@ -948,21 +1154,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 38,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233047",
@@ -971,21 +1183,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 39,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233048",
@@ -994,21 +1212,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 40,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233049",
@@ -1017,21 +1241,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 41,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233050",
@@ -1040,21 +1270,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 42,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233051",
@@ -1063,21 +1299,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 43,
       "builtUpSqft": 2345,
       "landAreaSqft": 2918,
       "dimensionText": "42' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1594800,
-      "finalPrice": null
+      "finalPrice": 1594800
     },
     {
       "unitNo": "233052",
@@ -1086,21 +1328,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 44,
       "builtUpSqft": 2345,
       "landAreaSqft": 2918,
       "dimensionText": "42' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1594800,
-      "finalPrice": null
+      "finalPrice": 1594800
     },
     {
       "unitNo": "233053",
@@ -1109,21 +1357,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 45,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233054",
@@ -1132,21 +1386,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 46,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233055",
@@ -1155,21 +1415,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 47,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233056",
@@ -1178,21 +1444,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 48,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233057",
@@ -1201,21 +1473,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 49,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233058",
@@ -1224,21 +1502,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 50,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233059",
@@ -1247,21 +1531,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 51,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233060",
@@ -1270,21 +1560,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 52,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233061",
@@ -1293,21 +1589,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 53,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233062",
@@ -1316,21 +1618,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 54,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233063",
@@ -1339,21 +1647,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 55,
       "builtUpSqft": 2219,
       "landAreaSqft": 2530,
       "dimensionText": "36' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1393800,
-      "finalPrice": null
+      "finalPrice": 1393800
     },
     {
       "unitNo": "233064",
@@ -1362,21 +1676,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 56,
       "builtUpSqft": 2219,
       "landAreaSqft": 2530,
       "dimensionText": "36' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1419800,
-      "finalPrice": null
+      "finalPrice": 1419800
     },
     {
       "unitNo": "233065",
@@ -1385,21 +1705,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 57,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233066",
@@ -1408,21 +1734,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 58,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233067",
@@ -1431,21 +1763,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 59,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233068",
@@ -1454,21 +1792,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 60,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233069",
@@ -1477,21 +1821,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 61,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233070",
@@ -1500,21 +1850,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 62,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233071",
@@ -1523,21 +1879,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 63,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233072",
@@ -1546,21 +1908,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 64,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233073",
@@ -1569,21 +1937,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 65,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233074",
@@ -1592,21 +1966,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 66,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233075",
@@ -1615,21 +1995,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 67,
       "builtUpSqft": 2345,
       "landAreaSqft": 2918,
       "dimensionText": "42' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1619800,
-      "finalPrice": null
+      "finalPrice": 1619800
     },
     {
       "unitNo": "233076",
@@ -1638,21 +2024,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 68,
       "builtUpSqft": 2345,
       "landAreaSqft": 2918,
       "dimensionText": "42' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1619800,
-      "finalPrice": null
+      "finalPrice": 1619800
     },
     {
       "unitNo": "233077",
@@ -1661,21 +2053,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 69,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233078",
@@ -1684,21 +2082,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 70,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233079",
@@ -1707,21 +2111,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 71,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233080",
@@ -1730,21 +2140,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 72,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233081",
@@ -1753,21 +2169,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 73,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233082",
@@ -1776,21 +2198,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 74,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233083",
@@ -1799,21 +2227,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 75,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233084",
@@ -1822,21 +2256,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 76,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233085",
@@ -1845,21 +2285,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 77,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233086",
@@ -1868,21 +2314,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 78,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1113800,
-      "finalPrice": null
+      "finalPrice": 1113800
     },
     {
       "unitNo": "233087",
@@ -1891,21 +2343,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 79,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1113800,
-      "finalPrice": null
+      "finalPrice": 1113800
     },
     {
       "unitNo": "233088",
@@ -1914,21 +2372,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 80,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233089",
@@ -1937,21 +2401,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 81,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233090",
@@ -1960,21 +2430,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 82,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233091",
@@ -1983,21 +2459,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 83,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233092",
@@ -2006,21 +2488,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 84,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233093",
@@ -2029,21 +2517,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 85,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233094",
@@ -2052,21 +2546,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 86,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233095",
@@ -2075,21 +2575,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 87,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233096",
@@ -2098,21 +2604,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 88,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233097",
@@ -2121,21 +2633,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 89,
       "builtUpSqft": 2345,
       "landAreaSqft": 2918,
       "dimensionText": "42' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1619800,
-      "finalPrice": null
+      "finalPrice": 1619800
     },
     {
       "unitNo": "233098",
@@ -2144,21 +2662,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 90,
       "builtUpSqft": 2345,
       "landAreaSqft": 2918,
       "dimensionText": "42' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1619800,
-      "finalPrice": null
+      "finalPrice": 1619800
     },
     {
       "unitNo": "233099",
@@ -2167,21 +2691,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 91,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233100",
@@ -2190,21 +2720,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 92,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233101",
@@ -2213,21 +2749,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 93,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233102",
@@ -2236,21 +2778,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 94,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233103",
@@ -2259,21 +2807,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 95,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233104",
@@ -2282,21 +2836,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 96,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233105",
@@ -2305,21 +2865,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 97,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233106",
@@ -2328,21 +2894,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 98,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233107",
@@ -2351,21 +2923,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 99,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1113800,
-      "finalPrice": null
+      "finalPrice": 1113800
     },
     {
       "unitNo": "233108",
@@ -2374,21 +2952,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 100,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1113800,
-      "finalPrice": null
+      "finalPrice": 1113800
     },
     {
       "unitNo": "233109",
@@ -2397,21 +2981,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 101,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233110",
@@ -2420,21 +3010,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 102,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233111",
@@ -2443,21 +3039,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 103,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233112",
@@ -2466,21 +3068,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 104,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233113",
@@ -2489,21 +3097,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 105,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233114",
@@ -2512,21 +3126,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 106,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233115",
@@ -2535,21 +3155,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 107,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233116",
@@ -2558,21 +3184,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 108,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233117",
@@ -2581,21 +3213,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 109,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1047800,
-      "finalPrice": null
+      "finalPrice": 1047800
     },
     {
       "unitNo": "233118",
@@ -2604,21 +3242,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 110,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "S",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "S",
+        "name": "South"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1113800,
-      "finalPrice": null
+      "finalPrice": 1113800
     },
     {
       "unitNo": "233119",
@@ -2627,21 +3271,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 111,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1091800,
-      "finalPrice": null
+      "finalPrice": 1091800
     },
     {
       "unitNo": "233120",
@@ -2650,21 +3300,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 112,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233121",
@@ -2673,21 +3329,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 113,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233122",
@@ -2696,21 +3358,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 114,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233123",
@@ -2719,21 +3387,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 115,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233124",
@@ -2742,21 +3416,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 116,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233125",
@@ -2765,21 +3445,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 117,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233126",
@@ -2788,21 +3474,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 118,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233127",
@@ -2811,21 +3503,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 119,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233128",
@@ -2834,21 +3532,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 120,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233129",
@@ -2857,21 +3561,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 121,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1091800,
-      "finalPrice": null
+      "finalPrice": 1091800
     },
     {
       "unitNo": "233130",
@@ -2880,21 +3590,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 122,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1091800,
-      "finalPrice": null
+      "finalPrice": 1091800
     },
     {
       "unitNo": "233131",
@@ -2903,21 +3619,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 123,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233132",
@@ -2926,21 +3648,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 124,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233133",
@@ -2949,21 +3677,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 125,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233134",
@@ -2972,21 +3706,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 126,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233135",
@@ -2995,21 +3735,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 127,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233136",
@@ -3018,21 +3764,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 128,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233137",
@@ -3041,21 +3793,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 129,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233138",
@@ -3064,21 +3822,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 130,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233139",
@@ -3087,21 +3851,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 131,
       "builtUpSqft": 2345,
       "landAreaSqft": 2918,
       "dimensionText": "42' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1594800,
-      "finalPrice": null
+      "finalPrice": 1594800
     },
     {
       "unitNo": "233140",
@@ -3110,21 +3880,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 132,
       "builtUpSqft": 2345,
       "landAreaSqft": 2918,
       "dimensionText": "42' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1594800,
-      "finalPrice": null
+      "finalPrice": 1594800
     },
     {
       "unitNo": "233141",
@@ -3133,21 +3909,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 133,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233142",
@@ -3156,21 +3938,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 134,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233143",
@@ -3179,21 +3967,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 135,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233144",
@@ -3202,21 +3996,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 136,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233145",
@@ -3225,21 +4025,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 137,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233146",
@@ -3248,21 +4054,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 138,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233147",
@@ -3271,21 +4083,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 139,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233148",
@@ -3294,21 +4112,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 140,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233149",
@@ -3317,21 +4141,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 141,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233150",
@@ -3340,21 +4170,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 142,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1091800,
-      "finalPrice": null
+      "finalPrice": 1091800
     },
     {
       "unitNo": "233151",
@@ -3363,21 +4199,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 143,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1091800,
-      "finalPrice": null
+      "finalPrice": 1091800
     },
     {
       "unitNo": "233152",
@@ -3386,21 +4228,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 144,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233153",
@@ -3409,21 +4257,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 145,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233154",
@@ -3432,21 +4286,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 146,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233155",
@@ -3455,21 +4315,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 147,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233156",
@@ -3478,21 +4344,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 148,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233157",
@@ -3501,21 +4373,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 149,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233158",
@@ -3524,21 +4402,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 150,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233159",
@@ -3547,21 +4431,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 151,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233160",
@@ -3570,21 +4460,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 152,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233161",
@@ -3593,21 +4489,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 153,
       "builtUpSqft": 2345,
       "landAreaSqft": 2918,
       "dimensionText": "42' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1594800,
-      "finalPrice": null
+      "finalPrice": 1594800
     },
     {
       "unitNo": "233162",
@@ -3616,21 +4518,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 154,
       "builtUpSqft": 2345,
       "landAreaSqft": 2918,
       "dimensionText": "42' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "COR",
+        "name": "Corner"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1594800,
-      "finalPrice": null
+      "finalPrice": 1594800
     },
     {
       "unitNo": "233163",
@@ -3639,21 +4547,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 155,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233164",
@@ -3662,21 +4576,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 156,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233165",
@@ -3685,21 +4605,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 157,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233166",
@@ -3708,21 +4634,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 158,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233167",
@@ -3731,21 +4663,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 159,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233168",
@@ -3754,21 +4692,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 160,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233169",
@@ -3777,21 +4721,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 161,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233170",
@@ -3800,21 +4750,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 162,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233171",
@@ -3823,21 +4779,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 163,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233172",
@@ -3846,21 +4808,27 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 164,
       "builtUpSqft": 2219,
       "landAreaSqft": 1400,
       "dimensionText": "20' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "INTER",
+        "name": "Intermediate"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1025800,
-      "finalPrice": null
+      "finalPrice": 1025800
     },
     {
       "unitNo": "233173",
@@ -3869,108 +4837,273 @@
         "code": "MIXED",
         "name": "Mixed"
       },
-      "bookingStatus": null,
-      "floor": null,
-      "stack": null,
-      "streetName": null,
+      "bookingStatus": {
+        "code": "UNVERIFIED",
+        "name": "Availability Pending"
+      },
+      "blockCode": "L4(A)(I)",
       "displaySequence": 165,
       "builtUpSqft": 2219,
       "landAreaSqft": 2530,
       "dimensionText": "36' x 70'",
-      "facing": "N",
-      "positionType": null,
+      "facing": null,
+      "facingType": {
+        "code": "N",
+        "name": "North"
+      },
+      "positionType": {
+        "code": "END",
+        "name": "End"
+      },
       "carparkCount": 2,
-      "carparkLotNo": null,
-      "carparkType": null,
       "basePrice": 1393800,
-      "finalPrice": null
+      "finalPrice": 1393800
     }
   ],
   "amenities": [
-    "Gated Community",
-    "Guarded Community",
-    "Swimming Pool",
-    "Gym",
-    "Fitness Lounge",
-    "Rock Climbing",
-    "Badminton Courts",
-    "Pickleball Courts",
-    "Sauna Room",
-    "Event Hall"
+    "Gated and Guarded"
   ],
   "tags": [
-    "New Launch",
     "Freehold",
-    "Double Storey Terrace House",
-    "Riverside Living",
-    "Clubhouse"
+    "New Launch",
+    "Avenia L4(a)(i)"
   ],
-  "nearbyPlaces": [
+  "nearbyPlaces": [],
+  "availabilityPlans": [
     {
-      "name": "AEON Mall Bukit Indah",
-      "category": "Shopping",
-      "distanceKm": 5,
-      "sortOrder": 1
-    },
-    {
-      "name": "Lotus's Bukit Indah",
-      "category": "Shopping",
-      "distanceKm": 6,
-      "sortOrder": 2
-    },
-    {
-      "name": "NSK Sunway Big Box",
-      "category": "Shopping",
-      "distanceKm": 10,
-      "sortOrder": 3
-    },
-    {
-      "name": "Mydin Iskandar Puteri",
-      "category": "Shopping",
-      "distanceKm": 6,
-      "sortOrder": 4
-    },
-    {
-      "name": "Mall of Medini",
-      "category": "Shopping",
-      "distanceKm": 7,
-      "sortOrder": 5
-    },
-    {
-      "name": "Horizon Mall",
-      "category": "Shopping",
-      "distanceKm": 3,
-      "sortOrder": 6
-    },
-    {
-      "name": "Puteri Harbour",
-      "category": "Leisure",
-      "distanceKm": 10,
-      "sortOrder": 7
-    },
-    {
-      "name": "LEGOLAND Malaysia",
-      "category": "Leisure",
-      "distanceKm": 4,
-      "sortOrder": 8
-    },
-    {
-      "name": "Columbia Asia Hospital - Iskandar Puteri",
-      "category": "Healthcare",
-      "distanceKm": 6,
-      "sortOrder": 9
-    },
-    {
-      "name": "Kensington Green Specialist Centre",
-      "category": "Healthcare",
-      "distanceKm": 5,
-      "sortOrder": 10
-    },
-    {
-      "name": "Gleneagles Hospital Medini Johor",
-      "category": "Healthcare",
-      "distanceKm": 4,
-      "sortOrder": 11
+      "towerCode": "L4AI",
+      "plan": {
+        "sitePlan": {
+          "zoneCode": "AVENIA L4(A)(I)",
+          "title": "Avenia L4(a)(i) Live Site Plan",
+          "tabs": [
+            {
+              "code": "ALL",
+              "label": "All residences",
+              "layoutCodes": [
+                "A",
+                "A1",
+                "A2"
+              ]
+            }
+          ],
+          "rowGroups": [
+            {
+              "code": "NORTH_1",
+              "label": "North-facing strip cluster 1",
+              "rows": [
+                [
+                  "233009",
+                  "233010",
+                  "233011",
+                  "233012",
+                  "233013",
+                  "233014",
+                  "233015",
+                  "233016",
+                  "233017",
+                  "233018",
+                  "233019"
+                ],
+                [
+                  "233020",
+                  "233021",
+                  "233022",
+                  "233023",
+                  "233024",
+                  "233025",
+                  "233026",
+                  "233027",
+                  "233028",
+                  "233029",
+                  "233030"
+                ],
+                [
+                  "233031",
+                  "233032",
+                  "233033",
+                  "233034",
+                  "233035",
+                  "233036",
+                  "233037",
+                  "233038",
+                  "233039",
+                  "233040",
+                  "233041"
+                ],
+                [
+                  "233042",
+                  "233043",
+                  "233044",
+                  "233045",
+                  "233046",
+                  "233047",
+                  "233048",
+                  "233049",
+                  "233050",
+                  "233051",
+                  "233052"
+                ],
+                [
+                  "233053",
+                  "233054",
+                  "233055",
+                  "233056",
+                  "233057",
+                  "233058",
+                  "233059",
+                  "233060",
+                  "233061",
+                  "233062",
+                  "233063"
+                ]
+              ]
+            },
+            {
+              "code": "SOUTH",
+              "label": "South-facing strip cluster",
+              "rows": [
+                [
+                  "233064",
+                  "233065",
+                  "233066",
+                  "233067",
+                  "233068",
+                  "233069",
+                  "233070",
+                  "233071",
+                  "233072",
+                  "233073",
+                  "233074"
+                ],
+                [
+                  "233075",
+                  "233076",
+                  "233077",
+                  "233078",
+                  "233079",
+                  "233080",
+                  "233081",
+                  "233082",
+                  "233083",
+                  "233084",
+                  "233085"
+                ],
+                [
+                  "233086",
+                  "233087",
+                  "233088",
+                  "233089",
+                  "233090",
+                  "233091",
+                  "233092",
+                  "233093",
+                  "233094",
+                  "233095",
+                  "233096"
+                ],
+                [
+                  "233097",
+                  "233098",
+                  "233099",
+                  "233100",
+                  "233101",
+                  "233102",
+                  "233103",
+                  "233104",
+                  "233105",
+                  "233106",
+                  "233107"
+                ],
+                [
+                  "233108",
+                  "233109",
+                  "233110",
+                  "233111",
+                  "233112",
+                  "233113",
+                  "233114",
+                  "233115",
+                  "233116",
+                  "233117",
+                  "233118"
+                ]
+              ]
+            },
+            {
+              "code": "NORTH_2",
+              "label": "North-facing strip cluster 2",
+              "rows": [
+                [
+                  "233119",
+                  "233120",
+                  "233121",
+                  "233122",
+                  "233123",
+                  "233124",
+                  "233125",
+                  "233126",
+                  "233127",
+                  "233128",
+                  "233129"
+                ],
+                [
+                  "233130",
+                  "233131",
+                  "233132",
+                  "233133",
+                  "233134",
+                  "233135",
+                  "233136",
+                  "233137",
+                  "233138",
+                  "233139",
+                  "233140"
+                ],
+                [
+                  "233141",
+                  "233142",
+                  "233143",
+                  "233144",
+                  "233145",
+                  "233146",
+                  "233147",
+                  "233148",
+                  "233149",
+                  "233150",
+                  "233151"
+                ],
+                [
+                  "233152",
+                  "233153",
+                  "233154",
+                  "233155",
+                  "233156",
+                  "233157",
+                  "233158",
+                  "233159",
+                  "233160",
+                  "233161",
+                  "233162"
+                ],
+                [
+                  "233163",
+                  "233164",
+                  "233165",
+                  "233166",
+                  "233167",
+                  "233168",
+                  "233169",
+                  "233170",
+                  "233171",
+                  "233172",
+                  "233173"
+                ]
+              ]
+            }
+          ]
+        }
+      }
     }
   ]
 }

@@ -30,8 +30,12 @@ type UnitItem = {
   landAreaSqft: string | null;
   dimensionText: string | null;
   facing: string | null;
+  facingTypeId: string | null;
+  facingTypeName: string | null;
   positionTypeId: string | null;
   positionTypeName: string | null;
+  viewTypeId: string | null;
+  viewTypeName: string | null;
   carparkCount: number;
   carparkLotNo: string | null;
   carparkType: string | null;
@@ -49,6 +53,8 @@ type ProjectUnitManagerProps = {
   lotTypes: SelectOption[];
   bookingStatuses: SelectOption[];
   unitPositions: SelectOption[];
+  unitViews: SelectOption[];
+  unitFacings: SelectOption[];
   units: UnitItem[];
 };
 
@@ -83,6 +89,8 @@ function UnitRow({
   lotTypes,
   bookingStatuses,
   unitPositions,
+  unitViews,
+  unitFacings,
 }: {
   projectId: string;
   unit: UnitItem;
@@ -90,6 +98,8 @@ function UnitRow({
   lotTypes: SelectOption[];
   bookingStatuses: SelectOption[];
   unitPositions: SelectOption[];
+  unitViews: SelectOption[];
+  unitFacings: SelectOption[];
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -103,10 +113,11 @@ function UnitRow({
   const [builtUpSqft, setBuiltUpSqft] = useState(unit.builtUpSqft ?? "");
   const [landAreaSqft, setLandAreaSqft] = useState(unit.landAreaSqft ?? "");
   const [dimensionText, setDimensionText] = useState(unit.dimensionText ?? "");
-  const [facing, setFacing] = useState(unit.facing ?? "");
+  const [facingTypeId, setFacingTypeId] = useState(unit.facingTypeId ?? "__none__");
   const [positionTypeId, setPositionTypeId] = useState(
     unit.positionTypeId ?? "__none__",
   );
+  const [viewTypeId, setViewTypeId] = useState(unit.viewTypeId ?? "__none__");
   const [carparkCount, setCarparkCount] = useState(String(unit.carparkCount));
   const [carparkLotNo, setCarparkLotNo] = useState(unit.carparkLotNo ?? "");
   const [carparkType, setCarparkType] = useState(unit.carparkType ?? "");
@@ -129,8 +140,9 @@ function UnitRow({
         builtUpSqft,
         landAreaSqft,
         dimensionText,
-        facing,
+        facingTypeId,
         positionTypeId,
+        viewTypeId,
         carparkCount,
         carparkLotNo,
         carparkType,
@@ -242,13 +254,29 @@ function UnitRow({
         <Input type="number" min={0} value={builtUpSqft} onChange={(e) => setBuiltUpSqft(e.target.value)} placeholder="Built-up sqft" className="h-11 rounded-xl" />
         <Input type="number" min={0} value={landAreaSqft} onChange={(e) => setLandAreaSqft(e.target.value)} placeholder="Land area sqft" className="h-11 rounded-xl" />
         <Input value={dimensionText} onChange={(e) => setDimensionText(e.target.value)} placeholder="Dimension e.g. 20x70" className="h-11 rounded-xl" />
-        <Input value={facing} onChange={(e) => setFacing(e.target.value)} placeholder="Facing" className="h-11 rounded-xl" />
+        <AppSelect
+          value={facingTypeId}
+          onValueChange={setFacingTypeId}
+          placeholder="Facing"
+          options={selectOptions(unitFacings, true)}
+          triggerClassName="h-11 w-full justify-between rounded-xl border-slate-200 bg-white text-sm font-semibold"
+          contentClassName="min-w-[var(--radix-select-trigger-width)] rounded-2xl"
+        />
 
         <AppSelect
           value={positionTypeId}
           onValueChange={setPositionTypeId}
           placeholder="Position"
           options={selectOptions(unitPositions, true)}
+          triggerClassName="h-11 w-full justify-between rounded-xl border-slate-200 bg-white text-sm font-semibold"
+          contentClassName="min-w-[var(--radix-select-trigger-width)] rounded-2xl"
+        />
+
+        <AppSelect
+          value={viewTypeId}
+          onValueChange={setViewTypeId}
+          placeholder="View"
+          options={selectOptions(unitViews, true)}
           triggerClassName="h-11 w-full justify-between rounded-xl border-slate-200 bg-white text-sm font-semibold"
           contentClassName="min-w-[var(--radix-select-trigger-width)] rounded-2xl"
         />
@@ -285,6 +313,8 @@ export function ProjectUnitManager({
   lotTypes,
   bookingStatuses,
   unitPositions,
+  unitViews,
+  unitFacings,
   units,
 }: ProjectUnitManagerProps) {
   const router = useRouter();
@@ -299,8 +329,9 @@ export function ProjectUnitManager({
   const [builtUpSqft, setBuiltUpSqft] = useState("");
   const [landAreaSqft, setLandAreaSqft] = useState("");
   const [dimensionText, setDimensionText] = useState("");
-  const [facing, setFacing] = useState("");
+  const [facingTypeId, setFacingTypeId] = useState("__none__");
   const [positionTypeId, setPositionTypeId] = useState("__none__");
+  const [viewTypeId, setViewTypeId] = useState("__none__");
   const [carparkCount, setCarparkCount] = useState("1");
   const [carparkLotNo, setCarparkLotNo] = useState("");
   const [carparkType, setCarparkType] = useState("");
@@ -324,8 +355,9 @@ export function ProjectUnitManager({
         builtUpSqft,
         landAreaSqft,
         dimensionText,
-        facing,
+        facingTypeId,
         positionTypeId,
+        viewTypeId,
         carparkCount,
         carparkLotNo,
         carparkType,
@@ -348,7 +380,9 @@ export function ProjectUnitManager({
       setBuiltUpSqft("");
       setLandAreaSqft("");
       setDimensionText("");
-      setFacing("");
+      setFacingTypeId("__none__");
+      setPositionTypeId("__none__");
+      setViewTypeId("__none__");
       setCarparkCount("1");
       setCarparkLotNo("");
       setCarparkType("");
@@ -382,9 +416,10 @@ export function ProjectUnitManager({
           <Input type="number" min={0} value={builtUpSqft} onChange={(e) => setBuiltUpSqft(e.target.value)} placeholder="Built-up sqft" className="h-11 rounded-xl" />
           <Input type="number" min={0} value={landAreaSqft} onChange={(e) => setLandAreaSqft(e.target.value)} placeholder="Land area sqft" className="h-11 rounded-xl" />
           <Input value={dimensionText} onChange={(e) => setDimensionText(e.target.value)} placeholder="Dimension e.g. 20x70" className="h-11 rounded-xl" />
-          <Input value={facing} onChange={(e) => setFacing(e.target.value)} placeholder="Facing" className="h-11 rounded-xl" />
+          <AppSelect value={facingTypeId} onValueChange={setFacingTypeId} placeholder="Facing" options={selectOptions(unitFacings, true)} triggerClassName="h-11 w-full justify-between rounded-xl border-slate-200 bg-white text-sm font-semibold" contentClassName="min-w-[var(--radix-select-trigger-width)] rounded-2xl" />
 
           <AppSelect value={positionTypeId} onValueChange={setPositionTypeId} placeholder="Position" options={selectOptions(unitPositions, true)} triggerClassName="h-11 w-full justify-between rounded-xl border-slate-200 bg-white text-sm font-semibold" contentClassName="min-w-[var(--radix-select-trigger-width)] rounded-2xl" />
+          <AppSelect value={viewTypeId} onValueChange={setViewTypeId} placeholder="View" options={selectOptions(unitViews, true)} triggerClassName="h-11 w-full justify-between rounded-xl border-slate-200 bg-white text-sm font-semibold" contentClassName="min-w-[var(--radix-select-trigger-width)] rounded-2xl" />
           <Input type="number" min={0} value={carparkCount} onChange={(e) => setCarparkCount(e.target.value)} placeholder="Carpark count" className="h-11 rounded-xl" />
           <Input value={basePrice} onChange={(e) => setBasePrice(e.target.value)} placeholder="Base price" className="h-11 rounded-xl" />
           <Input value={finalPrice} onChange={(e) => setFinalPrice(e.target.value)} placeholder="Final price" className="h-11 rounded-xl" />
@@ -418,6 +453,8 @@ export function ProjectUnitManager({
             lotTypes={lotTypes}
             bookingStatuses={bookingStatuses}
             unitPositions={unitPositions}
+            unitViews={unitViews}
+            unitFacings={unitFacings}
           />
         ))}
 

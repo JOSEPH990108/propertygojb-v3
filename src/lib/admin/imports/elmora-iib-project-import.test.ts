@@ -52,12 +52,13 @@ describe("Elmora IIB import dataset", () => {
     );
   });
 
-  it("stores each verified unit view as its direct facing label", () => {
+  it("stores each unit view separately from its physical position and facing", () => {
     for (const unit of elmoraImport.units) {
-      expect(unit.facing).toBe(
-        unit.positionType?.code === "FACILITIES_VIEW"
-          ? "Facilities View"
-          : "River View",
+      expect(unit.positionType).toBeNull();
+      expect(unit.facing).toBeNull();
+      expect(["RIVER_VIEW", "FACILITIES_VIEW"]).toContain(unit.viewType?.code);
+      expect(unit.viewType?.name).toBe(
+        unit.viewType?.code === "FACILITIES_VIEW" ? "Facilities View" : "River View",
       );
     }
   });
@@ -72,8 +73,8 @@ describe("Elmora IIB import dataset", () => {
       expect(floor19Units.map((unit) => unit.stack)).toEqual(
         Array.from({ length: 22 }, (_, index) => String(index + 1).padStart(2, "0")),
       );
-      expect(floor19Units.find((unit) => unit.stack === "07")?.positionType?.code).toBe("RIVER_VIEW");
-      expect(floor19Units.find((unit) => unit.stack === "17")?.positionType?.code).toBe("FACILITIES_VIEW");
+      expect(floor19Units.find((unit) => unit.stack === "07")?.viewType?.code).toBe("RIVER_VIEW");
+      expect(floor19Units.find((unit) => unit.stack === "17")?.viewType?.code).toBe("FACILITIES_VIEW");
     }
   });
 

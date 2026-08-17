@@ -187,8 +187,32 @@ export async function seedCoreLookups(db: DB) {
       { code: "END", name: "End" },
       { code: "EU", name: "End Unit" },
       { code: "EUL", name: "End Unit (Extra Land)" },
+    ])
+    .onConflictDoNothing();
+
+  await db
+    .insert(schema.unitViews)
+    .values([
+      { code: "RIVER_VIEW", name: "River View" },
+      { code: "FACILITIES_VIEW", name: "Facilities View" },
       { code: "CITY_VIEW", name: "City View" },
       { code: "SEA_VIEW", name: "Sea View" },
+      { code: "LAKE_GOLF_CITY_VIEW", name: "Lake, Golf & City View" },
+      { code: "SINGAPORE_VIEW", name: "Singapore View" },
+    ])
+    .onConflictDoNothing();
+
+  await db
+    .insert(schema.unitFacings)
+    .values([
+      { code: "N", name: "North" },
+      { code: "NE", name: "North East" },
+      { code: "E", name: "East" },
+      { code: "SE", name: "South East" },
+      { code: "S", name: "South" },
+      { code: "SW", name: "South West" },
+      { code: "W", name: "West" },
+      { code: "NW", name: "North West" },
     ])
     .onConflictDoNothing();
 

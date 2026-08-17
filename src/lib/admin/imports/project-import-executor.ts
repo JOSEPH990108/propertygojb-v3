@@ -341,6 +341,116 @@ async function findOrCreateUnitPosition(ref: LookupRef | null | undefined) {
   return firstId(inserted, "unit position");
 }
 
+async function findOrCreateUnitView(ref: LookupRef | null | undefined) {
+  if (!ref) {
+    return null;
+  }
+
+  const item = normalizeLookupRef(ref);
+  const existing = await db.query.unitViews.findFirst({
+    where: (table, { eq }) => eq(table.code, item.code),
+    columns: {
+      id: true,
+    },
+  });
+
+  if (existing) {
+    return existing.id;
+  }
+
+  const inserted = await db
+    .insert(schema.unitViews)
+    .values({
+      code: item.code,
+      name: item.name,
+      description: null,
+      sortOrder: 0,
+      isActive: true,
+    })
+    .returning({
+      id: schema.unitViews.id,
+    });
+
+  return firstId(inserted, "unit view");
+}
+
+const facingCodeByLegacyValue: Record<string, string> = {
+  N: "N",
+  NORTH: "N",
+  NE: "NE",
+  NORTH_EAST: "NE",
+  NORTHEAST: "NE",
+  E: "E",
+  EAST: "E",
+  SE: "SE",
+  SOUTH_EAST: "SE",
+  SOUTHEAST: "SE",
+  S: "S",
+  SOUTH: "S",
+  SW: "SW",
+  SOUTH_WEST: "SW",
+  SOUTHWEST: "SW",
+  W: "W",
+  WEST: "W",
+  NW: "NW",
+  NORTH_WEST: "NW",
+  NORTHWEST: "NW",
+};
+
+function normalizeFacingRef(ref: LookupRef | string | null | undefined) {
+  if (!ref) {
+    return null;
+  }
+
+  const item = typeof ref === "string"
+    ? { code: normalizeCode(ref), name: ref.trim() }
+    : normalizeLookupRef(ref);
+  const code = facingCodeByLegacyValue[item.code] ?? item.code;
+
+  return {
+    code,
+    name: ({
+      N: "North",
+      NE: "North East",
+      E: "East",
+      SE: "South East",
+      S: "South",
+      SW: "South West",
+      W: "West",
+      NW: "North West",
+    } as Record<string, string>)[code] ?? item.name,
+  };
+}
+
+async function findOrCreateUnitFacing(ref: LookupRef | string | null | undefined) {
+  const item = normalizeFacingRef(ref);
+  if (!item) {
+    return null;
+  }
+
+  const existing = await db.query.unitFacings.findFirst({
+    where: (table, { eq }) => eq(table.code, item.code),
+    columns: { id: true },
+  });
+
+  if (existing) {
+    return existing.id;
+  }
+
+  const inserted = await db
+    .insert(schema.unitFacings)
+    .values({
+      code: item.code,
+      name: item.name,
+      description: null,
+      sortOrder: 0,
+      isActive: true,
+    })
+    .returning({ id: schema.unitFacings.id });
+
+  return firstId(inserted, "unit facing");
+}
+
 async function findOrCreateLocation(
   location: ProjectImportPayload["project"]["location"],
 ) {
@@ -673,7 +783,15 @@ export async function executeProjectImport(payloadInput: unknown) {
     const layoutCode = unit.layoutCode ? normalizeCode(unit.layoutCode) : null;
     const layoutId = layoutCode ? layoutIdByCode.get(layoutCode) ?? null : null;
     const lotTypeId = await findOrCreateLotType(unit.lotType);
-    const positionTypeId = await findOrCreateUnitPosition(unit.positionType);
+    const legacyViewCodes = new Set(["RIVER_VIEW", "FACILITIES_VIEW", "CITY_VIEW", "SEA_VIEW"]);
+    const positionIsLegacyView = unit.positionType && legacyViewCodes.has(normalizeLookupRef(unit.positionType).code);
+    const positionTypeId = positionIsLegacyView
+      ? null
+      : await findOrCreateUnitPosition(unit.positionType);
+    const viewTypeId = await findOrCreateUnitView(
+      unit.viewType ?? (positionIsLegacyView ? unit.positionType : null),
+    );
+    const facingTypeId = await findOrCreateUnitFacing(unit.facingType ?? unit.facing);
 
     const existingUnit = await db.query.units.findFirst({
       where: (table, { and, eq }) =>
@@ -698,12 +816,15 @@ export async function executeProjectImport(payloadInput: unknown) {
       floor: unit.floor ?? null,
       stack: unit.stack ?? null,
       streetName: unit.streetName ?? null,
+      blockCode: unit.blockCode ?? null,
       displaySequence: unit.displaySequence,
       builtUpSqft: optionalMoney(unit.builtUpSqft),
       landAreaSqft: optionalMoney(unit.landAreaSqft),
       dimensionText: unit.dimensionText ?? null,
-      facing: unit.facing ?? null,
+      facing: null,
+      facingTypeId,
       positionTypeId,
+      viewTypeId,
       carparkCount: unit.carparkCount,
       carparkLotNo: unit.carparkLotNo ?? null,
       carparkType: unit.carparkType ?? null,
