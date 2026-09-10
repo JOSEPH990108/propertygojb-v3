@@ -1,4 +1,5 @@
-import { PublicEnquiryPage } from "@/components/public/public-enquiry-page";
+import { ContactEnquiryExperience } from "@/components/public/contact/contact-enquiry-experience";
+import { getPublicAreaNames } from "@/lib/public/areas";
 import { getPublicProjectCatalog } from "@/lib/public/projects";
 import { buildPublicPageMetadata } from "@/lib/public/seo";
 
@@ -10,17 +11,24 @@ export const metadata = buildPublicPageMetadata({
 });
 
 export default async function ContactPage() {
-  const projects = await getPublicProjectCatalog();
+  const [projects, areaOptions] = await Promise.all([
+    getPublicProjectCatalog(),
+    getPublicAreaNames(),
+  ]);
+
+  const projectOptions = projects.map((project) => ({
+    id: project.id,
+    name: project.name,
+    displayName: project.displayName,
+  }));
 
   return (
-    <PublicEnquiryPage
-      eyebrow="Contact PropertyGoJB"
-      title="Talk to our team about the right project fit."
-      description="Send us your details and we will follow up with the latest project availability, floor plans, and pricing guidance."
-      callout="We help buyers compare launches, shortlist options by budget, and move quickly when a suitable unit becomes available."
-      formTitle="Send a general enquiry"
-      formDescription="Choose a project if you already have one in mind, or ask us to recommend the best match for your budget and location."
-      projectOptions={projects}
+    <ContactEnquiryExperience
+      eyebrow="A Considered Beginning"
+      title="Let's find the right property for you."
+      description="Already have a project in mind? Great. Not sure yet? Tell us what you're looking for and we'll help you narrow it down."
+      projects={projectOptions}
+      areaOptions={areaOptions}
     />
   );
 }

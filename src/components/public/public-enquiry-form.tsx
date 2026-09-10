@@ -1,14 +1,28 @@
 "use client";
 
-import { FormEvent, useId, useMemo, useState, useTransition } from "react";
+import {
+  FormEvent,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { CalendarClock, CheckCircle2, MessageCircle, Send } from "lucide-react";
 
 import { AppButton } from "@/components/common/app-button";
-import { AppSelect, type AppSelectOption } from "@/components/common/app-select";
+import { AppFieldError } from "@/components/common/app-field-error";
+import {
+  AppSelect,
+  type AppSelectOption,
+} from "@/components/common/app-select";
 import { Input } from "@/components/ui/input";
 import { postJson } from "@/lib/api/client";
 import { appToast } from "@/lib/app-toast";
-import { getMarketingAttribution, trackMarketingEvent } from "@/lib/public/analytics";
+import {
+  getMarketingAttribution,
+  trackMarketingEvent,
+} from "@/lib/public/analytics";
 import {
   PUBLIC_CONTACT_METHOD_OPTIONS,
   PUBLIC_COUNTRY_CODE_OPTIONS,
@@ -52,7 +66,9 @@ const VIEWING_TIME_OPTIONS: AppSelectOption[] = Array.from(
   },
 );
 
-function buildProjectSelectOptions(projectOptions: PublicEnquiryProjectOption[]): AppSelectOption[] {
+function buildProjectSelectOptions(
+  projectOptions: PublicEnquiryProjectOption[],
+): AppSelectOption[] {
   return projectOptions.map((project) => ({
     value: project.id,
     label: project.displayName ?? project.name,
@@ -82,7 +98,8 @@ export function PublicEnquiryForm({
   const [countryCode, setCountryCode] = useState("+60");
   const [mobileNumber, setMobileNumber] = useState(initialPhoneNumber);
   const [email, setEmail] = useState(initialEmail);
-  const [preferredContactMethod, setPreferredContactMethod] = useState("WHATSAPP");
+  const [preferredContactMethod, setPreferredContactMethod] =
+    useState("WHATSAPP");
   const [viewingDate, setViewingDate] = useState("");
   const [viewingTime, setViewingTime] = useState("");
   const [message, setMessage] = useState(
@@ -92,6 +109,10 @@ export function PublicEnquiryForm({
         ? "I would like to arrange a project viewing. Please confirm the preferred time with me."
         : "I am looking for a suitable project in Johor Bahru. Please contact me with the latest details.",
   );
+  const [projectError, setProjectError] = useState<string | null>(null);
+  const [mobileError, setMobileError] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
+  const mobileInputRef = useRef<HTMLInputElement>(null);
 
   const selectedProject = useMemo(
     () => projectOptions.find((project) => project.id === selectedProjectId),
@@ -100,29 +121,38 @@ export function PublicEnquiryForm({
 
   const resolvedProjectId = projectId ?? selectedProjectId;
   const resolvedProjectName =
-    projectName ?? selectedProject?.displayName ?? selectedProject?.name ?? "Selected project";
+    projectName ??
+    selectedProject?.displayName ??
+    selectedProject?.name ??
+    "Selected project";
 
   const canSubmit = Boolean(
     fullName.trim() &&
-      mobileNumber.trim() &&
-      resolvedProjectId &&
-      (!viewingRequest || (viewingDate && viewingTime)),
+    mobileNumber.trim() &&
+    resolvedProjectId &&
+    (!viewingRequest || (viewingDate && viewingTime)),
   );
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    setFormError(null);
+
     if (!resolvedProjectId || !resolvedProjectName) {
-      appToast.error("Please choose a project.");
+      // Persistent field error already announces this; a toast would duplicate it.
+      setProjectError("Please choose a project.");
       return;
     }
+    setProjectError(null);
 
     const phoneNumber = buildPublicPhoneNumber(countryCode, mobileNumber);
 
     if (!phoneNumber) {
-      appToast.error("Please enter a valid mobile number.");
+      setMobileError("Please enter a valid mobile number.");
+      mobileInputRef.current?.focus();
       return;
     }
+    setMobileError(null);
 
     startTransition(async () => {
       const result = await postJson<{ leadId: string; inquiryId?: string }>(
@@ -135,7 +165,8 @@ export function PublicEnquiryForm({
           email,
           message,
           sourcePage:
-            sourcePage ?? (typeof window !== "undefined" ? window.location.pathname : null),
+            sourcePage ??
+            (typeof window !== "undefined" ? window.location.pathname : null),
           preferredContactMethod,
           attribution: getMarketingAttribution(),
           viewingPreference: viewingRequest
@@ -145,7 +176,8 @@ export function PublicEnquiryForm({
       );
 
       if (!result.ok) {
-        appToast.error(result.message);
+        // Persistent form error already announces this; a toast would duplicate it.
+        setFormError(result.message);
         return;
       }
 
@@ -177,7 +209,7 @@ export function PublicEnquiryForm({
     );
 
     return (
-      <div className="rounded-[2rem] border border-emerald-200 bg-emerald-50/90 p-6 text-center shadow-sm">
+      <div className="rounded-none border border-emerald-200 bg-emerald-50/90 p-6 text-center shadow-sm">
         <CheckCircle2 className="mx-auto size-10 text-emerald-600" />
         <h3 className="mt-4 text-xl font-black tracking-tight text-emerald-950">
           {viewingRequest ? "Viewing request received" : "Enquiry submitted"}
@@ -192,7 +224,7 @@ export function PublicEnquiryForm({
           href={whatsappHref}
           target="_blank"
           rel="noreferrer"
-          className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 text-sm font-black text-white shadow-sm transition hover:bg-emerald-700"
+          className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-success text-success-foreground px-5 text-sm font-black shadow-sm transition hover:brightness-95"
         >
           <MessageCircle className="size-4" />
           Continue on WhatsApp
@@ -202,52 +234,74 @@ export function PublicEnquiryForm({
   }
 
   return (
-    <div className="rounded-[2rem] border border-border bg-card p-6 text-card-foreground shadow-sm">
+    <div className="rounded-none border border-border bg-card p-6 text-card-foreground shadow-sm">
       <div>
-        <p className="text-sm font-black uppercase tracking-[0.2em] text-blue-600">
+        <p className="text-sm font-black uppercase tracking-[0.2em] text-public-decorative">
           {viewingRequest ? "Viewing Request" : "Enquiry"}
         </p>
         <h3 className="mt-2 text-2xl font-black tracking-tight text-card-foreground">
           {introTitle}
         </h3>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">{introDescription}</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          {introDescription}
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         {!projectId ? (
           <div className="space-y-2">
-            <label id={`${fieldId}-project-label`} htmlFor={`${fieldId}-project`} className="block text-sm font-bold text-foreground">
+            <label
+              id={`${fieldId}-project-label`}
+              htmlFor={`${fieldId}-project`}
+              className="block text-sm font-bold text-foreground"
+            >
               Project Interest <span className="text-red-500">*</span>
             </label>
             <AppSelect
               id={`${fieldId}-project`}
               ariaLabelledBy={`${fieldId}-project-label`}
+              ariaDescribedBy={
+                projectError ? `${fieldId}-project-error` : undefined
+              }
+              ariaInvalid={Boolean(projectError)}
               value={selectedProjectId}
-              onValueChange={setSelectedProjectId}
+              onValueChange={(nextValue) => {
+                setSelectedProjectId(nextValue);
+                setProjectError(null);
+              }}
               options={buildProjectSelectOptions(projectOptions)}
               placeholder="Choose a project"
               searchable
               triggerClassName="h-12 w-full justify-between rounded-2xl border-border bg-background px-4 text-left text-sm font-semibold text-foreground shadow-sm"
               contentClassName="rounded-2xl"
             />
+            <AppFieldError id={`${fieldId}-project-error`}>
+              {projectError}
+            </AppFieldError>
           </div>
         ) : null}
 
         {viewingRequest ? (
-          <div className="rounded-2xl border border-blue-200 bg-blue-50/70 p-4 dark:border-blue-900 dark:bg-blue-950/30">
+          <div className="rounded-2xl border border-info/30 bg-info/10 p-4">
             <div className="flex items-start gap-3">
-              <CalendarClock className="mt-0.5 size-5 shrink-0 text-blue-600" />
+              <CalendarClock className="mt-0.5 size-5 shrink-0 text-info" />
               <div>
-                <p className="text-sm font-black text-foreground">Preferred viewing time</p>
+                <p className="text-sm font-black text-foreground">
+                  Preferred viewing time
+                </p>
                 <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                  Choose a preferred slot in Malaysia time. The appointment is confirmed only after our team contacts you.
+                  Choose a preferred slot in Malaysia time. The appointment is
+                  confirmed only after our team contacts you.
                 </p>
               </div>
             </div>
 
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <div className="space-y-2">
-                <label htmlFor={`${fieldId}-viewing-date`} className="block text-sm font-bold text-foreground">
+                <label
+                  htmlFor={`${fieldId}-viewing-date`}
+                  className="block text-sm font-bold text-foreground"
+                >
                   Preferred Date <span className="text-red-500">*</span>
                 </label>
                 <Input
@@ -263,7 +317,11 @@ export function PublicEnquiryForm({
               </div>
 
               <div className="space-y-2">
-                <label id={`${fieldId}-viewing-time-label`} htmlFor={`${fieldId}-viewing-time`} className="block text-sm font-bold text-foreground">
+                <label
+                  id={`${fieldId}-viewing-time-label`}
+                  htmlFor={`${fieldId}-viewing-time`}
+                  className="block text-sm font-bold text-foreground"
+                >
                   Preferred Time <span className="text-red-500">*</span>
                 </label>
                 <AppSelect
@@ -285,7 +343,10 @@ export function PublicEnquiryForm({
         ) : null}
 
         <div className="space-y-2">
-          <label htmlFor={`${fieldId}-name`} className="block text-sm font-bold text-foreground">
+          <label
+            htmlFor={`${fieldId}-name`}
+            className="block text-sm font-bold text-foreground"
+          >
             Name <span className="text-red-500">*</span>
           </label>
           <Input
@@ -302,20 +363,31 @@ export function PublicEnquiryForm({
 
         <div className="grid gap-3 sm:grid-cols-[150px_1fr]">
           <div className="space-y-2">
-            <label id={`${fieldId}-country-code-label`} htmlFor={`${fieldId}-country-code`} className="block text-sm font-bold text-foreground">Country Code</label>
+            <label
+              id={`${fieldId}-country-code-label`}
+              htmlFor={`${fieldId}-country-code`}
+              className="block text-sm font-bold text-foreground"
+            >
+              Country Code
+            </label>
             <AppSelect
               id={`${fieldId}-country-code`}
               ariaLabelledBy={`${fieldId}-country-code-label`}
               value={countryCode}
               onValueChange={setCountryCode}
               options={PUBLIC_COUNTRY_CODE_OPTIONS}
+              searchable
+              searchPlaceholder="Search country..."
               triggerClassName="h-12 w-full justify-between rounded-2xl border-border bg-background px-4 text-left text-sm font-semibold text-foreground shadow-sm"
               contentClassName="rounded-2xl"
             />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor={`${fieldId}-mobile`} className="block text-sm font-bold text-foreground">
+            <label
+              htmlFor={`${fieldId}-mobile`}
+              className="block text-sm font-bold text-foreground"
+            >
               Mobile Number <span className="text-red-500">*</span>
             </label>
             <Input
@@ -325,16 +397,32 @@ export function PublicEnquiryForm({
               inputMode="tel"
               autoComplete="tel-national"
               required
+              ref={mobileInputRef}
+              aria-invalid={Boolean(mobileError)}
+              aria-describedby={
+                mobileError ? `${fieldId}-mobile-error` : undefined
+              }
               value={mobileNumber}
-              onChange={(event) => setMobileNumber(event.target.value)}
+              onChange={(event) => {
+                setMobileNumber(event.target.value);
+                setMobileError(null);
+              }}
               placeholder="Example: 104608699"
               className="h-12 rounded-2xl"
             />
+            <AppFieldError id={`${fieldId}-mobile-error`}>
+              {mobileError}
+            </AppFieldError>
           </div>
         </div>
 
         <div className="space-y-2">
-          <label htmlFor={`${fieldId}-email`} className="block text-sm font-bold text-foreground">Email</label>
+          <label
+            htmlFor={`${fieldId}-email`}
+            className="block text-sm font-bold text-foreground"
+          >
+            Email
+          </label>
           <Input
             id={`${fieldId}-email`}
             name="email"
@@ -348,7 +436,11 @@ export function PublicEnquiryForm({
         </div>
 
         <div className="space-y-2">
-          <label id={`${fieldId}-contact-method-label`} htmlFor={`${fieldId}-contact-method`} className="block text-sm font-bold text-foreground">
+          <label
+            id={`${fieldId}-contact-method-label`}
+            htmlFor={`${fieldId}-contact-method`}
+            className="block text-sm font-bold text-foreground"
+          >
             Preferred Contact Method
           </label>
           <AppSelect
@@ -363,20 +455,30 @@ export function PublicEnquiryForm({
         </div>
 
         <div className="space-y-2">
-          <label htmlFor={`${fieldId}-message`} className="block text-sm font-bold text-foreground">Message</label>
+          <label
+            htmlFor={`${fieldId}-message`}
+            className="block text-sm font-bold text-foreground"
+          >
+            Message
+          </label>
           <textarea
             id={`${fieldId}-message`}
             name="message"
             value={message}
             onChange={(event) => setMessage(event.target.value)}
             rows={4}
-            className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm font-semibold text-foreground outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+            className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm font-semibold text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/30"
           />
         </div>
+
+        <AppFieldError id={`${fieldId}-form-error`} className="text-center">
+          {formError}
+        </AppFieldError>
 
         <AppButton
           type="submit"
           disabled={!canSubmit || isPending}
+          isLoading={isPending}
           className="h-12 w-full rounded-2xl text-sm"
         >
           {isPending ? (

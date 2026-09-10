@@ -48,24 +48,36 @@ export function PublicEnquiryPage({
   const classes = toneClasses[tone];
 
   return (
-    <div className="bg-muted/40 px-4 py-12 sm:px-6 lg:px-8">
+    <div className="bg-muted/40 px-4 pt-28 pb-12 sm:px-6 lg:px-8">
       <section className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
         <AppReveal
           className={cn(
-            "space-y-6 rounded-[2rem] p-8 text-white shadow-2xl",
+            "space-y-6 rounded-none p-8 text-white shadow-2xl",
             classes.panel,
           )}
         >
-          <p className={cn("text-sm font-black uppercase tracking-[0.28em]", classes.eyebrow)}>
+          <p
+            className={cn(
+              "text-sm font-black uppercase tracking-[0.28em]",
+              classes.eyebrow,
+            )}
+          >
             {eyebrow}
           </p>
-          <h1 className="text-4xl font-black tracking-tight sm:text-5xl">{title}</h1>
-          <p className={cn("text-sm leading-7 sm:text-base", classes.description)}>
+          <h1 className="text-4xl font-black tracking-tight sm:text-5xl">
+            {title}
+          </h1>
+          <p
+            className={cn(
+              "text-sm leading-7 sm:text-base",
+              classes.description,
+            )}
+          >
             {description}
           </p>
           <div
             className={cn(
-              "rounded-[1.75rem] border p-5 text-sm leading-7 backdrop-blur",
+              "rounded-none border p-5 text-sm leading-7 backdrop-blur",
               classes.callout,
             )}
           >
