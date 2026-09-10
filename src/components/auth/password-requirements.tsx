@@ -1,7 +1,5 @@
 "use client";
 
-import { LockKeyhole } from "lucide-react";
-
 import { passwordRequirements } from "@/lib/auth/password-policy";
 import { cn } from "@/lib/utils";
 
@@ -19,16 +17,10 @@ export function PasswordRequirements({
   }
 
   return (
-    <div className="mt-2 rounded-2xl border border-blue-100 bg-blue-50/70 p-4 shadow-sm">
-      <div className="mb-3 flex items-center gap-3">
-        <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-blue-100 text-blue-600">
-          <LockKeyhole className="size-4" />
-        </span>
-
-        <p className="text-sm font-semibold leading-none text-slate-700">
-          Password requirements
-        </p>
-      </div>
+    <div className="mt-3 border border-border bg-muted/40 p-4">
+      <p className="mb-3 text-[0.65rem] font-medium tracking-[0.2em] text-muted-foreground uppercase">
+        Password requirements
+      </p>
 
       <div className="space-y-2">
         {passwordRequirements.map((requirement) => {
@@ -42,10 +34,10 @@ export function PasswordRequirements({
               <span
                 aria-hidden="true"
                 className={cn(
-                  "grid size-5 shrink-0 place-items-center rounded-full text-[12px] font-bold leading-none transition-colors",
+                  "grid size-5 shrink-0 place-items-center rounded-full text-[12px] leading-none font-bold transition-colors",
                   passed
-                    ? "bg-emerald-500 text-white"
-                    : "bg-slate-200 text-slate-500",
+                    ? "bg-success text-success-foreground"
+                    : "bg-border text-muted-foreground",
                 )}
               >
                 {passed ? "✓" : "×"}
@@ -54,7 +46,7 @@ export function PasswordRequirements({
               <span
                 className={cn(
                   "text-sm leading-5 transition-colors",
-                  passed ? "text-emerald-700" : "text-slate-500",
+                  passed ? "text-foreground" : "text-muted-foreground",
                 )}
               >
                 {requirement.label}

@@ -43,6 +43,14 @@ export const unitPositions = pgTable(
   }),
 );
 
+export const unitViews = pgTable("unit_views", lookupColumns(), (t) => ({
+  uniqCode: unique().on(t.code),
+}));
+
+export const unitFacings = pgTable("unit_facings", lookupColumns(), (t) => ({
+  uniqCode: unique().on(t.code),
+}));
+
 export const projectStatuses = pgTable(
   "project_statuses",
   lookupColumns(),

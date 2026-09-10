@@ -43,6 +43,28 @@ const systemSettingsBaseline = [
     isReadOnly: false,
     isActive: true,
   },
+  {
+    key: "booking.reservation_expiry_days",
+    environment: "ALL",
+    category: "BOOKING",
+    valueType: "NUMBER",
+    valueJson: 3,
+    changeReason: "Default booking deposit lock period.",
+    isSecret: false,
+    isReadOnly: false,
+    isActive: true,
+  },
+  {
+    key: "booking.lo_sign_expiry_days",
+    environment: "ALL",
+    category: "BOOKING",
+    valueType: "NUMBER",
+    valueJson: 14,
+    changeReason: "Default LO signing period after LO is obtained.",
+    isSecret: false,
+    isReadOnly: false,
+    isActive: true,
+  },
 ] as const;
 
 const featureFlagsBaseline = [

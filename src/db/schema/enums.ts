@@ -36,6 +36,10 @@ export const bookingStatusEnum = pgEnum("booking_status", [
   "DOCS_PENDING",
   "DOCS_VERIFIED",
   "APPROVED",
+  "LO_OBTAINED",
+  "LO_SIGNED",
+  "SPA_SIGNED",
+  "SOLD",
   "REJECTED",
   "EXPIRED",
   "CANCELLED",
@@ -75,6 +79,7 @@ export const otpPurposeEnum = pgEnum("otp_purpose", [
   "LOGIN",
   "REGISTER",
   "PASSWORD_RESET",
+  "PHONE_CHANGE",
 ]);
 
 export const otpChannelEnum = pgEnum("otp_channel", [

@@ -124,6 +124,7 @@ export async function seedCoreLookups(db: DB) {
       { code: "UPCOMING", name: "Upcoming" },
       { code: "SUBSALE", name: "Subsale" },
       { code: "FULLY_SOLD", name: "Fully Sold" },
+      { code: "COMING_SOON", name: "Coming Soon" },
     ])
     .onConflictDoNothing();
 
@@ -141,6 +142,11 @@ export async function seedCoreLookups(db: DB) {
     .values([
       { code: "AVAILABLE", name: "Available" },
       { code: "RESERVED", name: "Reserved" },
+      { code: "BOOKING", name: "Booking" },
+      { code: "APPROVED", name: "Approved" },
+      { code: "LO_OBTAINED", name: "LO Obtained" },
+      { code: "LO_SIGNED", name: "LO Signed" },
+      { code: "SPA_SIGNED", name: "SPA Signed" },
       { code: "SOLD", name: "Sold" },
       { code: "CANCELLED", name: "Cancelled" },
     ])
@@ -181,6 +187,32 @@ export async function seedCoreLookups(db: DB) {
       { code: "END", name: "End" },
       { code: "EU", name: "End Unit" },
       { code: "EUL", name: "End Unit (Extra Land)" },
+    ])
+    .onConflictDoNothing();
+
+  await db
+    .insert(schema.unitViews)
+    .values([
+      { code: "RIVER_VIEW", name: "River View" },
+      { code: "FACILITIES_VIEW", name: "Facilities View" },
+      { code: "CITY_VIEW", name: "City View" },
+      { code: "SEA_VIEW", name: "Sea View" },
+      { code: "LAKE_GOLF_CITY_VIEW", name: "Lake, Golf & City View" },
+      { code: "SINGAPORE_VIEW", name: "Singapore View" },
+    ])
+    .onConflictDoNothing();
+
+  await db
+    .insert(schema.unitFacings)
+    .values([
+      { code: "N", name: "North" },
+      { code: "NE", name: "North East" },
+      { code: "E", name: "East" },
+      { code: "SE", name: "South East" },
+      { code: "S", name: "South" },
+      { code: "SW", name: "South West" },
+      { code: "W", name: "West" },
+      { code: "NW", name: "North West" },
     ])
     .onConflictDoNothing();
 

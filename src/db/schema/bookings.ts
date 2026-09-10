@@ -90,6 +90,11 @@ export const bookingUnits = pgTable(
     }),
     reservationStartedAt: timestamp("reservation_started_at"),
     reservationExpiresAt: timestamp("reservation_expires_at"),
+    loObtainedAt: timestamp("lo_obtained_at"),
+    loSignDueAt: timestamp("lo_sign_due_at"),
+    loSignedAt: timestamp("lo_signed_at"),
+    spaSignedAt: timestamp("spa_signed_at"),
+    soldAt: timestamp("sold_at"),
     releasedAt: timestamp("released_at"),
     releaseReason: text("release_reason"),
   },
@@ -99,6 +104,10 @@ export const bookingUnits = pgTable(
     bookingExpiryIdx: index("booking_units_booking_expiry_idx").on(
       t.bookingId,
       t.reservationExpiresAt,
+    ),
+    loSignDueIdx: index("booking_units_lo_sign_due_idx").on(
+      t.bookingId,
+      t.loSignDueAt,
     ),
   }),
 );

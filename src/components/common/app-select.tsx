@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import { Check, ChevronsUpDown, Search } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -27,6 +27,12 @@ export type AppSelectOption = {
 };
 
 type AppSelectProps = {
+  id?: string;
+  ariaLabelledBy?: string;
+  /** Id(s) of related hint/error text, forwarded to the trigger button. */
+  ariaDescribedBy?: string;
+  /** Marks the trigger invalid for assistive tech and the shared destructive input styling. */
+  ariaInvalid?: boolean;
   value: string;
   options: AppSelectOption[];
   onValueChange: (value: string) => void;
@@ -36,11 +42,18 @@ type AppSelectProps = {
   className?: string;
   triggerClassName?: string;
   contentClassName?: string;
+  disabled?: boolean;
+  /** Closes the popover right after an option is chosen. Defaults to `true`; pass `false` to keep it open. */
+  closeOnSelect?: boolean;
   renderValue?: (option: AppSelectOption | undefined) => ReactNode;
   renderOption?: (option: AppSelectOption) => ReactNode;
 };
 
 export function AppSelect({
+  id,
+  ariaLabelledBy,
+  ariaDescribedBy,
+  ariaInvalid,
   value,
   options,
   onValueChange,
@@ -50,19 +63,35 @@ export function AppSelect({
   className,
   triggerClassName,
   contentClassName,
+  disabled,
+  closeOnSelect = true,
   renderValue,
   renderOption,
 }: AppSelectProps) {
+  const [open, setOpen] = useState(false);
   const selected = options.find((option) => option.value === value);
 
+  function handleSelect(optionValue: string) {
+    onValueChange(optionValue);
+
+    if (closeOnSelect) {
+      setOpen(false);
+    }
+  }
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          id={id}
+          aria-labelledby={ariaLabelledBy}
+          aria-describedby={ariaDescribedBy}
+          aria-invalid={ariaInvalid || undefined}
+          disabled={disabled}
           type="button"
           variant="outline"
           className={cn(
-            "h-12 justify-between rounded-2xl border-slate-200 bg-white/80 px-4 font-medium text-slate-900 shadow-sm hover:bg-white",
+            "h-12 justify-between rounded-2xl border-border bg-background px-4 font-medium text-foreground shadow-sm hover:bg-accent",
             triggerClassName,
             className,
           )}
@@ -74,21 +103,21 @@ export function AppSelect({
                 ? selected.label
                 : placeholder}
           </span>
-          <ChevronsUpDown className="ml-2 size-4 shrink-0 text-slate-400" />
+          <ChevronsUpDown className="ml-2 size-4 shrink-0 text-muted-foreground" />
         </Button>
       </PopoverTrigger>
 
       <PopoverContent
         align="start"
         className={cn(
-          "w-[var(--radix-popover-trigger-width)] min-w-64 rounded-2xl border-slate-200 bg-white/95 p-2 shadow-2xl backdrop-blur-xl",
+          "w-[var(--radix-popover-trigger-width)] rounded-2xl border-border bg-popover/95 p-2 text-popover-foreground shadow-2xl backdrop-blur-xl",
           contentClassName,
         )}
       >
         <Command>
           {searchable ? (
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <CommandInput
                 placeholder={searchPlaceholder}
                 className="h-10 pl-9"
@@ -104,7 +133,7 @@ export function AppSelect({
                 <CommandItem
                   key={option.value}
                   value={`${option.label} ${option.value} ${option.description ?? ""}`}
-                  onSelect={() => onValueChange(option.value)}
+                  onSelect={() => handleSelect(option.value)}
                   className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-3"
                 >
                   {renderOption ? (
@@ -118,7 +147,7 @@ export function AppSelect({
                       <div className="min-w-0 flex-1">
                         <p className="truncate font-semibold">{option.label}</p>
                         {option.description ? (
-                          <p className="truncate text-xs text-slate-500">
+                          <p className="truncate text-xs text-muted-foreground">
                             {option.description}
                           </p>
                         ) : null}
@@ -128,7 +157,7 @@ export function AppSelect({
 
                   <Check
                     className={cn(
-                      "ml-auto size-4 text-blue-600",
+                      "ml-auto size-4 text-primary",
                       value === option.value ? "opacity-100" : "opacity-0",
                     )}
                   />

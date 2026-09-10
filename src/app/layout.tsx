@@ -1,5 +1,7 @@
+import { AppConfirmProvider } from "@/components/common/app-confirm-provider";
+import { AppThemeProvider } from "@/components/common/app-theme-provider";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Cormorant_Garamond, Inter } from "next/font/google";
 
 import { AppToastProvider } from "@/components/common/app-toast-provider";
 
@@ -8,6 +10,13 @@ import "./globals.css";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+});
+
+// Editorial display serif used by the public marketing `font-serif` utility (see globals.css).
+const displaySerif = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["500", "600"],
+  variable: "--font-display",
 });
 
 export const metadata: Metadata = {
@@ -21,10 +30,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} antialiased`}>
-        {children}
-        <AppToastProvider />
+    <html lang="en" suppressHydrationWarning>
+      {/* A public-route inline script sets data-ui="public" here before hydration
+          (see src/components/common/inline-script.tsx); suppress the resulting,
+          expected DOM/props mismatch for this one attribute. */}
+      <body
+        className={`${inter.className} ${displaySerif.variable} antialiased`}
+        suppressHydrationWarning
+      >
+        <AppThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+          <AppToastProvider />
+          <AppConfirmProvider />
+        </AppThemeProvider>
       </body>
     </html>
   );

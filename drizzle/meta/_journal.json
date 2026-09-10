@@ -15,6 +15,55 @@
       "when": 1781678259757,
       "tag": "0001_brown_lady_mastermind",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782626517509,
+      "tag": "0002_absent_namor",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1785413515700,
+      "tag": "0003_plain_victor_mancha",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1785503793133,
+      "tag": "0004_uneven_forge",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1786107670873,
+      "tag": "0005_burly_liz_osborn",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1786261475655,
+      "tag": "0006_public_king_cobra",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1786265127671,
+      "tag": "0007_typical_juggernaut",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1786377600000,
+      "tag": "0008_brisk_onyx",
+      "breakpoints": true
     }
   ]
 }

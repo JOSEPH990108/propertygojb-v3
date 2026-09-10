@@ -56,6 +56,9 @@ export const leads = pgTable(
     sourceId: text("source_id")
       .references(() => leadSources.id)
       .notNull(),
+    customerUserId: text("customer_user_id").references(() => user.id, {
+      onDelete: "set null",
+    }),
     fullName: varchar("full_name", { length: 150 }),
     primaryPhoneE164: varchar("primary_phone_e164", { length: 30 }).notNull(),
     primaryPhoneNormalized: varchar("primary_phone_normalized", {
@@ -94,6 +97,7 @@ export const leads = pgTable(
       .on(t.primaryPhoneNormalized)
       .where(sql`${t.deletedAt} is null`),
     sourceIdx: index("leads_source_idx").on(t.sourceId),
+    customerUserIdx: index("leads_customer_user_idx").on(t.customerUserId),
     statusUpdatedIdx: index("leads_status_updated_idx").on(
       t.currentStatus,
       t.updatedAt,

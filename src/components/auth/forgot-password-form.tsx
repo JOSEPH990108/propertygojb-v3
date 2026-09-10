@@ -9,13 +9,7 @@ import {
   useTransition,
 } from "react";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  ArrowRight,
-  KeyRound,
-  ShieldCheck,
-  Smartphone,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { AuthCard } from "@/components/auth/auth-card";
@@ -23,7 +17,10 @@ import { AuthPageShell } from "@/components/auth/auth-page-shell";
 import { PasswordInput } from "@/components/auth/password-input";
 import { PasswordRequirements } from "@/components/auth/password-requirements";
 import { AppButton } from "@/components/common/app-button";
-import { AppSelect, type AppSelectOption } from "@/components/common/app-select";
+import {
+  AppSelect,
+  type AppSelectOption,
+} from "@/components/common/app-select";
 import { AppStepper } from "@/components/common/app-stepper";
 import { Input } from "@/components/ui/input";
 import { postJson } from "@/lib/api/client";
@@ -82,7 +79,10 @@ export function ForgotPasswordForm() {
 
       setOtpSent(true);
       setResetChallengeId("");
-      appToast.success("OTP sent successfully.", "Check your dev server terminal.");
+      appToast.success(
+        "OTP sent successfully.",
+        "Check your dev server terminal.",
+      );
 
       setTimeout(() => {
         inputRefs.current[0]?.focus();
@@ -131,7 +131,9 @@ export function ForgotPasswordForm() {
 
     if (!isPasswordValid(newPassword)) {
       setShowPasswordRequirements(true);
-      appToast.error("Please make sure your new password meets all requirements.");
+      appToast.error(
+        "Please make sure your new password meets all requirements.",
+      );
       return;
     }
 
@@ -205,41 +207,28 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <AuthPageShell>
+    <AuthPageShell
+      eyebrow="Account Access"
+      title={step === "reset" ? "New password." : "Forgot password?"}
+      description={
+        step === "reset"
+          ? "Create a stronger password for your account."
+          : "Enter your mobile number and we will send a reset code."
+      }
+    >
       <AuthCard>
-        <div className="space-y-7">
+        <div className="space-y-6">
           <AppStepper
             currentStep={step === "reset" ? 1 : 0}
-            items={[
-              { label: "Request Reset", icon: <Smartphone className="size-6" /> },
-              { label: "New Password", icon: <KeyRound className="size-6" /> },
-            ]}
+            items={[{ label: "Request Reset" }, { label: "New Password" }]}
           />
 
-          <div className="space-y-3 text-center">
-            <div className="mx-auto grid size-16 place-items-center rounded-full bg-blue-600 text-white shadow-[0_0_0_14px_rgba(37,99,235,0.10)]">
-              {step === "reset" ? (
-                <KeyRound className="size-7" />
-              ) : (
-                <ShieldCheck className="size-7" />
-              )}
-            </div>
-
-            <h1 className="text-3xl font-black tracking-tight">
-              {step === "reset" ? "Create New Password" : "Forgot Password?"}
-            </h1>
-
-            <p className="mx-auto max-w-xs text-sm leading-6 text-slate-500">
-              {step === "reset"
-                ? "Create a stronger password for your account."
-                : "Enter your mobile number and we will send a reset code."}
-            </p>
-          </div>
-
           {step === "request" ? (
-            <div className="space-y-5">
+            <div className="space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-semibold">Mobile Number</label>
+                <label className="text-[0.65rem] font-medium tracking-[0.24em] text-muted-foreground uppercase">
+                  Mobile Number
+                </label>
 
                 <div className="flex gap-3">
                   <AppSelect
@@ -248,25 +237,22 @@ export function ForgotPasswordForm() {
                     onValueChange={setCountryCode}
                     searchable
                     searchPlaceholder="Search country..."
-                    triggerClassName="w-[132px]"
+                    triggerClassName="h-auto w-auto min-w-0 justify-start rounded-none border-0 border-b border-border bg-transparent px-2 pt-1 pb-3 shadow-none hover:bg-transparent dark:border-border dark:bg-transparent dark:hover:bg-transparent"
                     renderValue={(option) => (
-                      <span className="flex items-center gap-2">
-                        <span className="grid size-7 place-items-center rounded-md bg-blue-50 text-xs font-bold text-blue-700">
-                          {option?.leading}
-                        </span>
-                        <span>{option?.value}</span>
+                      <span className="text-sm font-light">
+                        {option?.value}
                       </span>
                     )}
                     renderOption={(option) => (
                       <>
-                        <span className="grid size-8 place-items-center rounded-md bg-blue-50 text-xs font-bold text-blue-700">
+                        <span className="grid size-8 place-items-center bg-muted text-xs font-semibold text-foreground">
                           {option.leading}
                         </span>
                         <div className="min-w-0 flex-1">
-                          <p className="font-semibold text-slate-900">
+                          <p className="font-semibold text-foreground">
                             {option.label}
                           </p>
-                          <p className="text-xs text-slate-500">
+                          <p className="text-xs text-muted-foreground">
                             {option.description}
                           </p>
                         </div>
@@ -274,28 +260,25 @@ export function ForgotPasswordForm() {
                     )}
                   />
 
-                  <div className="relative flex-1">
-                    <Smartphone className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-                    <Input
-                      value={mobile}
-                      onChange={(event) => {
-                        setMobile(event.target.value);
-                        setOtpSent(false);
-                        setOtpDigits(["", "", "", "", "", ""]);
-                        setResetChallengeId("");
-                      }}
-                      placeholder="Enter mobile number"
-                      inputMode="tel"
-                      autoComplete="tel"
-                      className="h-12 rounded-2xl border-slate-200 bg-white/80 pl-11 shadow-sm"
-                    />
-                  </div>
+                  <Input
+                    value={mobile}
+                    onChange={(event) => {
+                      setMobile(event.target.value);
+                      setOtpSent(false);
+                      setOtpDigits(["", "", "", "", "", ""]);
+                      setResetChallengeId("");
+                    }}
+                    placeholder="Enter mobile number"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    className="h-auto flex-1 rounded-none border-0 border-b border-border bg-transparent 2 pt-1 pb-3 text-sm font-light shadow-none focus-visible:border-b-2 focus-visible:border-public-decorative focus-visible:ring-0 dark:bg-transparent"
+                  />
                 </div>
               </div>
 
               {otpSent ? (
                 <div className="space-y-3">
-                  <label className="text-sm font-semibold">
+                  <label className="text-[0.65rem] font-medium tracking-[0.24em] text-muted-foreground uppercase">
                     Enter the 6-digit code
                   </label>
 
@@ -316,7 +299,7 @@ export function ForgotPasswordForm() {
                         onPaste={handleOtpPaste}
                         inputMode="numeric"
                         maxLength={1}
-                        className="h-12 rounded-xl border-slate-200 bg-white/80 text-center text-lg font-bold shadow-sm focus-visible:ring-blue-600 sm:h-14"
+                        className="h-12 rounded-none border-0 border-b border-border bg-transparent text-center text-lg font-medium shadow-none focus-visible:border-b-2 focus-visible:border-public-decorative focus-visible:ring-0 sm:h-14 dark:bg-transparent"
                       />
                     ))}
                   </div>
@@ -327,7 +310,7 @@ export function ForgotPasswordForm() {
                 type="button"
                 disabled={isPending}
                 onClick={otpSent ? handleVerifyCode : handleSendCode}
-                className="w-full"
+                className="w-full rounded-none text-xs font-medium tracking-[0.2em] uppercase"
               >
                 {isPending
                   ? otpSent
@@ -344,7 +327,7 @@ export function ForgotPasswordForm() {
                   type="button"
                   disabled={isPending}
                   onClick={handleSendCode}
-                  className="w-full text-sm font-semibold text-blue-600"
+                  className="w-full text-sm font-medium text-foreground underline underline-offset-4"
                 >
                   Resend Code
                 </button>
@@ -353,15 +336,17 @@ export function ForgotPasswordForm() {
           ) : null}
 
           {step === "reset" ? (
-            <div className="space-y-5">
-              <div className="rounded-2xl border border-slate-200 bg-white/70 p-4">
-                <p className="text-sm font-medium text-slate-600">
+            <div className="space-y-6">
+              <div className="border border-border bg-muted/40 p-4">
+                <p className="text-sm font-medium text-muted-foreground">
                   {phoneNumber}
                 </p>
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-semibold">New Password</label>
+                <label className="text-[0.65rem] font-medium tracking-[0.24em] text-muted-foreground uppercase">
+                  New Password
+                </label>
                 <PasswordInput
                   value={newPassword}
                   onChange={(event) => setNewPassword(event.target.value)}
@@ -378,7 +363,9 @@ export function ForgotPasswordForm() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-semibold">Confirm Password</label>
+                <label className="text-[0.65rem] font-medium tracking-[0.24em] text-muted-foreground uppercase">
+                  Confirm Password
+                </label>
                 <PasswordInput
                   value={confirmPassword}
                   onChange={(event) => setConfirmPassword(event.target.value)}
@@ -391,7 +378,7 @@ export function ForgotPasswordForm() {
                 type="button"
                 disabled={isPending}
                 onClick={handleResetPassword}
-                className="w-full"
+                className="w-full rounded-none text-xs font-medium tracking-[0.2em] uppercase"
               >
                 {isPending ? "Resetting..." : "Reset Password"}
                 <ArrowRight className="ml-2 size-4" />
@@ -399,7 +386,7 @@ export function ForgotPasswordForm() {
 
               <button
                 type="button"
-                className="w-full text-sm font-semibold text-blue-600"
+                className="w-full text-sm font-medium text-foreground underline underline-offset-4"
                 onClick={() => setStep("request")}
               >
                 Back to Verify Code
@@ -410,7 +397,7 @@ export function ForgotPasswordForm() {
           <div className="text-center">
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600"
+              className="inline-flex items-center gap-2 text-sm font-medium text-foreground underline underline-offset-4"
             >
               <ArrowLeft className="size-4" />
               Back to Login
