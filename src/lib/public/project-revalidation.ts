@@ -23,7 +23,6 @@ export async function revalidatePublicProjectData() {
   revalidateTag(PUBLIC_PROJECTS_VERSION_TAG, { expire: 0 });
   revalidatePath("/");
   revalidatePath("/about");
-  revalidatePath("/book-viewing");
   revalidatePath("/contact");
   revalidatePath("/projects");
   revalidatePath("/projects/[slug]", "page");
