@@ -13,7 +13,7 @@ const supportedSlugs = new Set([
   "paragon-signature-suites",
   "sunway-lakehills",
   "sunway-lakehills-phase-1",
-  "vistara-residence",
+  "vistara-hills",
   "riveria-garden-wawari-elora",
 ]);
 
