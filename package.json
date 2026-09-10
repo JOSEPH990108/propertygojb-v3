@@ -15,6 +15,10 @@
     "test:watch": "vitest",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
+    "sdlc:score": "node scripts/sdlc-score.mjs",
+    "sdlc:rules": "node scripts/sdlc-score.mjs --digest",
+    "sdlc:validate": "node scripts/sdlc-score.mjs --validate",
+    "test:sdlc": "vitest run scripts/sdlc-score.test.mjs",
     "db:dev:provision-internal-user": "tsx src/db/scripts/dev-provision-internal-user.ts"
   },
   "dependencies": {

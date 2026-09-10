@@ -1,0 +1,1932 @@
+{
+  "$schema": "./business-rules.schema.json",
+  "version": "2.1.0",
+  "updatedAt": "2026-09-03",
+  "owner": "PropertyGoJB product and engineering owner",
+  "policy": "docs/AI_AGENTIC_SDLC.md",
+  "learningPolicy": {
+    "sourceOfTruth": "Only base rules and learnedRules with status active affect scoring.",
+    "candidateState": "Newly inferred or user-stated rules remain proposed until a human approves them.",
+    "promotionGate": "Promoting a learned rule to active is an R3 control-plane change.",
+    "requiredActiveFields": [
+      "id",
+      "status",
+      "category",
+      "statement",
+      "enforcement",
+      "owner",
+      "approvedBy",
+      "approvedAt",
+      "reviewBy",
+      "sources",
+      "weight",
+      "riskFloor",
+      "keywords",
+      "paths",
+      "requires",
+      "validation"
+    ]
+  },
+  "riskBands": [
+    { "class": "R0", "minScore": 0, "maxScore": 9, "label": "Informational" },
+    { "class": "R1", "minScore": 10, "maxScore": 24, "label": "Low" },
+    { "class": "R2", "minScore": 25, "maxScore": 49, "label": "Moderate" },
+    { "class": "R3", "minScore": 50, "maxScore": 79, "label": "High" },
+    {
+      "class": "R4",
+      "minScore": 80,
+      "maxScore": 100,
+      "label": "Critical / restricted"
+    }
+  ],
+  "autonomyCeiling": {
+    "R0": {
+      "level": "A1",
+      "note": "Read-only analysis or harmless documentation; a human accepts the deliverable."
+    },
+    "R1": {
+      "level": "A2",
+      "note": "Implement and run scoped checks in the workspace; do not merge or deploy."
+    },
+    "R2": {
+      "level": "A2",
+      "note": "Guarded-auto only when bounded, reversible, non-protected, and free of unresolved material choices."
+    },
+    "R3": {
+      "level": "A2",
+      "note": "Investigate and prepare the planning work item, then obtain explicit human approval before implementation/source/control edits."
+    },
+    "R4": {
+      "level": "A0",
+      "note": "Advice and a human-run plan only; the agent must not execute the restricted action."
+    }
+  },
+  "gates": {
+    "R0": ["agent-self-check", "human-accept"],
+    "R1": ["scoped-tests", "independent-review"],
+    "R2": [
+      "recorded-guarded-auto-plan",
+      "clean-ci",
+      "independent-review",
+      "preview-smoke"
+    ],
+    "R3": [
+      "human-plan-approval-before-implementation",
+      "security-privacy-review-as-applicable",
+      "integration-or-e2e",
+      "staging-evidence",
+      "rollback-plan",
+      "independent-review"
+    ],
+    "R4": ["human-execution-only", "no-autonomous-action"]
+  },
+  "checks": {
+    "always": [
+      "git diff --check",
+      "scope review against the declared file manifest"
+    ],
+    "code": [
+      "npm ci (clean CI)",
+      "npm exec next typegen",
+      "npm exec prettier -- --check .",
+      "npm run lint -- --max-warnings=0",
+      "npm run typecheck",
+      "npm run test",
+      "npm run build",
+      "npm audit --audit-level=high (clean CI)"
+    ],
+    "schema": [
+      "npm run db:generate",
+      "migration rehearsal on an isolated database",
+      "forward-fix or rollback evidence"
+    ],
+    "dependencies": [
+      "npm ci (clean CI)",
+      "npm audit --audit-level=high (clean CI)",
+      "npm run build"
+    ],
+    "docsOnly": [
+      "npm exec prettier -- --check <changed documentation files>",
+      "link and cross-reference validation",
+      "scope review (no policy change hidden in documentation)"
+    ],
+    "sdlcControl": [
+      "npm run sdlc:validate",
+      "npm run test:sdlc",
+      "representative request scoring smoke tests"
+    ]
+  },
+  "rules": [
+    {
+      "id": "BR-AUTH-001",
+      "category": "authorization",
+      "statement": "Every protected mutation must re-check authentication, role, and record ownership at the server boundary.",
+      "enforcement": "partial",
+      "weight": 60,
+      "riskFloor": "R3",
+      "keywords": [
+        "authentication",
+        "authorization",
+        "record ownership",
+        "session guard",
+        "protected mutation",
+        "rbac"
+      ],
+      "paths": [
+        "src/lib/auth/**",
+        "src/app/api/auth/**",
+        "src/app/api/internal/**",
+        "src/app/api/admin/**",
+        "src/app/api/agent/**"
+      ],
+      "requires": [
+        "authorization-matrix",
+        "role-denial-tests",
+        "ownership-denial-tests",
+        "security-review"
+      ],
+      "sources": [
+        "src/lib/auth/api-guards.ts",
+        "src/lib/auth/guards.ts",
+        "src/lib/auth/session.ts"
+      ],
+      "validation": [
+        "Verify unauthenticated, wrong-role, wrong-owner, missing-record, and success cases."
+      ]
+    },
+    {
+      "id": "BR-AUTH-002",
+      "category": "identity",
+      "statement": "Public registration creates CUSTOMER identities only; public flows never assign a privileged role.",
+      "enforcement": "enforced",
+      "weight": 55,
+      "riskFloor": "R3",
+      "keywords": [
+        "public registration",
+        "customer registration",
+        "register user",
+        "signup role",
+        "sign up role"
+      ],
+      "paths": [
+        "src/app/api/auth/mobile/register/**",
+        "src/components/auth/register-form.tsx"
+      ],
+      "requires": [
+        "customer-only-registration-test",
+        "privileged-role-denial-test"
+      ],
+      "sources": [
+        "src/app/api/auth/mobile/register/complete/route.ts",
+        "src/config/roles.ts"
+      ],
+      "validation": [
+        "Assert every public registration path resolves to CUSTOMER."
+      ]
+    },
+    {
+      "id": "BR-AUTH-003",
+      "category": "identity",
+      "statement": "Post-authentication redirects use the centralized role-to-route mapping and must not accept an unsafe caller-controlled destination.",
+      "enforcement": "enforced",
+      "weight": 50,
+      "riskFloor": "R3",
+      "keywords": [
+        "auth redirect",
+        "post login redirect",
+        "redirect by role",
+        "return url",
+        "callback url"
+      ],
+      "paths": [
+        "src/app/auth-redirect/**",
+        "src/config/routes.ts",
+        "src/config/roles.ts"
+      ],
+      "requires": ["open-redirect-test", "role-route-test"],
+      "sources": ["src/app/auth-redirect/page.tsx", "src/config/routes.ts"],
+      "validation": [
+        "Test each supported role and reject external or malformed destinations."
+      ]
+    },
+    {
+      "id": "BR-OTP-001",
+      "category": "identity-verification",
+      "statement": "OTP challenges are bound to purpose, phone, and user when applicable; expire after 5 minutes, throttle resend for 60 seconds, allow at most 5 attempts, and are consumed transactionally for identity changes.",
+      "enforcement": "enforced",
+      "weight": 65,
+      "riskFloor": "R3",
+      "keywords": [
+        "otp",
+        "one time password",
+        "verification code",
+        "phone verification",
+        "resend code"
+      ],
+      "paths": [
+        "src/lib/auth/otp-service.ts",
+        "src/db/schema/otp.ts",
+        "src/app/api/**/request-otp/**",
+        "src/app/api/**/verify-otp/**",
+        "src/app/api/**/phone/confirm/**"
+      ],
+      "requires": [
+        "expiry-test",
+        "resend-throttle-test",
+        "attempt-limit-test",
+        "purpose-binding-test",
+        "transaction-review"
+      ],
+      "sources": ["src/lib/auth/otp-service.ts", "src/db/schema/otp.ts"],
+      "validation": [
+        "Test replay, wrong purpose, wrong phone/user, expiry, throttling, and concurrent consumption."
+      ]
+    },
+    {
+      "id": "BR-ROLE-001",
+      "category": "privilege",
+      "statement": "Role and permission policy changes require explicit human product/security approval and complete audit evidence.",
+      "enforcement": "partial",
+      "weight": 70,
+      "riskFloor": "R3",
+      "keywords": [
+        "role change",
+        "change user role",
+        "permission change",
+        "role permission",
+        "fine grained permission",
+        "admin role"
+      ],
+      "paths": [
+        "src/config/roles.ts",
+        "src/db/schema/governance-rbac.ts",
+        "src/app/api/admin/users/role/**",
+        "src/db/seeds/3*-*.ts"
+      ],
+      "requires": [
+        "human-policy-approval",
+        "security-review",
+        "audit-entry",
+        "privilege-escalation-tests"
+      ],
+      "sources": [
+        "src/app/api/admin/users/role/route.ts",
+        "src/db/schema/governance-rbac.ts"
+      ],
+      "validation": [
+        "Verify actor authority, target-role constraints, self-escalation denial, and audit coverage."
+      ]
+    },
+    {
+      "id": "BR-ROLE-002",
+      "category": "privilege",
+      "statement": "Actually granting SUPER_ADMIN, impersonating a user, or elevating a real account is a human-executed action.",
+      "enforcement": "policy",
+      "weight": 90,
+      "riskFloor": "R4",
+      "hardStop": true,
+      "contextWeight": 70,
+      "contextRiskFloor": "R3",
+      "contextRequires": [
+        "human-policy-approval",
+        "security-review",
+        "privilege-escalation-tests"
+      ],
+      "hardStopTriggers": [
+        {
+          "actions": ["grant", "promote", "elevate", "make", "assign", "set"],
+          "targets": [
+            "super_admin",
+            "super admin",
+            "privileged role",
+            "administrator privileges"
+          ],
+          "appliesTo": ["change"]
+        },
+        {
+          "actions": ["impersonate"],
+          "targets": ["account", "user", "this account", "this user"],
+          "appliesTo": ["change"]
+        }
+      ],
+      "keywords": [
+        "super_admin",
+        "super admin",
+        "privilege elevation",
+        "user impersonation",
+        "grant super_admin",
+        "grant super admin",
+        "make me super admin",
+        "elevate this account",
+        "impersonate this user",
+        "change role to super_admin",
+        "promote user to super admin"
+      ],
+      "paths": [],
+      "requires": ["human-execution-only"],
+      "sources": [
+        "docs/AI_AGENTIC_SDLC.md",
+        "src/app/api/admin/users/role/route.ts"
+      ],
+      "validation": ["The agent stops without issuing a mutation command."]
+    },
+    {
+      "id": "BR-PROJECT-001",
+      "category": "catalog-content",
+      "statement": "Project draft, publish, schedule, and unpublish behavior is controlled by the project-content workflow, not by ad hoc public-page logic.",
+      "enforcement": "enforced",
+      "weight": 45,
+      "riskFloor": "R2",
+      "keywords": [
+        "publish project",
+        "unpublish project",
+        "schedule project",
+        "project content",
+        "draft project"
+      ],
+      "paths": [
+        "src/app/api/admin/projects/**/content/**",
+        "src/lib/admin/project-content-validation.ts",
+        "src/components/admin/projects/project-content-manager.tsx"
+      ],
+      "requires": [
+        "content-state-transition-tests",
+        "authorization-test",
+        "audit-entry"
+      ],
+      "sources": [
+        "src/lib/admin/project-content-validation.ts",
+        "src/app/api/admin/projects/[projectId]/content/route.ts"
+      ],
+      "validation": [
+        "Test draft, immediate publish, scheduled publish, and unpublish transitions."
+      ]
+    },
+    {
+      "id": "BR-PROJECT-002",
+      "category": "catalog-visibility",
+      "statement": "Draft, unpublished, and future-scheduled projects are excluded from public routes, catalogs, availability, metadata, and sitemap output.",
+      "enforcement": "enforced",
+      "weight": 45,
+      "riskFloor": "R2",
+      "keywords": [
+        "public project visibility",
+        "scheduled project visibility",
+        "project sitemap",
+        "hide unpublished",
+        "future scheduled project"
+      ],
+      "paths": [
+        "src/lib/public/projects.ts",
+        "src/app/(public)/projects/**",
+        "src/app/sitemap.ts"
+      ],
+      "requires": [
+        "visibility-query-test",
+        "direct-route-test",
+        "sitemap-test"
+      ],
+      "sources": ["src/lib/public/projects.ts", "src/app/sitemap.ts"],
+      "validation": [
+        "Test direct slug access and all discovery surfaces at schedule boundaries."
+      ]
+    },
+    {
+      "id": "BR-PROJECT-003",
+      "category": "catalog-consistency",
+      "statement": "A project-content or availability mutation revalidates affected public caches, broadcasts the version change when applicable, and records an audit entry.",
+      "enforcement": "partial",
+      "weight": 45,
+      "riskFloor": "R2",
+      "keywords": [
+        "revalidate project",
+        "project cache",
+        "project realtime",
+        "availability refresh",
+        "broadcast project"
+      ],
+      "paths": [
+        "src/lib/public/project-revalidation.ts",
+        "src/lib/realtime/public-projects.ts",
+        "src/app/api/admin/projects/**"
+      ],
+      "requires": [
+        "cache-revalidation-test",
+        "broadcast-failure-test",
+        "audit-entry"
+      ],
+      "sources": [
+        "src/lib/public/project-revalidation.ts",
+        "src/lib/realtime/public-projects.ts"
+      ],
+      "validation": [
+        "Verify mutation success remains consistent across cached and live public surfaces."
+      ]
+    },
+    {
+      "id": "BR-MEDIA-001",
+      "category": "catalog-media",
+      "statement": "External project media URLs must use HTTPS; durable binary upload, malware scanning, and lifecycle handling are required before local uploads are production-ready.",
+      "enforcement": "partial",
+      "weight": 40,
+      "riskFloor": "R2",
+      "keywords": [
+        "project media",
+        "external image",
+        "image url",
+        "media upload",
+        "project gallery"
+      ],
+      "paths": [
+        "src/app/api/admin/projects/**/media/**",
+        "src/components/admin/projects/project-media-manager.tsx",
+        "src/lib/admin/project-content-validation.ts"
+      ],
+      "requires": [
+        "https-url-validation",
+        "file-security-review-if-uploaded",
+        "audit-entry"
+      ],
+      "sources": [
+        "src/app/api/admin/projects/[projectId]/media/route.ts",
+        "src/lib/admin/project-content-validation.ts"
+      ],
+      "validation": [
+        "Reject non-HTTPS external URLs; do not claim binary-upload safety without storage and scan evidence."
+      ]
+    },
+    {
+      "id": "BR-CUSTOMER-001",
+      "category": "customer-identity",
+      "statement": "An authenticated customer may link or mutate only CRM records that match the verified identity and may not claim unrelated historical records.",
+      "enforcement": "partial",
+      "weight": 55,
+      "riskFloor": "R3",
+      "keywords": [
+        "link customer",
+        "claim enquiry",
+        "customer identity match",
+        "crm history",
+        "customer ownership"
+      ],
+      "paths": [
+        "src/lib/public/account.ts",
+        "src/app/api/public/account/**",
+        "src/lib/customers/**"
+      ],
+      "requires": [
+        "identity-match-test",
+        "wrong-owner-test",
+        "historical-record-denial-test"
+      ],
+      "sources": [
+        "src/lib/public/account.ts",
+        "src/app/api/public/account/profile/route.ts"
+      ],
+      "validation": [
+        "Test mismatched phone/user identities and unrelated lead or booking records."
+      ]
+    },
+    {
+      "id": "BR-PROFILE-001",
+      "category": "customer-profile",
+      "statement": "Customer profile changes affect linked active leads only; phone changes require OTP verification, and email editing stays disabled until a verified workflow exists.",
+      "enforcement": "enforced",
+      "weight": 55,
+      "riskFloor": "R3",
+      "keywords": [
+        "customer profile",
+        "change phone",
+        "edit email",
+        "profile phone",
+        "linked leads"
+      ],
+      "paths": [
+        "src/app/api/public/account/profile/**",
+        "src/lib/public/profile-validation.ts",
+        "src/components/public/customer-profile-form.tsx"
+      ],
+      "requires": [
+        "active-lead-scope-test",
+        "phone-otp-test",
+        "email-edit-denial-test",
+        "audit-entry"
+      ],
+      "sources": [
+        "src/app/api/public/account/profile/route.ts",
+        "src/app/api/public/account/profile/phone/confirm/route.ts"
+      ],
+      "validation": [
+        "Verify inactive and unrelated CRM records remain unchanged."
+      ]
+    },
+    {
+      "id": "BR-VIEW-001",
+      "category": "viewing",
+      "statement": "Viewing slots are interpreted in Malaysia time, server-validated, and deduplicated; a REQUESTED viewing is not a confirmed appointment.",
+      "enforcement": "enforced",
+      "weight": 45,
+      "riskFloor": "R2",
+      "keywords": [
+        "book viewing",
+        "viewing request",
+        "viewing slot",
+        "reschedule viewing",
+        "requested appointment"
+      ],
+      "paths": [
+        "src/lib/public/viewing.ts",
+        "src/app/(public)/book-viewing/**",
+        "src/app/api/internal/leads/appointment/**"
+      ],
+      "requires": [
+        "timezone-boundary-test",
+        "slot-validation-test",
+        "deduplication-test",
+        "requested-not-confirmed-test"
+      ],
+      "sources": [
+        "src/lib/public/viewing.ts",
+        "src/lib/public/viewing.test.ts"
+      ],
+      "validation": [
+        "Test Malaysia date boundaries, duplicates, invalid slots, and state labels."
+      ]
+    },
+    {
+      "id": "BR-LEAD-001",
+      "category": "lead-state",
+      "statement": "Lead claim and assignment must use an atomic conditional update, enforce actor scope, and write an audit entry.",
+      "enforcement": "partial",
+      "weight": 60,
+      "riskFloor": "R3",
+      "keywords": [
+        "lead claim",
+        "claim lead",
+        "assign lead",
+        "lead assignment",
+        "round robin assignment"
+      ],
+      "paths": [
+        "src/app/api/agent/leads/claim/**",
+        "src/app/api/admin/leads/assign/**",
+        "src/lib/**/leads/**",
+        "src/db/schema/crm-leads.ts"
+      ],
+      "requires": [
+        "concurrency-test",
+        "actor-scope-test",
+        "audit-entry",
+        "idempotency-test"
+      ],
+      "sources": [
+        "src/app/api/agent/leads/claim/route.ts",
+        "src/app/api/admin/leads/assign/route.ts"
+      ],
+      "validation": ["Prove two simultaneous claimers cannot both succeed."]
+    },
+    {
+      "id": "BR-BOOK-001",
+      "category": "booking-state",
+      "statement": "Booking status changes follow the declared transition graph and update status history, activity, and audit evidence atomically.",
+      "enforcement": "partial",
+      "weight": 65,
+      "riskFloor": "R3",
+      "keywords": [
+        "booking",
+        "booking status",
+        "approve booking",
+        "reject booking",
+        "cancel booking",
+        "expire booking"
+      ],
+      "paths": [
+        "src/lib/bookings/**",
+        "src/app/api/internal/bookings/**",
+        "src/app/api/internal/leads/booking/**",
+        "src/db/schema/bookings.ts"
+      ],
+      "requires": [
+        "transition-matrix-test",
+        "transaction-review",
+        "history-test",
+        "audit-entry"
+      ],
+      "sources": [
+        "src/lib/bookings/status.ts",
+        "src/app/api/internal/bookings/status/route.ts",
+        "src/db/schema/bookings.ts"
+      ],
+      "validation": [
+        "Test every legal and illegal transition, retry, and partial-failure case."
+      ]
+    },
+    {
+      "id": "BR-BOOK-002",
+      "category": "inventory-reservation",
+      "statement": "A booking reserves only an available unit, prevents conflicting active reservations, and releases the unit only when no other active booking still owns it.",
+      "enforcement": "partial",
+      "weight": 70,
+      "riskFloor": "R3",
+      "keywords": [
+        "reserve unit",
+        "unit reservation",
+        "booking inventory",
+        "release unit",
+        "double booking",
+        "unit availability"
+      ],
+      "paths": [
+        "src/lib/properties/inventory.ts",
+        "src/app/api/internal/properties/unit-status/**",
+        "src/app/api/internal/leads/booking/**",
+        "src/db/schema/inventory.ts"
+      ],
+      "requires": [
+        "unique-active-reservation-test",
+        "concurrency-test",
+        "conditional-release-test",
+        "transaction-review"
+      ],
+      "sources": [
+        "src/lib/properties/inventory.ts",
+        "src/app/api/internal/leads/booking/route.ts"
+      ],
+      "validation": [
+        "Race two reservations for one unit and test release with another active booking present."
+      ]
+    },
+    {
+      "id": "BR-BOOK-003",
+      "category": "booking-expiry",
+      "statement": "Reservation expiry defaults to 3 days and letter-of-offer signing to 14 days through settings; expiry is idempotent and records history and activity.",
+      "enforcement": "partial",
+      "weight": 60,
+      "riskFloor": "R3",
+      "keywords": [
+        "booking expiry",
+        "reservation expiry",
+        "letter of offer",
+        "lo signing",
+        "expiry days",
+        "expire overdue"
+      ],
+      "paths": [
+        "src/lib/bookings/expiry.ts",
+        "src/lib/bookings/config.ts",
+        "src/app/api/internal/automation/bookings/expire/**",
+        "src/app/api/internal/bookings/expire/**"
+      ],
+      "requires": [
+        "settings-fallback-test",
+        "idempotency-test",
+        "timezone-test",
+        "history-test"
+      ],
+      "sources": ["src/lib/bookings/config.ts", "src/lib/bookings/expiry.ts"],
+      "validation": [
+        "Test configured and default durations, repeated expiry, and already-inactive bookings."
+      ]
+    },
+    {
+      "id": "BR-PAY-001",
+      "category": "payment-state",
+      "statement": "Payment records and booking payment-state transitions require authorization, valid state invariants, idempotency, transaction safety, and audit evidence; verification is a human decision.",
+      "enforcement": "partial",
+      "weight": 70,
+      "riskFloor": "R3",
+      "keywords": [
+        "booking payment",
+        "payment record",
+        "deposit",
+        "payment status",
+        "payment verification",
+        "refund"
+      ],
+      "paths": [
+        "src/app/api/internal/bookings/payment/**",
+        "src/components/internal/bookings/booking-payment-composer.tsx",
+        "src/db/schema/bookings.ts"
+      ],
+      "requires": [
+        "human-verification",
+        "money-invariant-test",
+        "idempotency-test",
+        "transaction-review",
+        "audit-entry"
+      ],
+      "sources": [
+        "src/app/api/internal/bookings/payment/route.ts",
+        "src/db/schema/bookings.ts"
+      ],
+      "validation": [
+        "Test duplicate submissions, invalid amounts/states, wrong roles, and rollback on failure."
+      ]
+    },
+    {
+      "id": "BR-PAY-002",
+      "category": "payment-action",
+      "statement": "Actually marking a real customer payment as verified, paid, refunded, or reversed is human-executed.",
+      "enforcement": "policy",
+      "weight": 90,
+      "riskFloor": "R4",
+      "hardStop": true,
+      "contextWeight": 70,
+      "contextRiskFloor": "R3",
+      "contextRequires": [
+        "human-verification-design",
+        "money-invariant-test",
+        "transaction-review"
+      ],
+      "hardStopTriggers": [
+        {
+          "actions": [
+            "approve",
+            "mark",
+            "refund",
+            "reverse",
+            "verify",
+            "charge",
+            "set"
+          ],
+          "targets": [
+            "payment",
+            "paid",
+            "customer",
+            "card",
+            "deposit",
+            "transaction"
+          ],
+          "appliesTo": ["change"]
+        },
+        {
+          "actions": ["issue", "process"],
+          "targets": ["refund", "payment", "customer", "transaction"],
+          "appliesTo": ["change"]
+        }
+      ],
+      "keywords": [
+        "customer refund",
+        "refund workflow",
+        "payment approval",
+        "mark this payment verified",
+        "mark payment paid",
+        "refund this customer now",
+        "reverse this payment now",
+        "approve this payment"
+      ],
+      "paths": [],
+      "requires": ["human-execution-only"],
+      "sources": [
+        "docs/AI_AGENTIC_SDLC.md",
+        "src/app/api/internal/bookings/payment/route.ts"
+      ],
+      "validation": [
+        "The agent provides a human checklist and performs no real payment mutation."
+      ]
+    },
+    {
+      "id": "BR-DOC-001",
+      "category": "restricted-files",
+      "statement": "Customer documents are Restricted data, never model input, and require server authorization, verified content type, malware CLEAN status, durable storage, and access logging.",
+      "enforcement": "partial",
+      "weight": 70,
+      "riskFloor": "R3",
+      "keywords": [
+        "customer document",
+        "document upload",
+        "download document",
+        "file storage",
+        "malware scan",
+        "document access"
+      ],
+      "paths": [
+        "src/lib/documents/**",
+        "src/app/api/internal/documents/**",
+        "src/app/api/internal/files/**",
+        "src/db/schema/documents.ts",
+        "src/db/schema/files.ts"
+      ],
+      "requires": [
+        "no-ai-ingestion",
+        "authorization-test",
+        "content-sniff-test",
+        "clean-scan-gate-test",
+        "access-log-test"
+      ],
+      "sources": [
+        "src/lib/documents/queries.ts",
+        "src/app/api/internal/documents/upload/route.ts",
+        "src/app/api/internal/files/[fileId]/download/route.ts"
+      ],
+      "validation": [
+        "Reject wrong owner/role, spoofed types, non-CLEAN files, path traversal, and unlogged access."
+      ]
+    },
+    {
+      "id": "BR-DOC-002",
+      "category": "document-state",
+      "statement": "Document verification, rejection, and waiver require an authorized human decision, a reason where required, an immutable verification log, and synchronized booking activity.",
+      "enforcement": "partial",
+      "weight": 65,
+      "riskFloor": "R3",
+      "keywords": [
+        "verify document",
+        "reject document",
+        "waive document",
+        "document verification",
+        "document approval"
+      ],
+      "paths": [
+        "src/app/api/internal/documents/verification/**",
+        "src/components/internal/documents/document-verification-action-panel.tsx"
+      ],
+      "requires": [
+        "human-decision",
+        "authorization-test",
+        "reason-validation-test",
+        "verification-log-test",
+        "transaction-review"
+      ],
+      "sources": [
+        "src/app/api/internal/documents/verification/route.ts",
+        "src/db/schema/documents.ts"
+      ],
+      "validation": [
+        "Test closed requests, inactive bookings, missing reasons, repeated actions, and rollback."
+      ]
+    },
+    {
+      "id": "BR-DOC-003",
+      "category": "document-decision-action",
+      "statement": "Actually approving, verifying, rejecting, or waiving a real customer document is a human-executed decision.",
+      "enforcement": "policy",
+      "weight": 90,
+      "riskFloor": "R4",
+      "hardStop": true,
+      "contextWeight": 65,
+      "contextRiskFloor": "R3",
+      "contextRequires": [
+        "human-decision-design",
+        "authorization-test",
+        "verification-log-test"
+      ],
+      "hardStopTriggers": [
+        {
+          "actions": ["approve", "verify", "reject", "waive", "mark", "set"],
+          "targets": [
+            "document",
+            "customer document",
+            "submission",
+            "verification"
+          ],
+          "appliesTo": ["change"]
+        }
+      ],
+      "keywords": [
+        "document approval",
+        "document verification",
+        "approve this document",
+        "verify customer document",
+        "waive document"
+      ],
+      "paths": [],
+      "requires": ["human-execution-only", "authorized-human-decision"],
+      "sources": [
+        "docs/AI_AGENTIC_SDLC.md",
+        "src/app/api/internal/documents/verification/route.ts"
+      ],
+      "validation": [
+        "The agent may prepare a review checklist but performs no real document decision."
+      ]
+    },
+    {
+      "id": "BR-AUDIT-001",
+      "category": "audit",
+      "statement": "Every meaningful business mutation writes a sanitized operational audit entry through the central helper; high-volume page views belong in consented analytics instead.",
+      "enforcement": "partial",
+      "weight": 40,
+      "riskFloor": "R2",
+      "keywords": [
+        "audit log",
+        "audit trail",
+        "business mutation",
+        "activity history",
+        "forensics"
+      ],
+      "paths": ["src/lib/audit/**", "src/db/schema/audit.ts"],
+      "requires": [
+        "audit-entry",
+        "sensitive-field-redaction",
+        "failure-path-review"
+      ],
+      "sources": ["src/lib/audit/log.ts", "src/db/schema/audit.ts"],
+      "validation": [
+        "Assert actor, action, entity, outcome, and sanitized metadata for success and relevant failure paths."
+      ]
+    },
+    {
+      "id": "BR-CONSENT-001",
+      "category": "privacy-consent",
+      "statement": "Marketing scripts, tracking, and attribution remain disabled until explicit consent and are revoked or suppressed after denial or withdrawal.",
+      "enforcement": "enforced",
+      "weight": 50,
+      "riskFloor": "R3",
+      "keywords": [
+        "marketing consent",
+        "analytics consent",
+        "tracking pixel",
+        "ga4",
+        "facebook pixel",
+        "utm attribution",
+        "cookie consent"
+      ],
+      "paths": [
+        "src/lib/public/analytics.ts",
+        "src/lib/public/use-marketing-consent.ts",
+        "src/components/public/marketing-consent.tsx",
+        "src/components/public/marketing-scripts.tsx"
+      ],
+      "requires": [
+        "default-denied-test",
+        "grant-test",
+        "revoke-test",
+        "no-preconsent-network-test"
+      ],
+      "sources": [
+        "src/lib/public/analytics.ts",
+        "src/components/public/marketing-scripts.tsx"
+      ],
+      "validation": [
+        "Verify providers never load or receive events before consent and stop after revocation."
+      ]
+    },
+    {
+      "id": "BR-WA-001",
+      "category": "whatsapp-integration",
+      "statement": "WhatsApp V1 inbound processing is deterministic, verifies the provider signature on the raw payload, deduplicates provider event IDs, and records sanitized processing outcomes.",
+      "enforcement": "partial",
+      "weight": 65,
+      "riskFloor": "R3",
+      "keywords": [
+        "whatsapp",
+        "whatsapp webhook",
+        "meta cloud api",
+        "inbound message",
+        "provider event id",
+        "webhook signature"
+      ],
+      "paths": [
+        "src/lib/whatsapp/**",
+        "src/app/api/webhooks/whatsapp/**",
+        "src/db/schema/whatsapp-routing.ts"
+      ],
+      "requires": [
+        "signature-verification-test",
+        "idempotency-test",
+        "replay-test",
+        "pii-redaction-review",
+        "failure-retry-design"
+      ],
+      "sources": [
+        "docs/PropertyGo_Internal_WhatsApp_Automation_Build_Spec_Copilot.md",
+        "src/lib/whatsapp/webhook.ts",
+        "src/app/api/webhooks/whatsapp/route.ts"
+      ],
+      "validation": [
+        "Test invalid signatures, replayed events, malformed payloads, unsupported events, and sanitized logs."
+      ]
+    },
+    {
+      "id": "BR-WA-002",
+      "category": "customer-communication",
+      "statement": "Sending or broadcasting real outbound customer messages is human-executed; the agent may design and test with synthetic recipients but may not trigger delivery.",
+      "enforcement": "policy",
+      "weight": 90,
+      "riskFloor": "R4",
+      "hardStop": true,
+      "contextWeight": 65,
+      "contextRiskFloor": "R3",
+      "contextRequires": [
+        "consent-and-opt-out-design",
+        "synthetic-recipient-tests",
+        "delivery-kill-switch"
+      ],
+      "hardStopTriggers": [
+        {
+          "actions": [
+            "send",
+            "broadcast",
+            "blast",
+            "message",
+            "contact",
+            "email",
+            "notify",
+            "trigger"
+          ],
+          "targets": [
+            "whatsapp",
+            "customer",
+            "customers",
+            "client",
+            "clients",
+            "recipient",
+            "recipients",
+            "outbound message"
+          ],
+          "appliesTo": ["change"]
+        }
+      ],
+      "keywords": [
+        "outbound customer message",
+        "whatsapp campaign",
+        "send whatsapp to customers",
+        "send customer messages now",
+        "bulk whatsapp",
+        "broadcast whatsapp",
+        "message all customers",
+        "trigger outbound messages",
+        "blast messages to clients"
+      ],
+      "paths": [],
+      "requires": ["human-execution-only", "consent-and-opt-out-review"],
+      "sources": [
+        "docs/AI_AGENTIC_SDLC.md",
+        "docs/PropertyGo_Internal_WhatsApp_Automation_Build_Spec_Copilot.md"
+      ],
+      "validation": [
+        "No tool or production provider call is made by the agent."
+      ]
+    },
+    {
+      "id": "BR-IMPORT-001",
+      "category": "catalog-import",
+      "statement": "Project imports are schema-validated, bind preview to the exact payload, preserve omitted existing values, and execute transactionally with rollback evidence.",
+      "enforcement": "partial",
+      "weight": 60,
+      "riskFloor": "R3",
+      "keywords": [
+        "project import",
+        "import catalog",
+        "import units",
+        "bulk project data",
+        "import preview"
+      ],
+      "paths": [
+        "src/lib/admin/imports/**",
+        "src/app/api/admin/imports/**",
+        "src/components/admin/imports/**",
+        "docs/imports/**"
+      ],
+      "requires": [
+        "schema-validation-test",
+        "preview-payload-binding",
+        "transaction-review",
+        "rollback-plan",
+        "import-fixture-test"
+      ],
+      "sources": [
+        "src/lib/admin/imports/project-import-schema.ts",
+        "src/lib/admin/imports/project-import-executor.ts",
+        "src/app/api/admin/imports/project/route.ts"
+      ],
+      "validation": [
+        "Test malformed payloads, stale previews, partial failure, retry, and omitted existing fields."
+      ]
+    },
+    {
+      "id": "BR-DB-001",
+      "category": "database",
+      "statement": "Schema and migration changes use one designated writer, generated SQL review, isolated rehearsal, and recovery evidence; production migration execution is human-controlled.",
+      "enforcement": "policy",
+      "weight": 70,
+      "riskFloor": "R3",
+      "keywords": [
+        "database migration",
+        "schema change",
+        "drizzle migration",
+        "alter table",
+        "add column",
+        "backfill",
+        "database index"
+      ],
+      "paths": ["src/db/schema/**", "drizzle/**", "drizzle.config.ts"],
+      "requires": [
+        "single-schema-writer",
+        "generated-sql-review",
+        "isolated-migration-rehearsal",
+        "rollback-or-forward-fix"
+      ],
+      "sources": ["docs/AI_AGENTIC_SDLC.md", "drizzle.config.ts"],
+      "validation": [
+        "Test empty and prior-version databases and preserve backup or forward-fix evidence."
+      ]
+    },
+    {
+      "id": "BR-CONFIG-001",
+      "category": "configuration",
+      "statement": "Configuration changes document variable names and safe placeholders only, validate required values at startup, and never expose real secret values.",
+      "enforcement": "partial",
+      "weight": 40,
+      "riskFloor": "R2",
+      "keywords": [
+        "environment variable",
+        "env var",
+        "configuration",
+        "feature flag",
+        ".env.example"
+      ],
+      "paths": [
+        ".env.example",
+        "src/config/**",
+        "src/lib/system-settings.ts",
+        "src/db/schema/settings-flags.ts"
+      ],
+      "requires": [
+        "names-only-documentation",
+        "startup-validation",
+        "safe-default-review",
+        "secret-scan"
+      ],
+      "sources": [
+        ".env.example",
+        "src/lib/system-settings.ts",
+        "src/db/schema/settings-flags.ts"
+      ],
+      "validation": [
+        "Use placeholders in tests and verify missing or malformed required values fail safely."
+      ]
+    },
+    {
+      "id": "BR-SECRET-001",
+      "category": "secrets",
+      "statement": "Real secrets, credentials, OTP values, session tokens, and production environment files are never read, printed, copied, rotated, or changed by an agent.",
+      "enforcement": "policy",
+      "weight": 95,
+      "riskFloor": "R4",
+      "hardStop": true,
+      "contextWeight": 60,
+      "contextRiskFloor": "R3",
+      "contextRequires": [
+        "names-only-documentation",
+        "synthetic-values-only",
+        "secret-scan"
+      ],
+      "hardStopTriggers": [
+        {
+          "actions": [
+            "show",
+            "print",
+            "read",
+            "open",
+            "dump",
+            "copy",
+            "tell me",
+            "give",
+            "provide",
+            "paste",
+            "display",
+            "output",
+            "list",
+            "download",
+            "pull",
+            "query",
+            "use",
+            "screenshot",
+            "access",
+            "summarize",
+            "reveal",
+            "rotate",
+            "change",
+            "edit",
+            "export"
+          ],
+          "targets": [
+            "secret",
+            "secrets",
+            "credential",
+            "credentials",
+            "api key",
+            "token value",
+            ".env",
+            "environment values",
+            "otp value"
+          ],
+          "appliesTo": ["change", "read-only"]
+        }
+      ],
+      "keywords": [
+        "secret handling",
+        "production credentials",
+        "show me the secrets",
+        "show credentials",
+        "print the secrets",
+        "print .env",
+        "show .env",
+        "open .env",
+        "read .env",
+        "dump environment variables",
+        "reveal api key",
+        "print api key",
+        "read api key",
+        "api key value",
+        "rotate secret",
+        "rotate production secret",
+        "copy production credentials"
+      ],
+      "paths": [".env", ".env.*"],
+      "excludePaths": [".env.example", ".env.sample", ".env.template"],
+      "requires": ["human-execution-only", "no-secret-output"],
+      "sources": ["docs/AI_AGENTIC_SDLC.md", ".gitignore"],
+      "validation": [
+        "The agent stops and does not read or echo the value-bearing file."
+      ]
+    },
+    {
+      "id": "BR-API-001",
+      "category": "api-contract",
+      "statement": "Route handlers validate client input with Zod and return the shared okJson/errorJson contract with stable, sanitized errors.",
+      "enforcement": "partial",
+      "weight": 35,
+      "riskFloor": "R2",
+      "keywords": [
+        "route handler",
+        "api endpoint",
+        "api contract",
+        "error response",
+        "zod validation",
+        "status code"
+      ],
+      "paths": ["src/app/api/**", "src/lib/api/**"],
+      "requires": [
+        "input-validation-test",
+        "error-contract-test",
+        "raw-error-leakage-test"
+      ],
+      "sources": ["src/lib/api/json.ts", "src/lib/api/client.ts"],
+      "validation": [
+        "Test invalid JSON/input, stable codes, sanitized failures, and expected success envelopes."
+      ]
+    },
+    {
+      "id": "BR-PUBLIC-001",
+      "category": "public-surface",
+      "statement": "Unauthenticated mutation endpoints require server validation, rate limiting or equivalent abuse control, bot mitigation where appropriate, and minimal responses.",
+      "enforcement": "partial",
+      "weight": 45,
+      "riskFloor": "R2",
+      "keywords": [
+        "public api",
+        "unauthenticated endpoint",
+        "public form",
+        "enquiry form",
+        "contact form",
+        "rate limit",
+        "captcha",
+        "bot protection"
+      ],
+      "paths": ["src/app/api/public/**"],
+      "requires": [
+        "zod-validation",
+        "abuse-test",
+        "rate-limit-design",
+        "data-minimization-review"
+      ],
+      "sources": [
+        "src/app/api/public/leads/route.ts",
+        "src/app/api/public/geocode/route.ts"
+      ],
+      "validation": [
+        "Test malformed, oversized, repeated, automated, and privacy-sensitive requests."
+      ]
+    },
+    {
+      "id": "BR-REPORT-001",
+      "category": "reporting",
+      "statement": "Reports and exports enforce role and ownership scope, use complete aggregates, neutralize spreadsheet injection, minimize PII, and audit exports.",
+      "enforcement": "partial",
+      "weight": 55,
+      "riskFloor": "R3",
+      "keywords": [
+        "report export",
+        "csv export",
+        "download report",
+        "sales report",
+        "customer export",
+        "booking export"
+      ],
+      "paths": [
+        "src/lib/reports/**",
+        "src/app/api/internal/reports/**",
+        "src/app/api/internal/**/export/**"
+      ],
+      "requires": [
+        "role-and-owner-test",
+        "aggregate-completeness-test",
+        "csv-injection-test",
+        "pii-minimization",
+        "export-audit"
+      ],
+      "sources": [
+        "src/lib/reports/overview.ts",
+        "src/app/api/internal/reports/export/route.ts"
+      ],
+      "validation": [
+        "Test role scopes, large datasets, formula-prefixed values, and audit records."
+      ]
+    },
+    {
+      "id": "BR-UI-001",
+      "category": "user-interface",
+      "statement": "UI changes reuse established primitives, remain responsive, support keyboard and screen-reader use, respect theme and reduced motion, and expose clear loading/error states.",
+      "enforcement": "partial",
+      "weight": 15,
+      "riskFloor": "R1",
+      "keywords": [
+        "ui",
+        "component",
+        "button",
+        "spacing",
+        "styling",
+        "layout",
+        "responsive",
+        "accessibility",
+        "dialog",
+        "form"
+      ],
+      "paths": ["src/components/**", "src/app/globals.css"],
+      "requires": [
+        "reuse-existing-primitive",
+        "keyboard-check",
+        "screen-reader-check",
+        "responsive-check",
+        "reduced-motion-check"
+      ],
+      "sources": ["src/components/ui", "src/app/globals.css"],
+      "validation": [
+        "Verify keyboard flow, labels/errors, mobile and desktop layouts, both themes, and reduced motion."
+      ]
+    },
+    {
+      "id": "BR-SEO-001",
+      "category": "public-discovery",
+      "statement": "Public indexable pages provide accurate metadata, canonical URLs, robots/sitemap behavior, and structured data without bypassing consent rules.",
+      "enforcement": "partial",
+      "weight": 25,
+      "riskFloor": "R2",
+      "keywords": [
+        "seo",
+        "metadata",
+        "canonical url",
+        "sitemap",
+        "robots",
+        "json-ld",
+        "structured data"
+      ],
+      "paths": [
+        "src/app/sitemap.ts",
+        "src/app/robots.ts",
+        "src/lib/public/seo.ts",
+        "src/components/public/structured-data.tsx"
+      ],
+      "requires": [
+        "metadata-test",
+        "canonical-test",
+        "sitemap-visibility-test",
+        "structured-data-validation"
+      ],
+      "sources": [
+        "src/lib/public/seo.ts",
+        "src/app/sitemap.ts",
+        "src/app/robots.ts"
+      ],
+      "validation": [
+        "Verify public visibility rules and validate generated structured data."
+      ]
+    },
+    {
+      "id": "BR-NEXT-001",
+      "category": "framework",
+      "statement": "Before changing Next.js behavior, read the relevant version-matched guide under node_modules/next/dist/docs and follow its deprecation notices.",
+      "enforcement": "policy",
+      "weight": 12,
+      "riskFloor": "R1",
+      "keywords": [
+        "next.js",
+        "app router",
+        "server component",
+        "client component",
+        "server action",
+        "route group",
+        "middleware",
+        "metadata"
+      ],
+      "paths": ["src/app/**", "next.config.ts"],
+      "requires": ["read-version-matched-next-docs"],
+      "sources": ["AGENTS.md", "node_modules/next/dist/docs/"],
+      "validation": [
+        "Record the exact local guide consulted in change evidence."
+      ]
+    },
+    {
+      "id": "BR-TEST-001",
+      "category": "quality",
+      "statement": "Tests derive from acceptance criteria and cover negative paths; an agent never weakens requirements, controls, or assertions merely to obtain a pass.",
+      "enforcement": "policy",
+      "weight": 12,
+      "riskFloor": "R1",
+      "keywords": [
+        "test",
+        "vitest",
+        "coverage",
+        "fixture",
+        "mock",
+        "regression test",
+        "acceptance criteria"
+      ],
+      "paths": [
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.spec.ts",
+        "**/*.spec.tsx"
+      ],
+      "requires": [
+        "acceptance-criteria-traceability",
+        "negative-path-tests",
+        "no-control-relaxation"
+      ],
+      "sources": [
+        "docs/AI_AGENTIC_SDLC.md",
+        "docs/templates/AI_AGENT_WORK_ITEM.md"
+      ],
+      "validation": [
+        "Map each changed behavior to positive and applicable negative test evidence."
+      ]
+    },
+    {
+      "id": "BR-SCOPE-001",
+      "category": "change-safety",
+      "statement": "Preserve unrelated tracked and untracked user work; never revert, stash, overwrite, move, or delete outside the declared change set.",
+      "enforcement": "policy",
+      "weight": 10,
+      "riskFloor": "R1",
+      "keywords": [
+        "refactor",
+        "cleanup",
+        "reorganize",
+        "rename files",
+        "move files",
+        "migrate codebase"
+      ],
+      "paths": [],
+      "requires": [
+        "initial-git-status",
+        "declared-file-manifest",
+        "final-scope-review"
+      ],
+      "sources": ["AGENTS.md", "docs/AI_AGENTIC_SDLC.md"],
+      "validation": [
+        "Compare initial status, declared ownership, and final manifest."
+      ]
+    },
+    {
+      "id": "BR-CTRL-001",
+      "category": "agent-control-plane",
+      "statement": "Agent instructions, SDLC rules, calculator logic, CI, ownership policy, dependency manifests, and framework configuration are protected control-plane changes.",
+      "enforcement": "policy",
+      "weight": 60,
+      "riskFloor": "R3",
+      "keywords": [
+        "agent instructions",
+        "copilot instructions",
+        "business rule registry",
+        "risk calculator",
+        "ci workflow",
+        "codeowners",
+        "branch protection",
+        "package manifest",
+        "lockfile"
+      ],
+      "paths": [
+        "**/AGENTS.md",
+        "**/CLAUDE.md",
+        ".agents/**",
+        ".claude/**",
+        ".codex/**",
+        ".github/**",
+        "CODEOWNERS",
+        "docs/AI_AGENTIC_SDLC.md",
+        "docs/sdlc/**",
+        "docs/templates/**",
+        "docs/work-items/README.md",
+        "scripts/sdlc-*.mjs",
+        "package.json",
+        "package-lock.json",
+        "pnpm-lock.yaml",
+        "yarn.lock",
+        ".npmrc",
+        ".nvmrc",
+        ".mcp.json",
+        "**/mcp.json",
+        "eslint.config.mjs",
+        "next.config.*",
+        "tsconfig*.json",
+        "vitest.config.*",
+        "postcss.config.*",
+        "tailwind.config.*",
+        "drizzle.config.*",
+        "Dockerfile*",
+        "docker-compose*.yml",
+        "docker-compose*.yaml",
+        "vercel.json",
+        "netlify.toml",
+        ".devcontainer/**",
+        "infra/**",
+        "terraform/**"
+      ],
+      "requires": [
+        "human-plan-approval-before-implementation",
+        "control-plane-tests",
+        "scope-review",
+        "independent-review"
+      ],
+      "sources": ["docs/AI_AGENTIC_SDLC.md", ".github/copilot-instructions.md"],
+      "validation": [
+        "Validate the registry and calculator and test representative risk classes and bypass attempts."
+      ]
+    },
+    {
+      "id": "BR-SCM-001",
+      "category": "source-control-action",
+      "statement": "Actually approving or merging a pull request, or pushing to the default or a protected branch, is human-executed; an agent never approves its own work.",
+      "enforcement": "policy",
+      "weight": 90,
+      "riskFloor": "R4",
+      "hardStop": true,
+      "contextWeight": 60,
+      "contextRiskFloor": "R3",
+      "contextRequires": [
+        "protected-branch-design",
+        "independent-human-approval",
+        "synthetic-or-local-workflow-tests"
+      ],
+      "hardStopTriggers": [
+        {
+          "actions": ["approve", "self-approve", "merge"],
+          "targets": ["pull request", "pr", "this pull request", "this pr"],
+          "appliesTo": ["change"]
+        },
+        {
+          "actions": ["merge", "push", "force push"],
+          "targets": [
+            "to main",
+            "into main",
+            "main branch",
+            "to master",
+            "into master",
+            "master branch",
+            "default branch",
+            "protected branch"
+          ],
+          "appliesTo": ["change"]
+        }
+      ],
+      "keywords": [
+        "approve pull request",
+        "approve pr",
+        "merge pull request",
+        "merge this pr",
+        "push to main",
+        "push default branch",
+        "push protected branch"
+      ],
+      "paths": [],
+      "requires": [
+        "human-execution-only",
+        "no-self-approval",
+        "protected-branch-review"
+      ],
+      "sources": ["docs/AI_AGENTIC_SDLC.md", ".github/copilot-instructions.md"],
+      "validation": [
+        "Confirm the agent stops before approval, merge, or protected/default-branch push actions."
+      ]
+    },
+    {
+      "id": "BR-DESTROY-001",
+      "category": "destructive-action",
+      "statement": "Destructive or difficult-to-recover operations require explicit human authorization naming exact targets and are not autonomously executed.",
+      "enforcement": "policy",
+      "weight": 95,
+      "riskFloor": "R4",
+      "hardStop": true,
+      "contextWeight": 60,
+      "contextRiskFloor": "R3",
+      "contextRequires": [
+        "exact-target-design",
+        "recovery-plan",
+        "negative-scope-tests"
+      ],
+      "hardStopTriggers": [
+        {
+          "actions": [
+            "delete",
+            "remove",
+            "truncate",
+            "drop",
+            "wipe",
+            "erase",
+            "purge",
+            "mass update"
+          ],
+          "targets": [
+            "records",
+            "database",
+            "table",
+            "customer accounts",
+            "accounts",
+            "customer data",
+            "files",
+            "directories",
+            "repository",
+            "workspace",
+            "production"
+          ],
+          "appliesTo": ["change"]
+        },
+        {
+          "actions": ["force push", "reset --hard", "git clean -fd", "rm -rf"],
+          "targets": [
+            "git",
+            "branch",
+            "main",
+            "repository",
+            "workspace",
+            "--hard"
+          ],
+          "appliesTo": ["change"]
+        }
+      ],
+      "keywords": [
+        "destructive operation",
+        "data purge",
+        "delete all",
+        "delete database",
+        "remove all records",
+        "bulk delete",
+        "truncate table",
+        "drop table",
+        "drop database",
+        "wipe database",
+        "erase database",
+        "purge records",
+        "force push",
+        "reset --hard",
+        "git clean -fd",
+        "rm -rf",
+        "mass update production"
+      ],
+      "paths": [],
+      "requires": [
+        "human-execution-only",
+        "exact-target-confirmation",
+        "recovery-evidence"
+      ],
+      "sources": ["docs/AI_AGENTIC_SDLC.md", "AGENTS.md"],
+      "validation": [
+        "The agent stops before any destructive command or mutation."
+      ]
+    },
+    {
+      "id": "BR-PROD-001",
+      "category": "production-action",
+      "statement": "Production deploys, production migrations, real-data backfills, and direct production data changes are human-executed actions.",
+      "enforcement": "policy",
+      "weight": 95,
+      "riskFloor": "R4",
+      "hardStop": true,
+      "contextWeight": 65,
+      "contextRiskFloor": "R3",
+      "contextRequires": [
+        "release-runbook-design",
+        "staging-evidence",
+        "rollback-readiness"
+      ],
+      "hardStopTriggers": [
+        {
+          "actions": [
+            "deploy",
+            "release",
+            "ship",
+            "migrate",
+            "backfill",
+            "run",
+            "execute",
+            "promote",
+            "production deployment",
+            "go live"
+          ],
+          "targets": [
+            "production",
+            "prod",
+            "live database",
+            "live environment",
+            "go live"
+          ],
+          "appliesTo": ["change"]
+        },
+        {
+          "actions": ["change", "edit", "write", "migrate", "backfill"],
+          "targets": [
+            "production database",
+            "production data",
+            "production records",
+            "live database"
+          ],
+          "appliesTo": ["change"]
+        }
+      ],
+      "keywords": [
+        "production deployment",
+        "production migration",
+        "production backfill",
+        "deploy to production",
+        "run production migration",
+        "backfill production data",
+        "change production database",
+        "edit production records",
+        "release to production now"
+      ],
+      "paths": [],
+      "requires": [
+        "human-execution-only",
+        "approved-release-runbook",
+        "rollback-readiness"
+      ],
+      "sources": ["docs/AI_AGENTIC_SDLC.md"],
+      "validation": [
+        "The agent limits output to evidence and an approved human-run procedure."
+      ]
+    },
+    {
+      "id": "BR-AI-DATA-001",
+      "category": "ai-data-boundary",
+      "statement": "Coding-agent prompts, logs, fixtures, and evidence use synthetic or redacted data only; customer PII, OTPs, documents, credentials, and raw conversations are excluded.",
+      "enforcement": "policy",
+      "weight": 60,
+      "riskFloor": "R3",
+      "keywords": [
+        "customer data",
+        "personal data",
+        "pii",
+        "raw conversation",
+        "production fixture",
+        "real customer example",
+        "ai training data"
+      ],
+      "paths": [],
+      "requires": [
+        "synthetic-data-only",
+        "redaction-review",
+        "secret-scan",
+        "data-minimization"
+      ],
+      "sources": ["docs/AI_AGENTIC_SDLC.md", "docs/sdlc/SESSION_CONTEXT.md"],
+      "validation": [
+        "Review model-visible inputs and artifacts for prohibited data classes."
+      ]
+    },
+    {
+      "id": "BR-AI-DATA-002",
+      "category": "restricted-data-access",
+      "statement": "Directly reading, printing, copying, or pasting real customer PII, production records, documents, OTPs, or raw conversations into an agent session is prohibited.",
+      "enforcement": "policy",
+      "weight": 95,
+      "riskFloor": "R4",
+      "hardStop": true,
+      "contextWeight": 60,
+      "contextRiskFloor": "R3",
+      "contextRequires": [
+        "synthetic-or-redacted-design",
+        "data-minimization",
+        "model-input-review"
+      ],
+      "hardStopTriggers": [
+        {
+          "actions": [
+            "show",
+            "print",
+            "read",
+            "open",
+            "dump",
+            "copy",
+            "paste",
+            "tell me",
+            "give",
+            "provide",
+            "display",
+            "output",
+            "list",
+            "download",
+            "pull",
+            "query",
+            "use",
+            "screenshot",
+            "access",
+            "summarize",
+            "load",
+            "export",
+            "inspect",
+            "retrieve"
+          ],
+          "targets": [
+            "customer data",
+            "customer pii",
+            "production data",
+            "production records",
+            "customer documents",
+            "otp values",
+            "raw conversations",
+            "real customer",
+            "customer records"
+          ],
+          "appliesTo": ["change", "read-only"]
+        }
+      ],
+      "keywords": [
+        "restricted customer data",
+        "production customer records",
+        "show customer data",
+        "print customer data",
+        "read production data",
+        "dump production records",
+        "open customer documents",
+        "paste customer conversation",
+        "use real customer example",
+        "load production fixture",
+        "show otp values"
+      ],
+      "paths": [],
+      "requires": ["no-autonomous-access", "synthetic-or-redacted-substitute"],
+      "sources": ["docs/AI_AGENTIC_SDLC.md", "docs/sdlc/SESSION_CONTEXT.md"],
+      "validation": [
+        "The agent stops before retrieving or exposing restricted data and offers a synthetic or redacted workflow."
+      ]
+    }
+  ],
+  "escalators": [
+    {
+      "id": "ESC-WIDE",
+      "weight": 15,
+      "riskFloor": "R2",
+      "when": "The change is cross-cutting or touches more than 15 files.",
+      "keywords": [
+        "across the app",
+        "everywhere",
+        "all pages",
+        "entire codebase",
+        "global refactor"
+      ]
+    },
+    {
+      "id": "ESC-EXTERNAL",
+      "weight": 15,
+      "riskFloor": "R3",
+      "when": "A change can cause an external side effect.",
+      "keywords": [
+        "send email",
+        "send sms",
+        "notify customer",
+        "external api",
+        "outbound webhook",
+        "third party write"
+      ]
+    },
+    {
+      "id": "ESC-MONEY",
+      "weight": 20,
+      "riskFloor": "R3",
+      "when": "Money, price, commission, or sellable inventory can change.",
+      "keywords": [
+        "change price",
+        "pricing rule",
+        "discount",
+        "commission",
+        "payment amount",
+        "inventory allocation"
+      ]
+    },
+    {
+      "id": "ESC-NO-ROLLBACK",
+      "weight": 20,
+      "riskFloor": "R3",
+      "when": "The request declares no reliable rollback path.",
+      "keywords": [
+        "irreversible",
+        "one way migration",
+        "no rollback",
+        "cannot undo"
+      ]
+    }
+  ],
+  "learnedRules": []
+}

@@ -38,6 +38,8 @@ npm run test
 npm run build
 ```
 
+Agent-assisted code, dependency, schema, configuration, and executable-workflow changes use the complete clean-CI command matrix in [docs/AI_AGENTIC_SDLC.md](docs/AI_AGENTIC_SDLC.md#121-clean-checkout-merge-baseline). Record every command as Pass, Fail, or `N/A—reason` in [the change-evidence template](docs/templates/AI_CHANGE_EVIDENCE.md); an accountable reviewer must approve every N/A.
+
 ## Architecture Rules
 
 - Keep production catalog, inventory, lead, and booking data in PostgreSQL. Do not copy database records into mock files.
@@ -49,3 +51,31 @@ npm run build
 - Use `AppReveal` for viewport motion. It automatically respects reduced-motion preferences.
 
 See [docs/EXTERNAL_WEBSITE.md](docs/EXTERNAL_WEBSITE.md) for extension and marketing guidance and [docs/EXTERNAL_QA.md](docs/EXTERNAL_QA.md) for evidence-based completion gates.
+
+## Agentic SDLC Quick Start
+
+1. Open Copilot Chat and select **Agent** mode.
+2. Describe the outcome in a few sentences; you do not need to complete a template.
+3. Let the agent inspect the current code, load active business rules, calculate risk, and propose the file scope.
+4. Review the risk decision: R0 is read-only, R1 and eligible R2 work may proceed automatically, R3 pauses for your explicit approval after planning, and R4 provides advice for a human to execute.
+5. Review the changed files, checks, evidence, and remaining risks before approving a merge.
+
+Example request:
+
+> Add an archive option for inactive property listings. Archived listings must not appear publicly, but administrators can restore them.
+
+For an R3 plan, continue only when ready by replying: `Approved, continue with the proposed R3 plan.`
+
+Inspect or validate the decision manually when useful:
+
+```bash
+npm run sdlc:score -- --request "Add a favourites feature"
+npm run sdlc:score -- --request "Change booking status" --files "src/lib/bookings/status.ts,src/app/api/internal/bookings/status/route.ts"
+npm run sdlc:rules
+npm run sdlc:validate
+npm run test:sdlc
+```
+
+The durable session map is [docs/sdlc/SESSION_CONTEXT.md](docs/sdlc/SESSION_CONTEXT.md), and the canonical machine-readable memory is [docs/sdlc/business-rules.json](docs/sdlc/business-rules.json). Proposed learned rules do not apply until a human approves them as active.
+
+See [the complete Agentic SDLC and automatic-runner guide](docs/AI_AGENTIC_SDLC.md#24-automatic-rough-request-execution-and-business-rule-memory), [the work-item template](docs/templates/AI_AGENT_WORK_ITEM.md), and [the change-evidence template](docs/templates/AI_CHANGE_EVIDENCE.md).
