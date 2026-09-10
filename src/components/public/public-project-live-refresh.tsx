@@ -8,7 +8,11 @@ const REFRESH_INTERVAL_MS = 60_000;
 const REALTIME_ENABLED = process.env.NEXT_PUBLIC_ABLY_ENABLED === "true";
 
 function isProjectDataPage(pathname: string) {
-  return pathname === "/" || pathname === "/projects" || pathname.startsWith("/projects/");
+  return (
+    pathname === "/" ||
+    pathname === "/projects" ||
+    pathname.startsWith("/projects/")
+  );
 }
 
 export function PublicProjectLiveRefresh() {

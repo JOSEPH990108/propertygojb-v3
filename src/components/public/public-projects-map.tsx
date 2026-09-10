@@ -3,8 +3,21 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from "react-leaflet";
-import { LocateFixed, MapPinned, Navigation2, Radar, Search } from "lucide-react";
+import {
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+  useMap,
+  useMapEvents,
+} from "react-leaflet";
+import {
+  LocateFixed,
+  MapPinned,
+  Navigation2,
+  Radar,
+  Search,
+} from "lucide-react";
 import { divIcon } from "leaflet";
 
 import type { PublicProjectCard } from "@/lib/public/projects";
@@ -43,7 +56,10 @@ function haversineDistanceKm(left: LatLng, right: LatLng) {
 
   const a =
     Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-    Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
+    Math.cos(lat1) *
+      Math.cos(lat2) *
+      Math.sin(deltaLng / 2) *
+      Math.sin(deltaLng / 2);
 
   return 2 * earthRadiusKm * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
@@ -52,13 +68,19 @@ function MapSync({ center }: { center: LatLng }) {
   const map = useMap();
 
   useEffect(() => {
-    map.setView([center.lat, center.lng], Math.max(map.getZoom(), 12), { animate: true });
+    map.setView([center.lat, center.lng], Math.max(map.getZoom(), 12), {
+      animate: true,
+    });
   }, [center.lat, center.lng, map]);
 
   return null;
 }
 
-function MapDragSync({ onCenterChange }: { onCenterChange: (center: LatLng) => void }) {
+function MapDragSync({
+  onCenterChange,
+}: {
+  onCenterChange: (center: LatLng) => void;
+}) {
   useMapEvents({
     dragend(event) {
       const map = event.target;
@@ -70,7 +92,11 @@ function MapDragSync({ onCenterChange }: { onCenterChange: (center: LatLng) => v
   return null;
 }
 
-export function PublicProjectsMap({ projects }: { projects: PublicProjectCard[] }) {
+export function PublicProjectsMap({
+  projects,
+}: {
+  projects: PublicProjectCard[];
+}) {
   const projectsWithCoordinates = useMemo(() => {
     return projects
       .map((project) => {
@@ -86,7 +112,10 @@ export function PublicProjectsMap({ projects }: { projects: PublicProjectCard[] 
           coordinates: { lat, lng },
         };
       })
-      .filter((project): project is PublicProjectCard & { coordinates: LatLng } => project !== null);
+      .filter(
+        (project): project is PublicProjectCard & { coordinates: LatLng } =>
+          project !== null,
+      );
   }, [projects]);
 
   const initialCenter = useMemo(() => {
@@ -112,7 +141,9 @@ export function PublicProjectsMap({ projects }: { projects: PublicProjectCard[] 
   const [center, setCenter] = useState<LatLng>(initialCenter);
   const [query, setQuery] = useState("");
   const [searchLabel, setSearchLabel] = useState("Johor Bahru area");
-  const [searchState, setSearchState] = useState<"idle" | "loading" | "error">("idle");
+  const [searchState, setSearchState] = useState<"idle" | "loading" | "error">(
+    "idle",
+  );
 
   useEffect(() => {
     if (projectsWithCoordinates.length === 0) {
@@ -163,7 +194,9 @@ export function PublicProjectsMap({ projects }: { projects: PublicProjectCard[] 
     setSearchState("loading");
 
     try {
-      const response = await fetch(`/api/public/geocode?q=${encodeURIComponent(query.trim())}`);
+      const response = await fetch(
+        `/api/public/geocode?q=${encodeURIComponent(query.trim())}`,
+      );
 
       if (!response.ok) {
         throw new Error("Unable to geocode area");
@@ -191,7 +224,7 @@ export function PublicProjectsMap({ projects }: { projects: PublicProjectCard[] 
   }
 
   return (
-    <section className="overflow-hidden rounded-[2.25rem] border border-blue-100 bg-background shadow-[0_24px_70px_-40px_rgba(15,23,42,0.5)]">
+    <section className="overflow-hidden rounded-none border border-blue-100 bg-background shadow-[0_24px_70px_-40px_rgba(15,23,42,0.5)]">
       <div className="border-b border-blue-100 bg-[linear-gradient(135deg,#f8fbff_0%,#ffffff_65%,#eef5ff_100%)] px-5 py-5 sm:px-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
@@ -202,7 +235,9 @@ export function PublicProjectsMap({ projects }: { projects: PublicProjectCard[] 
               Search an area, then drag to explore nearby projects
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Low-cost map view powered by OpenStreetMap. Search a place, then see all project pins on the map or drag to inspect a different area.
+              Low-cost map view powered by OpenStreetMap. Search a place, then
+              see all project pins on the map or drag to inspect a different
+              area.
             </p>
           </div>
 
@@ -219,7 +254,10 @@ export function PublicProjectsMap({ projects }: { projects: PublicProjectCard[] 
           </div>
         </div>
 
-        <form onSubmit={handleSearch} className="mt-5 grid gap-3 lg:grid-cols-[1fr_auto] lg:items-center">
+        <form
+          onSubmit={handleSearch}
+          className="mt-5 grid gap-3 lg:grid-cols-[1fr_auto] lg:items-center"
+        >
           <label className="relative block">
             <span className="sr-only">Search area</span>
             <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -275,7 +313,7 @@ export function PublicProjectsMap({ projects }: { projects: PublicProjectCard[] 
                   minWidth={220}
                   maxWidth={252}
                 >
-                  <div className="w-[228px] overflow-hidden rounded-[1.25rem] border border-slate-200 bg-white shadow-[0_18px_50px_-30px_rgba(15,23,42,0.55)]">
+                  <div className="w-[228px] overflow-hidden rounded-none border border-slate-200 bg-white shadow-[0_18px_50px_-30px_rgba(15,23,42,0.55)]">
                     <div className="h-1 bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-500" />
 
                     <div className="space-y-3 p-3">
@@ -284,7 +322,11 @@ export function PublicProjectsMap({ projects }: { projects: PublicProjectCard[] 
                           <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-slate-100 ring-1 ring-slate-200">
                             <Image
                               src={project.mediaUrl}
-                              alt={project.mediaCaption ?? project.displayName ?? project.name}
+                              alt={
+                                project.mediaCaption ??
+                                project.displayName ??
+                                project.name
+                              }
                               fill
                               unoptimized
                               sizes="56px"
@@ -309,7 +351,9 @@ export function PublicProjectsMap({ projects }: { projects: PublicProjectCard[] 
                           </div>
 
                           <p className="mt-1 line-clamp-2 text-[0.72rem] font-medium leading-5 text-slate-500">
-                            {project.areaName ?? project.regionName ?? "Location updating soon"}
+                            {project.areaName ??
+                              project.regionName ??
+                              "Location updating soon"}
                           </p>
                         </div>
                       </div>
@@ -392,7 +436,9 @@ export function PublicProjectsMap({ projects }: { projects: PublicProjectCard[] 
                         {project.displayName ?? project.name}
                       </p>
                       <p className="mt-1 text-sm text-muted-foreground">
-                        {project.areaName ?? project.regionName ?? "Location updating soon"}
+                        {project.areaName ??
+                          project.regionName ??
+                          "Location updating soon"}
                       </p>
                     </div>
 
@@ -403,7 +449,9 @@ export function PublicProjectsMap({ projects }: { projects: PublicProjectCard[] 
 
                   <div className="mt-3 flex items-center justify-between gap-3 text-sm font-semibold text-muted-foreground">
                     <span>{project.availableUnitCount} available units</span>
-                    <span className="font-black text-blue-700">{project.minPrice ?? "Price on request"}</span>
+                    <span className="font-black text-blue-700">
+                      {project.minPrice ?? "Price on request"}
+                    </span>
                   </div>
                 </button>
               ))

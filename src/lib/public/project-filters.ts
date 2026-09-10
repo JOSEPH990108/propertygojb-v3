@@ -29,7 +29,9 @@ type FilterablePublicProject = {
   address: string | null;
 };
 
-export function buildPublicProjectFilterOptions(projects: FilterablePublicProject[]) {
+export function buildPublicProjectFilterOptions(
+  projects: FilterablePublicProject[],
+) {
   const uniqueBy = (
     getter: (project: FilterablePublicProject) => string | null,
     labelGetter: (project: FilterablePublicProject) => string | null,
@@ -52,17 +54,25 @@ export function buildPublicProjectFilterOptions(projects: FilterablePublicProjec
       });
     }
 
-    return Array.from(map.values()).sort((left, right) => left.label.localeCompare(right.label));
+    return Array.from(map.values()).sort((left, right) =>
+      left.label.localeCompare(right.label),
+    );
   };
 
   return {
-    regionOptions: uniqueBy((project) => project.regionId, (project) => project.regionName),
+    regionOptions: uniqueBy(
+      (project) => project.regionId,
+      (project) => project.regionName,
+    ),
     areaOptions: uniqueBy(
       (project) => project.areaId,
       (project) => project.areaName,
       (project) => project.regionId,
     ),
-    statusOptions: uniqueBy((project) => project.projectStatusId, (project) => project.projectStatusName),
+    statusOptions: uniqueBy(
+      (project) => project.projectStatusId,
+      (project) => project.projectStatusName,
+    ),
     propertyTypeOptions: uniqueBy(
       (project) => project.propertyTypeId,
       (project) => project.propertyTypeName,
@@ -90,7 +100,10 @@ export function filterPublicProjects<T extends FilterablePublicProject>(
       return false;
     }
 
-    if (filters.propertyTypeId && project.propertyTypeId !== filters.propertyTypeId) {
+    if (
+      filters.propertyTypeId &&
+      project.propertyTypeId !== filters.propertyTypeId
+    ) {
       return false;
     }
 
@@ -104,6 +117,7 @@ export function filterPublicProjects<T extends FilterablePublicProject>(
       project.developerName,
       project.regionName,
       project.areaName,
+      project.propertyCategoryName,
       project.propertyTypeName,
       project.projectStatusName,
       project.address,

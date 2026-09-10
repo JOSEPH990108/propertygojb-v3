@@ -4,7 +4,10 @@ import { FormEvent, useMemo, useState } from "react";
 import { Filter, Search } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
-import { AppSelect, type AppSelectOption } from "@/components/common/app-select";
+import {
+  AppSelect,
+  type AppSelectOption,
+} from "@/components/common/app-select";
 
 type FilterOption = {
   value: string;
@@ -26,7 +29,10 @@ type PublicProjectsFiltersProps = {
   propertyTypeOptions: FilterOption[];
 };
 
-function toSelectOptions(options: FilterOption[], includeAll = true): AppSelectOption[] {
+function toSelectOptions(
+  options: FilterOption[],
+  includeAll = true,
+): AppSelectOption[] {
   return [
     ...(includeAll ? [{ value: "", label: "All" }] : []),
     ...options.map((option) => ({
@@ -58,7 +64,9 @@ export function PublicProjectsFilters({
       return areaOptions;
     }
 
-    return areaOptions.filter((option) => option.description === regionId || !option.description);
+    return areaOptions.filter(
+      (option) => option.description === regionId || !option.description,
+    );
   }, [areaOptions, regionId]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -87,7 +95,9 @@ export function PublicProjectsFilters({
     }
 
     const queryString = params.toString();
-    router.push(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
+    router.push(queryString ? `${pathname}?${queryString}` : pathname, {
+      scroll: false,
+    });
   }
 
   function handleReset() {
@@ -102,7 +112,7 @@ export function PublicProjectsFilters({
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-[2rem] border border-border bg-background/95 p-5 text-foreground shadow-sm backdrop-blur"
+      className="rounded-none border border-border bg-background/95 p-5 text-foreground shadow-sm backdrop-blur"
     >
       <div className="grid gap-4 lg:grid-cols-[1.2fr_0.9fr_0.9fr_0.9fr_0.9fr_auto_auto] lg:items-end">
         <label className="space-y-2 lg:col-span-1">

@@ -29,7 +29,9 @@ export const metadata = buildPublicPageMetadata({
   socialTitle: "PropertyGoJB Projects",
 });
 
-export default async function ProjectsPage({ searchParams }: ProjectsPageProps) {
+export default async function ProjectsPage({
+  searchParams,
+}: ProjectsPageProps) {
   const params = searchParams ? await searchParams : {};
   const catalog = await getPublicProjectCatalog();
   const filteredProjects = filterPublicProjects(catalog, {
@@ -54,7 +56,9 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
             Explore published projects in Johor Bahru
           </h1>
           <p className="mt-5 max-w-2xl text-sm leading-7 text-blue-100 sm:text-base">
-            Search by project name, location, status, or type, then open each project for detailed layouts, unit availability, and enquiry options.
+            Search by project name, location, status, or type, then open each
+            project for detailed layouts, unit availability, and enquiry
+            options.
           </p>
 
           <div className="mt-10 flex flex-wrap gap-3 text-sm font-bold text-white/80">
@@ -62,7 +66,11 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
               {catalog.length} published projects
             </span>
             <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur">
-              {catalog.reduce((sum, project) => sum + project.availableUnitCount, 0)} available units
+              {catalog.reduce(
+                (sum, project) => sum + project.availableUnitCount,
+                0,
+              )}{" "}
+              available units
             </span>
             <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur">
               {catalog.filter((project) => project.isHotDeal).length} hot deals
@@ -92,7 +100,8 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
               Available Projects
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Showing {filteredProjects.length} project{filteredProjects.length === 1 ? "" : "s"} matching your filters.
+              Showing {filteredProjects.length} project
+              {filteredProjects.length === 1 ? "" : "s"} matching your filters.
             </p>
           </div>
 
@@ -103,7 +112,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
         </AppReveal>
 
         {filteredProjects.length === 0 ? (
-          <AppReveal className="mt-8 rounded-[2rem] border border-dashed border-border bg-background p-12 text-center shadow-sm">
+          <AppReveal className="mt-8 rounded-none border border-dashed border-border bg-background p-12 text-center shadow-sm">
             <Building2 className="mx-auto size-10 text-muted-foreground/50" />
             <h3 className="mt-4 text-xl font-black text-foreground">
               No projects match the current filters
