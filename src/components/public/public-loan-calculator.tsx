@@ -3,7 +3,11 @@
 import { useMemo, useState } from "react";
 import { Calculator } from "lucide-react";
 
-import { AppSelect, type AppSelectOption } from "@/components/common/app-select";
+import {
+  AppSelect,
+  type AppSelectOption,
+} from "@/components/common/app-select";
+import { MaskedPrice } from "@/components/public/price-visibility";
 
 type PublicLoanCalculatorLayout = {
   id: string;
@@ -19,6 +23,7 @@ type PublicLoanCalculatorLayout = {
 
 type PublicLoanCalculatorProps = {
   layouts: PublicLoanCalculatorLayout[];
+  isAuthenticated: boolean;
 };
 
 type LayoutSelectOption = AppSelectOption & {
@@ -37,7 +42,11 @@ function formatMyr(value: number | null) {
   }).format(value);
 }
 
-function calculateMonthlyInstallment(principal: number, annualRate: number, tenureYears: number) {
+function calculateMonthlyInstallment(
+  principal: number,
+  annualRate: number,
+  tenureYears: number,
+) {
   const months = tenureYears * 12;
 
   if (principal <= 0 || months <= 0) {
@@ -53,21 +62,34 @@ function calculateMonthlyInstallment(principal: number, annualRate: number, tenu
   return (principal * monthlyRate) / (1 - (1 + monthlyRate) ** -months);
 }
 
-export function PublicLoanCalculator({ layouts }: PublicLoanCalculatorProps) {
-  const selectableLayouts = layouts.filter((layout) => layout.priceFrom && layout.priceFrom > 0);
+export function PublicLoanCalculator({
+  layouts,
+  isAuthenticated,
+}: PublicLoanCalculatorProps) {
+  const selectableLayouts = layouts.filter(
+    (layout) => layout.priceFrom && layout.priceFrom > 0,
+  );
   const defaultLayout = selectableLayouts[0] ?? layouts[0] ?? null;
 
-  const [selectedLayoutId, setSelectedLayoutId] = useState(defaultLayout?.id ?? "");
+  const [selectedLayoutId, setSelectedLayoutId] = useState(
+    defaultLayout?.id ?? "",
+  );
   const [downPaymentPercent, setDownPaymentPercent] = useState("10");
   const [annualRate, setAnnualRate] = useState("4.5");
   const [tenureYears, setTenureYears] = useState("35");
 
-  const selectedLayout = layouts.find((layout) => layout.id === selectedLayoutId) ?? defaultLayout;
+  const selectedLayout =
+    layouts.find((layout) => layout.id === selectedLayoutId) ?? defaultLayout;
   const selectedPrice = selectedLayout?.priceFrom ?? 0;
   const parsedDownPaymentPercent = Number(downPaymentPercent);
   const parsedAnnualRate = Number(annualRate);
   const parsedTenureYears = Number(tenureYears);
-  const downPayment = (selectedPrice * (Number.isFinite(parsedDownPaymentPercent) ? parsedDownPaymentPercent : 0)) / 100;
+  const downPayment =
+    (selectedPrice *
+      (Number.isFinite(parsedDownPaymentPercent)
+        ? parsedDownPaymentPercent
+        : 0)) /
+    100;
   const loanAmount = Math.max(selectedPrice - downPayment, 0);
   const monthlyInstallment = calculateMonthlyInstallment(
     loanAmount,
@@ -80,10 +102,12 @@ export function PublicLoanCalculator({ layouts }: PublicLoanCalculatorProps) {
       layouts.map((layout) => ({
         value: layout.id,
         label: `${layout.code} - ${layout.name ?? layout.code}`,
-        description: `${formatMyr(layout.priceFrom)} · ${layout.bedrooms} Bedroom · ${layout.bathrooms} Bathroom`,
+        description: isAuthenticated
+          ? `${formatMyr(layout.priceFrom)} · ${layout.bedrooms} Bedroom · ${layout.bathrooms} Bathroom`
+          : `${layout.bedrooms} Bedroom · ${layout.bathrooms} Bathroom · Sign in for price`,
         layout,
       })),
-    [layouts],
+    [layouts, isAuthenticated],
   );
 
   const summaryItems = useMemo(
@@ -105,21 +129,22 @@ export function PublicLoanCalculator({ layouts }: PublicLoanCalculatorProps) {
   );
 
   return (
-    <div className="space-y-6 rounded-[1.75rem] border border-blue-200/60 bg-gradient-to-br from-blue-50 via-white to-slate-50 p-5 shadow-[0_18px_50px_-32px_rgba(15,23,42,0.45)]">
+    <div className="space-y-6 rounded-none border border-border bg-card p-5 shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.28em] text-blue-700">
+          <p className="text-xs font-black uppercase tracking-[0.28em] text-public-decorative">
             Loan calculator
           </p>
           <h3 className="mt-2 text-xl font-black tracking-tight text-foreground">
             Estimate your monthly installment
           </h3>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Choose a layout and adjust the down payment, interest rate, and tenure to preview the monthly commitment.
+            Choose a layout and adjust the down payment, interest rate, and
+            tenure to preview the monthly commitment.
           </p>
         </div>
 
-        <div className="rounded-2xl bg-blue-600 p-3 text-white shadow-lg shadow-blue-500/25">
+        <div className="rounded-2xl bg-primary p-3 text-primary-foreground shadow-sm">
           <Calculator className="size-5" />
         </div>
       </div>
@@ -145,9 +170,12 @@ export function PublicLoanCalculator({ layouts }: PublicLoanCalculatorProps) {
               return (
                 <>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-semibold">{layoutOption.label}</p>
+                    <p className="truncate font-semibold">
+                      {layoutOption.label}
+                    </p>
                     <p className="truncate text-xs text-muted-foreground">
-                      {layoutOption.layout.builtUpSqft} sqft · {formatMyr(layoutOption.layout.priceFrom)}
+                      {layoutOption.layout.builtUpSqft} sqft ·{" "}
+                      {formatMyr(layoutOption.layout.priceFrom)}
                     </p>
                   </div>
                 </>
@@ -168,9 +196,9 @@ export function PublicLoanCalculator({ layouts }: PublicLoanCalculatorProps) {
               step="1"
               value={downPaymentPercent}
               onChange={(event) => setDownPaymentPercent(event.target.value)}
-              className="h-12 w-full rounded-2xl border border-border bg-background px-4 pr-12 text-sm font-semibold text-foreground outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-200"
+              className="h-12 w-full rounded-2xl border border-border bg-background px-4 pr-12 text-sm font-semibold text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/30"
             />
-            <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm font-black text-blue-700">
+            <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm font-black text-public-decorative">
               %
             </span>
           </div>
@@ -188,9 +216,9 @@ export function PublicLoanCalculator({ layouts }: PublicLoanCalculatorProps) {
               step="0.1"
               value={annualRate}
               onChange={(event) => setAnnualRate(event.target.value)}
-              className="h-12 w-full rounded-2xl border border-border bg-background px-4 pr-12 text-sm font-semibold text-foreground outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-200"
+              className="h-12 w-full rounded-2xl border border-border bg-background px-4 pr-12 text-sm font-semibold text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/30"
             />
-            <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm font-black text-blue-700">
+            <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm font-black text-public-decorative">
               p.a.
             </span>
           </div>
@@ -208,9 +236,9 @@ export function PublicLoanCalculator({ layouts }: PublicLoanCalculatorProps) {
               step="1"
               value={tenureYears}
               onChange={(event) => setTenureYears(event.target.value)}
-              className="h-12 w-full rounded-2xl border border-border bg-background px-4 pr-14 text-sm font-semibold text-foreground outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-200"
+              className="h-12 w-full rounded-2xl border border-border bg-background px-4 pr-14 text-sm font-semibold text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/30"
             />
-            <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm font-black text-blue-700">
+            <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm font-black text-public-decorative">
               years
             </span>
           </div>
@@ -219,29 +247,39 @@ export function PublicLoanCalculator({ layouts }: PublicLoanCalculatorProps) {
 
       <div className="grid gap-3 sm:grid-cols-3">
         {summaryItems.map((item) => (
-          <div key={item.label} className="rounded-2xl border border-white/80 bg-white px-4 py-3 shadow-sm">
+          <div
+            key={item.label}
+            className="rounded-2xl border border-border bg-background px-4 py-3 shadow-sm"
+          >
             <p className="text-[0.7rem] font-black uppercase tracking-[0.22em] text-muted-foreground">
               {item.label}
             </p>
             <p className="mt-2 text-lg font-black tracking-tight text-foreground">
-              {item.value}
+              {isAuthenticated ? (
+                item.value
+              ) : (
+                <MaskedPrice isAuthenticated={false} value={item.value} />
+              )}
             </p>
           </div>
         ))}
       </div>
 
       <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-muted-foreground">
-        <span className="rounded-full bg-blue-600 px-3 py-1 font-black text-white">
+        <span className="rounded-full bg-primary px-3 py-1 font-black text-primary-foreground">
           {selectedLayout?.code ?? "Layout"}
         </span>
         <span>
-          {selectedLayout?.bedrooms ?? 0} Bedroom · {selectedLayout?.bathrooms ?? 0} Bathroom · {selectedLayout?.hasBalcony ? "Balcony" : "No balcony"}
+          {selectedLayout?.bedrooms ?? 0} Bedroom ·{" "}
+          {selectedLayout?.bathrooms ?? 0} Bathroom ·{" "}
+          {selectedLayout?.hasBalcony ? "Balcony" : "No balcony"}
         </span>
       </div>
 
       {selectedLayout?.availableUnitCount ? (
         <p className="text-xs font-semibold text-muted-foreground">
-          {selectedLayout.availableUnitCount} available unit{selectedLayout.availableUnitCount > 1 ? "s" : ""} in this layout.
+          {selectedLayout.availableUnitCount} available unit
+          {selectedLayout.availableUnitCount > 1 ? "s" : ""} in this layout.
         </p>
       ) : null}
     </div>

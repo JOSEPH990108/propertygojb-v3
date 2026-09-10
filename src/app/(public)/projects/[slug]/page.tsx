@@ -1,13 +1,57 @@
-import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, Building2, MapPin, MessageCircle, Star } from "lucide-react";
 
-import { AppReveal } from "@/components/common/app-reveal";
-import { PublicEnquiryForm } from "@/components/public/public-enquiry-form";
 import { PublicProjectCard } from "@/components/public/public-project-card";
 import { StructuredData } from "@/components/public/structured-data";
+import {
+  MaskedPrice,
+  PriceAuthProvider,
+} from "@/components/public/price-visibility";
+import {
+  ProjectHero,
+  type ProjectHeroMedia,
+} from "@/components/public/project-template/project-hero";
+import {
+  ProjectDirectoryNav,
+  type ProjectDirectoryItem,
+} from "@/components/public/project-template/project-directory-nav";
+import {
+  ProjectFactsSection,
+  type ProjectFact,
+} from "@/components/public/project-template/project-facts-section";
+import {
+  ProjectLocationSection,
+  type ProjectNearbyPlace,
+} from "@/components/public/project-template/project-location-section";
+import {
+  ProjectLayoutsSection,
+  type ProjectLayoutOption,
+} from "@/components/public/project-template/project-layouts-section";
+import {
+  ProjectFacilitiesSection,
+  type ProjectFacilityItem,
+} from "@/components/public/project-template/project-facilities-section";
+import {
+  ProjectGallerySection,
+  type ProjectGalleryPhoto,
+} from "@/components/public/project-template/project-gallery-section";
+import {
+  ProjectAvailabilitySection,
+  type ProjectAvailabilityRow,
+} from "@/components/public/project-template/project-availability-section";
+import { ProjectToolsSection } from "@/components/public/project-template/project-tools-section";
+import { ProjectEnquireSection } from "@/components/public/project-template/project-enquire-section";
 import { getPublicUrl, publicSiteConfig } from "@/config/public-site";
+import { getCurrentAuthContext } from "@/lib/auth/guards";
+import {
+  FALLBACK_GALLERY_IMAGES,
+  FALLBACK_HERO_IMAGE,
+  FALLBACK_LAYOUT_GROUPS,
+  FALLBACK_SITE_PLAN_IMAGE,
+} from "@/lib/public/fallback-media";
+import {
+  buildLayoutAvailability,
+  buildUnitPositionBreakdown,
+} from "@/lib/public/project-detail-view";
 import {
   getPublicProjectBySlug,
   getPublicProjectCatalog,
@@ -16,7 +60,28 @@ import {
 import { getPublicWhatsAppHref } from "@/lib/public/site";
 import { buildPublicPageMetadata } from "@/lib/public/seo";
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+const DIRECTORY_GROUP_ORDER = ["Discover", "The details", "Planning"];
+
+function formatMyr(value: number | null) {
+  if (!value || !Number.isFinite(value) || value <= 0) {
+    return null;
+  }
+
+  return `RM ${value.toLocaleString("en-MY", { maximumFractionDigits: 0 })}`;
+}
+
+function formatSqft(value: string | null | undefined) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0
+    ? `${Math.round(parsed).toLocaleString("en-MY")} sq ft`
+    : null;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const detail = await getPublicProjectBySlug(slug);
 
@@ -29,7 +94,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     detail.project.metaDescription ??
     detail.project.mediaCaption ??
     `View project details, layouts, and availability for ${name}.`;
-  const canonical = detail.project.canonicalUrl ?? getPublicUrl(`/projects/${slug}`);
+  const canonical =
+    detail.project.canonicalUrl ?? getPublicUrl(`/projects/${slug}`);
 
   return buildPublicPageMetadata({
     title: detail.project.metaTitle ?? getPublicProjectPageTitle(name),
@@ -38,7 +104,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     canonicalUrl: canonical,
     socialTitle: detail.project.ogTitle ?? detail.project.metaTitle ?? name,
     socialDescription: detail.project.ogDescription ?? description,
-    images: detail.project.ogImageUrl ? [{ url: detail.project.ogImageUrl }] : undefined,
+    images: detail.project.ogImageUrl
+      ? [{ url: detail.project.ogImageUrl }]
+      : undefined,
   });
 }
 
@@ -59,12 +127,22 @@ export default async function ProjectDetailPage({
     notFound();
   }
 
-  const { project, mediaItems, layouts, amenities, nearbyPlaces } = detail;
+  // Server-side check so an anonymous visitor's HTML never contains the real
+  // price in the first place — client-only masking would still leak it via
+  // view-source before JS hides it.
+  const { isAuthenticated } = await getCurrentAuthContext();
+
+  const { project, mediaItems, layouts, units, amenities, nearbyPlaces } =
+    detail;
   const catalog = await getPublicProjectCatalog();
-  const relatedProjects = catalog.filter((item) => item.id !== project.id).slice(0, 3);
+  const relatedProjects = catalog
+    .filter((item) => item.id !== project.id)
+    .slice(0, 3);
+  const projectName = project.displayName ?? project.name;
+  const areaLabel = project.areaName ?? project.regionName ?? "Johor Bahru";
   const heroImage = mediaItems[0];
   const whatsappHref = getPublicWhatsAppHref(
-    `Hi, I am interested in ${project.displayName ?? project.name}. Please share more details.`,
+    `Hi, I am interested in ${projectName}. Please share more details.`,
   );
   const projectSchema = {
     "@context": "https://schema.org",
@@ -98,276 +176,300 @@ export default async function ProjectDetailPage({
       }
     : null;
 
+  // Reusable "v1" template inputs — dynamic hero media (video takes priority,
+  // then the project's own photo, then illustrative sample photography).
+  const heroMedia: ProjectHeroMedia = project.heroVideoUrl
+    ? {
+        type: "video",
+        videoUrl: project.heroVideoUrl,
+        posterUrl: heroImage?.url ?? heroImage?.key ?? null,
+      }
+    : heroImage?.url || heroImage?.key
+      ? {
+          type: "image",
+          imageUrl: heroImage.url ?? heroImage.key ?? "",
+          alt: heroImage.caption ?? projectName,
+        }
+      : {
+          type: "image",
+          imageUrl: FALLBACK_HERO_IMAGE,
+          alt: "Illustrative hero photo — sample content",
+          isFallback: true,
+        };
+
+  const layoutAvailability = buildLayoutAvailability(units);
+  const positionBreakdown = buildUnitPositionBreakdown(units);
+
+  const layoutOptions: ProjectLayoutOption[] = layouts.map((layout, index) => ({
+    id: layout.id,
+    code: layout.code,
+    name: layout.name,
+    builtUpSqft: layout.builtUpSqft,
+    bedrooms: layout.bedrooms,
+    bathrooms: layout.bathrooms,
+    studyRooms: layout.studyRooms,
+    floorPlanUrl: layout.floorPlanUrl,
+    fallbackGroup:
+      FALLBACK_LAYOUT_GROUPS[index % FALLBACK_LAYOUT_GROUPS.length],
+  }));
+
+  const loanCalculatorLayouts = layouts.map((layout) => ({
+    id: layout.id,
+    code: layout.code,
+    name: layout.name,
+    builtUpSqft: layout.builtUpSqft,
+    bedrooms: layout.bedrooms,
+    bathrooms: layout.bathrooms,
+    hasBalcony: layout.hasBalcony,
+    priceFrom: layoutAvailability.get(layout.id)?.priceFrom ?? null,
+    availableUnitCount:
+      layoutAvailability.get(layout.id)?.availableUnitCount ?? 0,
+  }));
+
+  const galleryFromMedia = mediaItems
+    .slice(1)
+    .filter((media) => media.url || media.key)
+    .slice(0, 2);
+  const galleryPhotos: ProjectGalleryPhoto[] =
+    galleryFromMedia.length > 0
+      ? galleryFromMedia.map((media, index) => ({
+          id: media.id,
+          url: media.url ?? media.key ?? "",
+          alt: media.caption ?? projectName,
+          caption: media.caption ?? (index === 0 ? "Exterior" : "Facade"),
+          isFallback: false,
+        }))
+      : FALLBACK_GALLERY_IMAGES.map((image, index) => ({
+          id: `fallback-${index}`,
+          url: image.url,
+          alt: image.alt,
+          caption: index === 0 ? "Exterior" : "Facade",
+          isFallback: true,
+        }));
+
+  const nearbyPlaceItems: ProjectNearbyPlace[] = nearbyPlaces.map((place) => ({
+    id: place.id,
+    name: place.name,
+    distanceLabel: place.distanceKm
+      ? `${place.distanceKm} km`
+      : "Distance updating",
+  }));
+
+  const facilityItems: ProjectFacilityItem[] = amenities
+    .slice(0, 6)
+    .map((amenity) => ({ id: amenity.id, name: amenity.name }));
+
+  const facts: (ProjectFact | null)[] = [
+    project.totalUnits
+      ? { label: "Homes", value: `${project.totalUnits}` }
+      : null,
+    project.propertyTypeName
+      ? { label: "Type", value: project.propertyTypeName }
+      : null,
+    {
+      label: "From",
+      value: (
+        <MaskedPrice
+          isAuthenticated={isAuthenticated}
+          value={project.minPrice ?? "Contact for price"}
+        />
+      ),
+    },
+    project.projectStatusName
+      ? { label: "Status", value: project.projectStatusName }
+      : null,
+  ];
+  const publishedFacts = facts.filter(
+    (fact): fact is ProjectFact => fact !== null,
+  );
+
+  const availabilityRows: ProjectAvailabilityRow[] = layouts.map((layout) => {
+    const stats = layoutAvailability.get(layout.id);
+    const status =
+      stats && stats.availableUnitCount > 0
+        ? `${stats.availableUnitCount} available`
+        : stats && stats.totalUnitCount > 0
+          ? "Fully booked"
+          : "Register interest";
+
+    return {
+      id: layout.id,
+      unitType: layout.name ?? layout.code,
+      builtUpSqft: formatSqft(layout.builtUpSqft) ?? "\u2014",
+      landAreaSqft: formatSqft(stats?.landAreaSqft),
+      guidePrice: (
+        <MaskedPrice
+          isAuthenticated={isAuthenticated}
+          value={
+            formatMyr(stats?.priceFrom ?? null) ??
+            project.minPrice ??
+            "Contact for price"
+          }
+        />
+      ),
+      status,
+    };
+  });
+
+  const directoryItems: ProjectDirectoryItem[] = [
+    { id: "overview", label: "Overview", group: "Discover" },
+    { id: "residence", label: "The residence", group: "Discover" },
+    { id: "location", label: "Location", group: "Discover" },
+    ...(layoutOptions.length > 0
+      ? [{ id: "layouts", label: "Layouts", group: "The details" }]
+      : []),
+    ...(facilityItems.length > 0
+      ? [{ id: "facilities", label: "Facilities", group: "The details" }]
+      : []),
+    { id: "gallery", label: "Gallery", group: "The details" },
+    { id: "availability", label: "Availability", group: "Planning" },
+    { id: "tools", label: "Tools", group: "Planning" },
+    { id: "enquire", label: "Enquire", group: "Planning" },
+  ];
+
+  // Numbered eyebrows ("NN / Label") reflect each section's real position for
+  // THIS project — Layouts/Facilities are skipped when a project has no data,
+  // so a project without Layouts shows Facilities as "03", not a hardcoded "04".
+  // Order matches the section order actually rendered below (Overview is unnumbered).
+  const numberedSections = [
+    { id: "residence", label: "The residence" },
+    { id: "location", label: "Location" },
+    ...(layoutOptions.length > 0 ? [{ id: "layouts", label: "Layouts" }] : []),
+    ...(facilityItems.length > 0
+      ? [{ id: "facilities", label: "Facilities" }]
+      : []),
+    { id: "gallery", label: "Gallery" },
+    { id: "availability", label: "Availability" },
+    { id: "tools", label: "Planning tools" },
+    { id: "enquire", label: "Enquire" },
+  ];
+  const sectionEyebrows = new Map(
+    numberedSections.map(({ id, label }, index) => [
+      id,
+      `${String(index + 1).padStart(2, "0")} / ${label}`,
+    ]),
+  );
+  const eyebrowFor = (id: string) => sectionEyebrows.get(id) ?? "";
+
   return (
-    <div className="bg-muted/40">
-      <StructuredData data={faqSchema ? [projectSchema, faqSchema] : projectSchema} />
-      <section className="relative overflow-hidden bg-slate-950 px-4 py-14 text-white sm:px-6 lg:px-8">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.35),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.08),transparent_26%)]" />
-        <div className="relative mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
-          <AppReveal>
-            <p className="text-sm font-black uppercase tracking-[0.28em] text-blue-100">
-              PropertyGoJB Project
-            </p>
-            <h1 className="mt-4 text-4xl font-black tracking-tight sm:text-5xl">
-              {project.displayName ?? project.name}
-            </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
-              {project.mediaCaption ??
-                "Explore project details, floor plans, and available units for this Johor Bahru new launch."}
-            </p>
+    <PriceAuthProvider>
+      <div className="bg-background text-foreground">
+        <StructuredData
+          data={faqSchema ? [projectSchema, faqSchema] : projectSchema}
+        />
 
-            <div className="mt-6 flex flex-wrap gap-3 text-sm text-slate-300">
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-2 backdrop-blur">
-                <MapPin className="size-4" />
-                {[project.areaName, project.regionName].filter(Boolean).join(", ") || "Location updating soon"}
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-2 backdrop-blur">
-                <Building2 className="size-4" />
-                {project.developerName ?? "Developer updating soon"}
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-2 backdrop-blur">
-                <Star className="size-4" />
-                {project.projectStatusName ?? "Status updating soon"}
-              </span>
-            </div>
-          </AppReveal>
+        <ProjectHero
+          eyebrow={`${projectName} / ${areaLabel}`}
+          title={
+            <>
+              A higher
+              <br />
+              <em className="text-[#ead5a8] not-italic">standard</em>
+              <br />
+              of home.
+            </>
+          }
+          description={
+            project.mediaCaption ??
+            "Thoughtfully designed homes built for modern family living, in a considered address."
+          }
+          media={heroMedia}
+          scrollTargetId="residence"
+        />
 
-          <AppReveal delay={0.1} className="rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur">
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-blue-100">
-              Starting From
-            </p>
-            <p className="mt-3 text-4xl font-black tracking-tight text-white">
-              {project.minPrice ?? "Contact for price"}
-            </p>
-            <p className="mt-3 text-sm leading-6 text-slate-300">
-              {project.totalUnits || 0} total units · {layouts.length} layouts · {project.availableUnitCount} available
-            </p>
+        <ProjectDirectoryNav
+          items={directoryItems}
+          groupOrder={DIRECTORY_GROUP_ORDER}
+        />
 
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-5 py-4 text-sm font-black text-white transition hover:bg-emerald-600"
-            >
-              <MessageCircle className="size-4" />
-              WhatsApp Enquiry
-            </a>
-          </AppReveal>
-        </div>
-      </section>
+        <ProjectFactsSection
+          eyebrow={eyebrowFor("residence")}
+          heading="Designed for"
+          accentHeading="the way life expands."
+          description={
+            project.mediaCaption ??
+            `${projectName} offers ${project.propertyTypeName ?? "homes"} in ${areaLabel}, with everyday convenience and considered design.`
+          }
+          facts={publishedFacts}
+        />
 
-      <AppReveal className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:px-8 lg:grid-cols-[1.15fr_0.85fr]">
-        <div className="space-y-8">
-          <div className="overflow-hidden rounded-[2rem] border border-border bg-background shadow-sm">
-            <div className="relative aspect-[16/9] bg-muted">
-              {project.heroVideoUrl ? (
-                <video
-                  src={project.heroVideoUrl}
-                  poster={heroImage?.url ?? heroImage?.key ?? undefined}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  controls
-                  className="size-full object-cover"
-                />
-              ) : heroImage?.url || heroImage?.key ? (
-                <Image
-                  src={heroImage.url ?? heroImage.key ?? ""}
-                  alt={heroImage.caption ?? project.displayName ?? project.name}
-                  fill
-                  unoptimized
-                  className="object-cover"
-                />
-              ) : (
-                <div className="flex h-full items-center justify-center bg-gradient-to-br from-blue-50 to-slate-100">
-                  <Building2 className="size-20 text-blue-200" />
-                </div>
-              )}
-            </div>
-          </div>
+        <ProjectLocationSection
+          eyebrow={eyebrowFor("location")}
+          heading="A calm address,"
+          accentHeading="well connected."
+          description={`Set within ${areaLabel}, ${projectName} is close to daily essentials while retaining a slower, greener rhythm.`}
+          places={nearbyPlaceItems}
+          pinLabel={projectName}
+          regionLabel={`${areaLabel} / Malaysia`}
+        />
 
-          <section className="rounded-[2rem] border border-border bg-background p-6 shadow-sm">
-            <h2 className="text-2xl font-black tracking-tight text-foreground">
-              Project Highlights
-            </h2>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {[project.propertyTypeName, project.tenureName, project.titleTypeName]
-                .filter(Boolean)
-                .map((item) => (
-                  <div
-                    key={item as string}
-                    className="rounded-2xl border border-border bg-muted/50 p-4 text-sm font-semibold text-foreground"
-                  >
-                    {item}
-                  </div>
-                ))}
-            </div>
-          </section>
-
-          {project.highlights.length > 0 ? (
-            <section className="rounded-[2rem] border border-border bg-background p-6 shadow-sm">
-              <h2 className="text-2xl font-black tracking-tight text-foreground">Why this project stands out</h2>
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                {project.highlights.map((highlight) => (
-                  <div key={highlight} className="flex items-start gap-3 rounded-2xl bg-blue-50 p-4 text-sm font-bold text-blue-950 dark:bg-blue-950/40 dark:text-blue-100">
-                    <Star className="mt-0.5 size-4 shrink-0 text-blue-600" />
-                    {highlight}
-                  </div>
-                ))}
-              </div>
-            </section>
-          ) : null}
-
-          <section className="rounded-[2rem] border border-border bg-background p-6 shadow-sm">
-            <h2 className="text-2xl font-black tracking-tight text-foreground">Layouts</h2>
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
-              {layouts.length > 0 ? (
-                layouts.map((layout) => (
-                  <div
-                    key={layout.id}
-                    className="rounded-2xl border border-border bg-muted/50 p-4"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <h3 className="font-black text-foreground">{layout.code}</h3>
-                        <p className="text-sm text-muted-foreground">{layout.name}</p>
-                      </div>
-                      <p className="text-sm font-black text-blue-700">
-                        {layout.builtUpSqft} sqft
-                      </p>
-                    </div>
-                    <div className="mt-4 flex flex-wrap gap-2 text-xs font-bold text-muted-foreground">
-                      <span className="rounded-full bg-background px-3 py-1">{layout.bedrooms} BR</span>
-                      <span className="rounded-full bg-background px-3 py-1">{layout.bathrooms} Bath</span>
-                      {layout.isDualKey ? (
-                        <span className="rounded-full bg-background px-3 py-1">Dual Key</span>
-                      ) : null}
-                      {layout.hasBalcony ? <span className="rounded-full bg-background px-3 py-1">Balcony</span> : null}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-sm text-muted-foreground">Layouts updating soon.</p>
-              )}
-            </div>
-          </section>
-
-          {["elmora-condominium", "paragon-signature-suites", "sunway-lakehills", "sunway-lakehills-phase-1"].includes(project.slug) ? (
-            <Link
-              href={`/projects/${project.slug}/availability`}
-              className="inline-flex w-full items-center justify-between border border-blue-200 bg-blue-50 px-6 py-5 text-blue-950 transition hover:border-blue-400 hover:bg-blue-100"
-            >
-              <span>
-                <span className="block text-lg font-black">Live tower availability</span>
-                <span className="mt-1 block text-sm font-semibold text-blue-800">Browse floors, stacks, current unit status, and pricing.</span>
-              </span>
-              <ArrowRight className="size-5 shrink-0" />
-            </Link>
-          ) : null}
-
-          {project.faqs.length > 0 ? (
-            <section className="rounded-[2rem] border border-border bg-background p-6 shadow-sm">
-              <h2 className="text-2xl font-black tracking-tight text-foreground">Frequently asked questions</h2>
-              <div className="mt-6 divide-y divide-border">
-                {project.faqs.map((faq) => (
-                  <details key={faq.question} className="group py-4">
-                    <summary className="cursor-pointer list-none font-black text-foreground">{faq.question}</summary>
-                    <p className="mt-3 text-sm leading-7 text-muted-foreground">{faq.answer}</p>
-                  </details>
-                ))}
-              </div>
-            </section>
-          ) : null}
-
-          <section className="rounded-[2rem] border border-border bg-background p-6 shadow-sm">
-            <h2 className="text-2xl font-black tracking-tight text-foreground">Amenities</h2>
-            <div className="mt-6 flex flex-wrap gap-3">
-              {amenities.length > 0 ? (
-                amenities.map((amenity) => (
-                  <span
-                    key={amenity.id}
-                    className="rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 dark:bg-blue-950/40 dark:text-blue-200"
-                  >
-                    {amenity.name}
-                  </span>
-                ))
-              ) : (
-                <p className="text-sm text-muted-foreground">Amenities updating soon.</p>
-              )}
-            </div>
-          </section>
-
-          <section className="rounded-[2rem] border border-border bg-background p-6 shadow-sm">
-            <h2 className="text-2xl font-black tracking-tight text-foreground">Nearby Places</h2>
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
-              {nearbyPlaces.length > 0 ? (
-                nearbyPlaces.map((place) => (
-                  <div
-                    key={place.id}
-                    className="rounded-2xl border border-border bg-muted/50 p-4"
-                  >
-                    <p className="font-black text-foreground">{place.name}</p>
-                    <p className="mt-1 text-sm text-muted-foreground">{place.category}</p>
-                    <p className="mt-2 text-sm font-bold text-blue-700">
-                      {place.distanceKm ? `${place.distanceKm} km away` : "Distance updating"}
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <p className="text-sm text-muted-foreground">Nearby places updating soon.</p>
-              )}
-            </div>
-          </section>
-        </div>
-
-        <aside className="space-y-6 lg:sticky lg:top-6 lg:self-start">
-          <PublicEnquiryForm
-            projectId={project.id}
-            projectName={project.displayName ?? project.name}
-            introTitle="Register your interest"
-            introDescription="Share your details and we will contact you with the latest availability, brochure, and pricing."
+        {layoutOptions.length > 0 ? (
+          <ProjectLayoutsSection
+            eyebrow={eyebrowFor("layouts")}
+            heading="Space, drawn"
+            accentHeading="with intention."
+            description="Explore each available layout, from footprint to finish."
+            layouts={layoutOptions}
           />
+        ) : null}
 
-          <section className="rounded-[2rem] border border-border bg-background p-6 shadow-sm">
-            <h3 className="text-lg font-black text-foreground">Need instant help?</h3>
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-4 py-3 font-black text-white transition hover:bg-emerald-600"
-            >
-              <MessageCircle className="size-4" />
-              WhatsApp now
-            </a>
-          </section>
-        </aside>
-      </AppReveal>
+        <ProjectFacilitiesSection
+          eyebrow={eyebrowFor("facilities")}
+          heading="Everyday life,"
+          accentHeading="elevated."
+          facilities={facilityItems}
+        />
 
-      {relatedProjects.length > 0 ? (
-        <AppReveal className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between gap-6">
-            <div>
-              <h2 className="text-2xl font-black tracking-tight text-foreground sm:text-3xl">
-                Similar Projects
-              </h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Explore other published projects across Johor Bahru.
-              </p>
+        <ProjectGallerySection
+          eyebrow={eyebrowFor("gallery")}
+          photos={galleryPhotos}
+        />
+
+        <ProjectAvailabilitySection
+          eyebrow={eyebrowFor("availability")}
+          description={`A current preview of available units and layouts at ${projectName}.`}
+          sitePlanUrl={FALLBACK_SITE_PLAN_IMAGE}
+          sitePlanIsFallback
+          totalUnitsLabel={`${project.totalUnits || 0} homes`}
+          positions={positionBreakdown}
+          rows={availabilityRows}
+          enquireHref="#enquire"
+        />
+
+        <ProjectToolsSection
+          eyebrow={eyebrowFor("tools")}
+          layouts={loanCalculatorLayouts}
+          isAuthenticated={isAuthenticated}
+        />
+
+        <ProjectEnquireSection
+          eyebrow={eyebrowFor("enquire")}
+          projectId={project.id}
+          projectName={projectName}
+          whatsappHref={whatsappHref}
+        />
+
+        {relatedProjects.length > 0 ? (
+          <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+            <div className="flex items-end justify-between gap-6">
+              <div>
+                <h2 className="font-serif text-3xl tracking-tight sm:text-4xl">
+                  Similar projects
+                </h2>
+                <p className="mt-2 text-sm text-[#172238]/60">
+                  Explore other published projects across Johor Bahru.
+                </p>
+              </div>
             </div>
-            <Link href="/projects" className="inline-flex items-center gap-2 text-sm font-black text-blue-700">
-              View all
-              <ArrowRight className="size-4" />
-            </Link>
-          </div>
 
-          <div className="mt-8 grid gap-6 lg:grid-cols-3">
-            {relatedProjects.map((item) => (
-              <PublicProjectCard key={item.id} project={item} />
-            ))}
-          </div>
-        </AppReveal>
-      ) : null}
-    </div>
+            <div className="mt-8 grid gap-6 lg:grid-cols-3">
+              {relatedProjects.map((item) => (
+                <PublicProjectCard key={item.id} project={item} />
+              ))}
+            </div>
+          </section>
+        ) : null}
+      </div>
+    </PriceAuthProvider>
   );
 }
