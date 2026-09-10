@@ -64,7 +64,9 @@ export function MarketingScripts({
       </Suspense>
       {googleId ? (
         <>
-          <Script src={`https://www.googletagmanager.com/gtag/js?id=${googleId}`} />
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${googleId}`}
+          />
           <Script id="propertygojb-google-tags">
             {`window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag('js',new Date());${googleAnalyticsId ? `gtag('config','${googleAnalyticsId}');` : ""}${googleAdsId ? `gtag('config','${googleAdsId}');` : ""}${googleAdsId && googleAdsConversionLabel ? `window.propertyGoJbGoogleAdsConversionTarget='${googleAdsId}/${googleAdsConversionLabel}';` : ""}`}
           </Script>

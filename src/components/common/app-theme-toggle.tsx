@@ -27,8 +27,15 @@ function subscribeToHydration() {
   return () => undefined;
 }
 
-export function AppThemeToggle({ className, showLabel = false }: AppThemeToggleProps) {
-  const isHydrated = useSyncExternalStore(subscribeToHydration, () => true, () => false);
+export function AppThemeToggle({
+  className,
+  showLabel = false,
+}: AppThemeToggleProps) {
+  const isHydrated = useSyncExternalStore(
+    subscribeToHydration,
+    () => true,
+    () => false,
+  );
   const { theme, resolvedTheme, setTheme } = useTheme();
 
   const ActiveIcon = isHydrated && resolvedTheme === "dark" ? Moon : Sun;

@@ -23,25 +23,27 @@ export function AppStepper({ items, currentStep, className }: AppStepperProps) {
         const isActive = index === currentStep;
 
         return (
-          <div key={item.label} className="flex flex-1 items-start last:flex-none">
+          <div
+            key={item.label}
+            className="flex flex-1 items-start last:flex-none"
+          >
             <div className="flex flex-col items-center">
               <div
                 className={cn(
-                  "grid size-14 place-items-center rounded-full border border-slate-200 bg-white text-slate-400 shadow-[0_10px_30px_-18px_rgba(15,23,42,0.5)] transition-all",
+                  "grid size-12 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-all",
                   isActive &&
-                    "border-blue-100 bg-blue-600 text-white shadow-[0_0_0_10px_rgba(37,99,235,0.10)]",
-                  isDone &&
-                    "border-emerald-100 bg-emerald-500 text-white shadow-[0_0_0_10px_rgba(16,185,129,0.10)]",
+                    "border-primary bg-primary text-primary-foreground",
+                  isDone && "border-success bg-success text-success-foreground",
                 )}
               >
-                {isDone ? <Check className="size-6" /> : item.icon}
+                {isDone ? <Check className="size-5" /> : item.icon}
               </div>
 
               <p
                 className={cn(
-                  "mt-3 whitespace-nowrap text-xs font-semibold text-slate-500",
-                  isActive && "text-blue-600",
-                  isDone && "text-emerald-600",
+                  "mt-3 text-xs font-medium tracking-[0.14em] whitespace-nowrap text-muted-foreground uppercase",
+                  isActive && "text-foreground",
+                  isDone && "text-success",
                 )}
               >
                 {item.label}
@@ -51,9 +53,9 @@ export function AppStepper({ items, currentStep, className }: AppStepperProps) {
             {index < items.length - 1 ? (
               <div
                 className={cn(
-                  "mx-4 mt-7 h-0.5 flex-1 rounded-full bg-slate-200",
-                  isActive && "bg-blue-600",
-                  isDone && "bg-emerald-400",
+                  "mx-4 mt-6 h-px flex-1 bg-border",
+                  isActive && "bg-primary",
+                  isDone && "bg-success",
                 )}
               />
             ) : null}

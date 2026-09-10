@@ -9,6 +9,9 @@ type AppThemeProviderProps = ComponentProps<typeof ThemeProvider>;
  * Global theme boundary for all three application surfaces.
  * Keep theme persistence here so public, agent, and admin UIs share one setting.
  */
-export function AppThemeProvider({ children, ...props }: AppThemeProviderProps) {
+export function AppThemeProvider({
+  children,
+  ...props
+}: AppThemeProviderProps) {
   return <ThemeProvider {...props}>{children}</ThemeProvider>;
 }

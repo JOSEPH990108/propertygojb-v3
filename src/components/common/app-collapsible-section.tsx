@@ -31,9 +31,17 @@ export function AppCollapsibleSection({
   return (
     <details
       open={isOpen}
-      className={cn("group rounded-[2rem] border border-border bg-background p-6 shadow-sm", className)}
+      className={cn(
+        "group rounded-[2rem] border border-border bg-background p-6 shadow-sm",
+        className,
+      )}
     >
-      <summary className={cn("list-none", collapsible ? "cursor-pointer" : "pointer-events-none")}>
+      <summary
+        className={cn(
+          "list-none",
+          collapsible ? "cursor-pointer" : "pointer-events-none",
+        )}
+      >
         <div className="flex items-start justify-between gap-4">
           <div>
             {eyebrow ? (
@@ -42,12 +50,22 @@ export function AppCollapsibleSection({
               </p>
             ) : null}
             {title ? (
-              <h2 className={cn("text-2xl font-black tracking-tight text-foreground", eyebrow ? "mt-2" : "")}>
+              <h2
+                className={cn(
+                  "text-2xl font-black tracking-tight text-foreground",
+                  eyebrow ? "mt-2" : "",
+                )}
+              >
                 {title}
               </h2>
             ) : null}
             {description ? (
-              <p className={cn("max-w-2xl text-sm leading-6 text-muted-foreground", title ? "mt-2" : "")}>
+              <p
+                className={cn(
+                  "max-w-2xl text-sm leading-6 text-muted-foreground",
+                  title ? "mt-2" : "",
+                )}
+              >
                 {description}
               </p>
             ) : null}

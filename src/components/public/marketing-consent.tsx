@@ -12,7 +12,8 @@ import { useMarketingConsent } from "@/lib/public/use-marketing-consent";
 
 export function MarketingConsentBanner() {
   const storedConsent = useMarketingConsent();
-  const [selectedConsent, setSelectedConsent] = useState<MarketingConsent | null>(null);
+  const [selectedConsent, setSelectedConsent] =
+    useState<MarketingConsent | null>(null);
   const consent = selectedConsent ?? storedConsent;
 
   function chooseConsent(value: MarketingConsent) {
@@ -37,10 +38,13 @@ export function MarketingConsentBanner() {
         <div className="min-w-0 flex-1">
           <p className="font-black">Your privacy, your choice</p>
           <p className="mt-1 text-xs leading-5 text-muted-foreground sm:hidden">
-            Essential storage keeps the site working. Marketing cookies help us measure campaigns and improve recommendations.
+            Essential storage keeps the site working. Marketing cookies help us
+            measure campaigns and improve recommendations.
           </p>
           <p className="mt-1 hidden text-sm leading-6 text-muted-foreground sm:block">
-            Essential storage keeps the site working. With your permission, analytics and advertising pixels help us measure campaigns and improve project recommendations.
+            Essential storage keeps the site working. With your permission,
+            analytics and advertising pixels help us measure campaigns and
+            improve project recommendations.
           </p>
         </div>
 
