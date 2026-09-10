@@ -11,6 +11,10 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
+  /* Editorial display serif for public marketing headings (see
+     docs/work-items/PG-20260908-223056-DD3CC8CA-homepage-luxury-redesign.md).
+     Falls back to system serif if the webfont fails to load. */
+  --font-serif: var(--font-display), Georgia, "Times New Roman", serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -40,6 +44,21 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-subtle: var(--brand-subtle);
+  --color-brand-subtle-foreground: var(--brand-subtle-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-public-hero: var(--public-hero-background);
+  --color-public-hero-foreground: var(--public-hero-foreground);
+  --color-public-hero-accent: var(--public-hero-accent);
+  --color-public-decorative: var(--public-decorative);
+  --color-public-decorative-foreground: var(--public-decorative-foreground);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -82,6 +101,23 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --brand: oklch(0.546 0.215 262.1);
+  --brand-foreground: oklch(0.985 0 0);
+  --brand-subtle: oklch(0.951 0.02 262.1);
+  --brand-subtle-foreground: oklch(0.398 0.16 262.1);
+  --success: oklch(0.723 0.15 154.4);
+  --success-foreground: oklch(0.985 0 0);
+  --warning: oklch(0.795 0.15 78.5);
+  --warning-foreground: oklch(0.205 0 0);
+  --info: oklch(0.6 0.19 259.8);
+  --info-foreground: oklch(0.985 0 0);
+
+  /* Fixed architectural-luxury hero surface (docs/PROPERTYGOJB_LUXURY_REDESIGN_COPILOT_BRIEF.md).
+     Always charcoal/ivory/champagne regardless of light/dark preference — a local
+     surface treatment, not a theme. */
+  --public-hero-background: #252622;
+  --public-hero-foreground: #f4f1ea;
+  --public-hero-accent: #d5c09a;
 }
 
 .dark {
@@ -116,6 +152,84 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --brand: oklch(0.65 0.19 262.1);
+  --brand-foreground: oklch(0.145 0 0);
+  --brand-subtle: oklch(0.32 0.08 262.1);
+  --brand-subtle-foreground: oklch(0.9 0.05 262.1);
+  --success: oklch(0.72 0.16 154.4);
+  --success-foreground: oklch(0.145 0 0);
+  --warning: oklch(0.78 0.15 78.5);
+  --warning-foreground: oklch(0.145 0 0);
+  --info: oklch(0.68 0.17 259.8);
+  --info-foreground: oklch(0.145 0 0);
+}
+
+/* Public surface (docs/PROPERTYGOJB_LUXURY_REDESIGN_COPILOT_BRIEF.md task-scoped
+   exception): warm ivory/charcoal/champagne, scoped to `<body data-ui="public">`
+   (set by src/components/public/public-theme-scope.tsx) so admin/agent keep the
+   existing neutral tokens. Light/dark preference is preserved independently of
+   this scope — see the `.dark` pairing below. */
+body[data-ui="public"] {
+  --background: #f4f1ea;
+  --foreground: #1b1c19;
+  --card: #faf8f3;
+  --card-foreground: #1b1c19;
+  --popover: #faf8f3;
+  --popover-foreground: #1b1c19;
+  --primary: #1b1c19;
+  --primary-foreground: #faf8f3;
+  --secondary: #ece7da;
+  --secondary-foreground: #1b1c19;
+  --muted: #ece7da;
+  --muted-foreground: #5b594f;
+  --accent: #efe3cc;
+  --accent-foreground: #4a3b22;
+  --border: #e1dacb;
+  --input: #e1dacb;
+  --ring: #8a6a3e;
+  --brand: #1b1c19;
+  --brand-foreground: #faf8f3;
+  --brand-subtle: #efe3cc;
+  --brand-subtle-foreground: #6b4e23;
+  /* Deepened from the brief's #B1925F starting value: that value measures only
+     2.61:1 as small text on this ivory background (fails 4.5:1). This shade
+     keeps the champagne hue and measures 5.59:1 (verified via rendered
+     getComputedStyle contrast, see chat evidence). */
+  --public-decorative: #7a5a30;
+  --public-decorative-foreground: #2e2410;
+  /* Editorial no-radius direction (see docs/work-items/PG-20260908-223056-DD3CC8CA-homepage-luxury-redesign.md):
+     every shadcn component derives its rounded-* utilities from this single
+     variable, so flattening it here sharpens buttons/inputs/selects/dialogs
+     across the whole public surface without touching component code.
+     rounded-full elements (pills, switches, avatars) are unaffected — that
+     utility is a fixed value, not part of this scale. */
+  --radius: 0px;
+}
+
+.dark body[data-ui="public"] {
+  --background: #1b1c19;
+  --foreground: #f4f1ea;
+  --card: #232420;
+  --card-foreground: #f4f1ea;
+  --popover: #232420;
+  --popover-foreground: #f4f1ea;
+  --primary: #f4f1ea;
+  --primary-foreground: #1b1c19;
+  --secondary: #2e2f29;
+  --secondary-foreground: #f4f1ea;
+  --muted: #2e2f29;
+  --muted-foreground: #b8b3a4;
+  --accent: #3a3527;
+  --accent-foreground: #f0e4c8;
+  --border: rgba(244, 241, 234, 0.14);
+  --input: rgba(244, 241, 234, 0.18);
+  --ring: #d5c09a;
+  --brand: #f4f1ea;
+  --brand-foreground: #1b1c19;
+  --brand-subtle: #3a3527;
+  --brand-subtle-foreground: #d5c09a;
+  --public-decorative: #d5c09a;
+  --public-decorative-foreground: #2e2410;
 }
 
 @layer base {
@@ -128,6 +242,21 @@
   html {
     @apply font-sans;
   }
+}
+
+/* Unlayered on purpose: fields also carry the "shadow-none" utility, and Tailwind's
+   utilities layer always outranks @layer base regardless of selector specificity, so a
+   base-layer override here would never win. Browser autofill also ignores background-color
+   entirely; only box-shadow can mask its native highlight, with an opaque color matching
+   the page background (a "transparent" shadow does not hide it). */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: currentColor;
+  -webkit-box-shadow: 0 0 0px 1000px var(--background) inset;
+  box-shadow: 0 0 0px 1000px var(--background) inset;
+  transition: background-color 9999s ease-in-out 0s;
 }
 
 @layer components {

@@ -3,9 +3,11 @@ import type { ReactNode } from "react";
 
 import { publicSiteConfig } from "@/config/public-site";
 import { isProduction } from "@/config/app";
+import { InlineScript } from "@/components/common/inline-script";
 import { MarketingConsentBanner } from "@/components/public/marketing-consent";
 import { MarketingScripts } from "@/components/public/marketing-scripts";
 import { PublicShell } from "@/components/public/public-shell";
+import { PublicThemeScope } from "@/components/public/public-theme-scope";
 import { StructuredData } from "@/components/public/structured-data";
 import { PUBLIC_SITE_NAME, PUBLIC_SITE_TAGLINE } from "@/lib/public/site";
 import { getPublicRobotsMetadata } from "@/lib/public/seo";
@@ -64,6 +66,9 @@ export default function PublicLayout({
 
   return (
     <>
+      {/* Hard navigation/reload: runs during HTML parsing, before first paint. */}
+      <InlineScript html="document.body.setAttribute('data-ui','public')" />
+      <PublicThemeScope />
       <StructuredData data={organizationSchema} />
       <PublicShell>{children}</PublicShell>
       <MarketingConsentBanner />
