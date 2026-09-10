@@ -31,7 +31,8 @@ function splitPhoneNumber(phoneNumber: string | null) {
 
   return {
     countryCode: countryCode ?? PUBLIC_DEFAULT_COUNTRY_CODE,
-    mobile: countryCode && phoneNumber ? phoneNumber.slice(countryCode.length) : "",
+    mobile:
+      countryCode && phoneNumber ? phoneNumber.slice(countryCode.length) : "",
   };
 }
 
@@ -48,7 +49,8 @@ export function CustomerProfileForm({
   const [nationality, setNationality] = useState(initialNationality ?? "");
   const [countryCode, setCountryCode] = useState(initialPhone.countryCode);
   const [mobile, setMobile] = useState("");
-  const [currentPhoneNumber, setCurrentPhoneNumber] = useState(initialPhoneNumber);
+  const [currentPhoneNumber, setCurrentPhoneNumber] =
+    useState(initialPhoneNumber);
   const [otpCode, setOtpCode] = useState("");
   const [isVerifyingPhone, setIsVerifyingPhone] = useState(false);
   const [pendingAction, setPendingAction] = useState<PendingAction>(null);
@@ -99,7 +101,10 @@ export function CustomerProfileForm({
 
         setOtpCode("");
         setIsVerifyingPhone(true);
-        appToast.success("Verification code sent.", "Check your dev server terminal.");
+        appToast.success(
+          "Verification code sent.",
+          "Check your dev server terminal.",
+        );
       } finally {
         setPendingAction(null);
       }
@@ -125,7 +130,9 @@ export function CustomerProfileForm({
           return;
         }
 
-        setCurrentPhoneNumber(`${countryCode}${mobile.replace(/\D/g, "").replace(/^0+/, "")}`);
+        setCurrentPhoneNumber(
+          `${countryCode}${mobile.replace(/\D/g, "").replace(/^0+/, "")}`,
+        );
         setMobile("");
         setIsVerifyingPhone(false);
         setOtpCode("");
@@ -139,17 +146,26 @@ export function CustomerProfileForm({
 
   return (
     <div className="mt-8 divide-y divide-border border-y border-border">
-      <form className="grid gap-6 py-7 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]" onSubmit={handleProfileSubmit}>
+      <form
+        className="grid gap-6 py-7 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]"
+        onSubmit={handleProfileSubmit}
+      >
         <div>
           <h3 className="font-black">Personal details</h3>
           <p className="mt-1 max-w-sm text-sm leading-6 text-muted-foreground">
-            These details are also synchronized to customer records linked to your account.
+            These details are also synchronized to customer records linked to
+            your account.
           </p>
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="space-y-2 sm:col-span-2">
-            <label htmlFor="customer-profile-name" className="text-sm font-bold">Full name</label>
+            <label
+              htmlFor="customer-profile-name"
+              className="text-sm font-bold"
+            >
+              Full name
+            </label>
             <Input
               id="customer-profile-name"
               name="name"
@@ -163,7 +179,12 @@ export function CustomerProfileForm({
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="customer-profile-nationality" className="text-sm font-bold">Nationality</label>
+            <label
+              htmlFor="customer-profile-nationality"
+              className="text-sm font-bold"
+            >
+              Nationality
+            </label>
             <Input
               id="customer-profile-nationality"
               name="nationality"
@@ -177,9 +198,15 @@ export function CustomerProfileForm({
           </div>
 
           <div className="flex items-end">
-            <AppButton type="submit" disabled={isPending || !name.trim()} className="w-full rounded-xl sm:w-auto">
+            <AppButton
+              type="submit"
+              disabled={isPending || !name.trim()}
+              className="w-full rounded-xl sm:w-auto"
+            >
               <Save className="size-4" />
-              {isPending && pendingAction === "profile" ? "Saving..." : "Save details"}
+              {isPending && pendingAction === "profile"
+                ? "Saving..."
+                : "Save details"}
             </AppButton>
           </div>
         </div>
@@ -189,7 +216,8 @@ export function CustomerProfileForm({
         <div>
           <h3 className="font-black">Verified mobile</h3>
           <p className="mt-1 max-w-sm text-sm leading-6 text-muted-foreground">
-            Changing your login number requires a one-time code sent to the new number.
+            Changing your login number requires a one-time code sent to the new
+            number.
           </p>
           <p className="mt-3 text-sm font-bold text-foreground">
             Current: {currentPhoneNumber ?? "Not provided"}
@@ -199,20 +227,29 @@ export function CustomerProfileForm({
         <div className="space-y-5">
           <div className="grid gap-3 sm:grid-cols-[150px_minmax(0,1fr)]">
             <div className="space-y-2">
-              <label id="customer-country-label" className="text-sm font-bold">Country code</label>
+              <label id="customer-country-label" className="text-sm font-bold">
+                Country code
+              </label>
               <AppSelect
                 id="customer-country-code"
                 ariaLabelledBy="customer-country-label"
                 value={countryCode}
                 options={PUBLIC_COUNTRY_CODE_OPTIONS}
                 onValueChange={setCountryCode}
+                searchable
+                searchPlaceholder="Search country..."
                 disabled={isVerifyingPhone || isPending}
                 triggerClassName="w-full rounded-xl"
               />
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="customer-new-mobile" className="text-sm font-bold">New mobile number</label>
+              <label
+                htmlFor="customer-new-mobile"
+                className="text-sm font-bold"
+              >
+                New mobile number
+              </label>
               <Input
                 id="customer-new-mobile"
                 name="mobile"
@@ -232,24 +269,39 @@ export function CustomerProfileForm({
               <div className="flex items-start gap-3">
                 <ShieldCheck className="mt-0.5 size-5 shrink-0 text-blue-700 dark:text-blue-300" />
                 <div className="min-w-0 flex-1">
-                  <label htmlFor="customer-phone-otp" className="text-sm font-black text-blue-900 dark:text-blue-100">
+                  <label
+                    htmlFor="customer-phone-otp"
+                    className="text-sm font-black text-blue-900 dark:text-blue-100"
+                  >
                     Verification code
                   </label>
                   <p className="mt-1 text-xs leading-5 text-blue-800 dark:text-blue-200">
-                    Enter the six-digit code. Your current number remains active until verification succeeds.
+                    Enter the six-digit code. Your current number remains active
+                    until verification succeeds.
                   </p>
                   <div className="mt-3 flex flex-col gap-3 sm:flex-row">
                     <Input
                       id="customer-phone-otp"
                       value={otpCode}
-                      onChange={(event) => setOtpCode(event.target.value.replace(/\D/g, "").slice(0, 6))}
+                      onChange={(event) =>
+                        setOtpCode(
+                          event.target.value.replace(/\D/g, "").slice(0, 6),
+                        )
+                      }
                       inputMode="numeric"
                       autoComplete="one-time-code"
                       maxLength={6}
                       className="h-11 max-w-48 rounded-xl bg-background font-mono text-lg tracking-[0.3em]"
                     />
-                    <AppButton type="button" onClick={handleConfirmPhone} disabled={isPending} className="h-11 rounded-xl px-5 text-sm">
-                      {isPending && pendingAction === "confirm-phone" ? "Verifying..." : "Verify and change"}
+                    <AppButton
+                      type="button"
+                      onClick={handleConfirmPhone}
+                      disabled={isPending}
+                      className="h-11 rounded-xl px-5 text-sm"
+                    >
+                      {isPending && pendingAction === "confirm-phone"
+                        ? "Verifying..."
+                        : "Verify and change"}
                     </AppButton>
                     <AppButton
                       type="button"
@@ -265,9 +317,16 @@ export function CustomerProfileForm({
               </div>
             </div>
           ) : (
-            <AppButton type="button" onClick={handleRequestOtp} disabled={isPending || !mobile.trim()} className="rounded-xl">
+            <AppButton
+              type="button"
+              onClick={handleRequestOtp}
+              disabled={isPending || !mobile.trim()}
+              className="rounded-xl"
+            >
               <Smartphone className="size-4" />
-              {isPending && pendingAction === "request-phone" ? "Sending..." : "Send verification code"}
+              {isPending && pendingAction === "request-phone"
+                ? "Sending..."
+                : "Send verification code"}
             </AppButton>
           )}
         </div>
@@ -276,11 +335,18 @@ export function CustomerProfileForm({
       <div className="grid gap-3 py-7 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]">
         <div>
           <h3 className="font-black">Email</h3>
-          <p className="mt-1 text-sm text-muted-foreground">Email changes remain locked until verified email delivery is configured.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Email changes remain locked until verified email delivery is
+            configured.
+          </p>
         </div>
         <div>
           <p className="font-bold">{email ?? "No verified email added"}</p>
-          <p className="mt-1 text-sm text-muted-foreground">{emailVerified ? "Verified email" : "Email verification unavailable"}</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {emailVerified
+              ? "Verified email"
+              : "Email verification unavailable"}
+          </p>
         </div>
       </div>
     </div>

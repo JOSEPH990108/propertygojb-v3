@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { Smartphone } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { AuthCard } from "@/components/auth/auth-card";
@@ -10,7 +9,10 @@ import { AuthPageShell } from "@/components/auth/auth-page-shell";
 import { GoogleLoginButton } from "@/components/auth/google-login-button";
 import { PasswordInput } from "@/components/auth/password-input";
 import { AppButton } from "@/components/common/app-button";
-import { AppSelect, type AppSelectOption } from "@/components/common/app-select";
+import {
+  AppSelect,
+  type AppSelectOption,
+} from "@/components/common/app-select";
 import { Input } from "@/components/ui/input";
 import { postJson } from "@/lib/api/client";
 import { appToast } from "@/lib/app-toast";
@@ -25,7 +27,6 @@ const countryCodeOptions: AppSelectOption[] = [
   { value: "+91", label: "India", description: "+91", leading: "IN" },
 ];
 
-
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -35,7 +36,6 @@ export function LoginForm() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
   const [isPending, startTransition] = useTransition();
-
 
   function handleLogin() {
     if (!mobile.trim() || !password) {
@@ -63,7 +63,9 @@ export function LoginForm() {
       });
 
       if (result.error) {
-        appToast.error(result.error.message ?? "Invalid mobile number or password.");
+        appToast.error(
+          result.error.message ?? "Invalid mobile number or password.",
+        );
         return;
       }
 
@@ -83,113 +85,114 @@ export function LoginForm() {
   }
 
   return (
-    <AuthPageShell>
+    <AuthPageShell
+      eyebrow="Account Access"
+      title="Welcome back."
+      description="Sign in with your mobile number to continue."
+    >
       <AuthCard>
-        <div className="space-y-7">
-          <div className="space-y-3 text-center">
-            <h1 className="text-3xl font-black tracking-tight">Welcome Back</h1>
-            <p className="mx-auto max-w-xs text-sm leading-6 text-slate-500">
-              Login securely with your mobile number and password.
-            </p>
-          </div>
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <label className="text-[0.65rem] font-medium tracking-[0.24em] text-muted-foreground uppercase">
+              Mobile Number
+            </label>
 
-          <div className="space-y-5">
-            <div className="space-y-2">
-              <label className="text-sm font-semibold">Mobile Number</label>
-
-              <div className="flex gap-3">
-                <AppSelect
-                  value={countryCode}
-                  options={countryCodeOptions}
-                  onValueChange={setCountryCode}
-                  searchable
-                  searchPlaceholder="Search country..."
-                  triggerClassName="w-[132px]"
-                  renderValue={(option) => (
-                    <span className="flex items-center gap-2">
-                      <span className="grid size-7 place-items-center rounded-md bg-blue-50 text-xs font-bold text-blue-700">
-                        {option?.leading}
-                      </span>
-                      <span>{option?.value}</span>
+            <div className="flex gap-3">
+              <AppSelect
+                value={countryCode}
+                options={countryCodeOptions}
+                onValueChange={setCountryCode}
+                searchable
+                searchPlaceholder="Search country..."
+                triggerClassName="h-auto w-auto min-w-0 justify-start rounded-none border-0 border-b border-border bg-transparent px-2 pt-3 pb-3 shadow-none hover:bg-transparent dark:border-border dark:bg-transparent dark:hover:bg-transparent"
+                renderValue={(option) => (
+                  <span className="text-sm font-light">{option?.value}</span>
+                )}
+                renderOption={(option) => (
+                  <>
+                    <span className="grid size-8 place-items-center bg-muted text-xs font-semibold text-foreground">
+                      {option.leading}
                     </span>
-                  )}
-                  renderOption={(option) => (
-                    <>
-                      <span className="grid size-8 place-items-center rounded-md bg-blue-50 text-xs font-bold text-blue-700">
-                        {option.leading}
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="font-semibold text-slate-900">{option.label}</p>
-                        <p className="text-xs text-slate-500">{option.description}</p>
-                      </div>
-                    </>
-                  )}
-                />
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold text-foreground">
+                        {option.label}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {option.description}
+                      </p>
+                    </div>
+                  </>
+                )}
+              />
 
-                <div className="relative flex-1">
-                  <Smartphone className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-                  <Input
-                    value={mobile}
-                    onChange={(event) => setMobile(event.target.value)}
-                    placeholder="Enter mobile number"
-                    inputMode="tel"
-                    autoComplete="tel"
-                    className="h-12 rounded-2xl border-slate-200 bg-white/80 pl-11 shadow-sm"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-semibold">Password</label>
-              <PasswordInput
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                placeholder="Enter your password"
-                autoComplete="current-password"
+              <Input
+                value={mobile}
+                onChange={(event) => setMobile(event.target.value)}
+                placeholder="Enter mobile number"
+                inputMode="tel"
+                autoComplete="tel"
+                className="h-auto flex-1 rounded-none border-0 border-b border-border bg-transparent px-2 pt-3 pb-3 text-sm font-light shadow-none focus-visible:border-b-2 focus-visible:border-public-decorative focus-visible:ring-0 dark:bg-transparent"
               />
             </div>
-
-            <div className="flex items-center justify-between gap-4 text-sm">
-              <label className="flex items-center gap-2 text-slate-600">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(event) => setRememberMe(event.target.checked)}
-                  className="size-4 rounded border-slate-300 accent-blue-600"
-                />
-                Remember me
-              </label>
-
-              <Link href="/forgot-password" className="font-semibold text-blue-600">
-                Forgot Password?
-              </Link>
-            </div>
-
-            <AppButton
-              type="button"
-              disabled={isPending}
-              onClick={handleLogin}
-              className="w-full"
-            >
-              {isPending ? "Logging in..." : "Log In"}
-            </AppButton>
-
-            <div className="flex items-center gap-3">
-              <div className="h-px flex-1 bg-slate-200" />
-              <span className="text-xs text-slate-400">or</span>
-              <div className="h-px flex-1 bg-slate-200" />
-            </div>
-
-            <GoogleLoginButton callbackURL="/auth-redirect" />
-
-            <p className="text-center text-sm text-slate-500">
-              Don&apos;t have an account?{" "}
-              <Link href="/register" className="font-semibold text-blue-600">
-                Register
-              </Link>
-            </p>
           </div>
+
+          <div className="space-y-2">
+            <label className="text-[0.65rem] font-medium tracking-[0.24em] text-muted-foreground uppercase">
+              Password
+            </label>
+            <PasswordInput
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="Enter your password"
+              autoComplete="current-password"
+            />
+          </div>
+
+          <div className="flex items-center justify-between gap-4 text-sm">
+            <label className="flex items-center gap-2 text-muted-foreground">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(event) => setRememberMe(event.target.checked)}
+                className="size-4 rounded-none border-border accent-foreground"
+              />
+              Remember me
+            </label>
+
+            <Link
+              href="/forgot-password"
+              className="font-medium text-foreground underline underline-offset-4"
+            >
+              Forgot password?
+            </Link>
+          </div>
+
+          <AppButton
+            type="button"
+            disabled={isPending}
+            onClick={handleLogin}
+            className="w-full rounded-none text-xs font-medium tracking-[0.2em] uppercase"
+          >
+            {isPending ? "Logging in..." : "Log In"}
+          </AppButton>
+
+          <div className="flex items-center gap-3">
+            <div className="h-px flex-1 bg-border" />
+            <span className="text-xs text-muted-foreground uppercase">or</span>
+            <div className="h-px flex-1 bg-border" />
+          </div>
+
+          <GoogleLoginButton callbackURL="/auth-redirect" />
+
+          <p className="text-center text-sm text-muted-foreground">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/register"
+              className="font-medium text-foreground underline underline-offset-4"
+            >
+              Register
+            </Link>
+          </p>
         </div>
       </AuthCard>
     </AuthPageShell>

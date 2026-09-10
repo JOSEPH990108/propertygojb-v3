@@ -1,61 +1,95 @@
 import type { ReactNode } from "react";
-
-import { ShieldCheck, Sparkles } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 type AuthPageShellProps = {
   children: ReactNode;
+  eyebrow: string;
+  title: string;
+  description: string;
 };
 
-export function AuthPageShell({ children }: AuthPageShellProps) {
+/** Editorial split shell shared by login/register/forgot-password (see docs/UI_DESIGN_GUIDE.md). */
+export function AuthPageShell({
+  children,
+  eyebrow,
+  title,
+  description,
+}: AuthPageShellProps) {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#f7fbff] text-slate-950">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_82%,rgba(37,99,235,0.22),transparent_30%),radial-gradient(circle_at_18%_12%,rgba(147,197,253,0.22),transparent_28%)]" />
-      <div className="pointer-events-none absolute right-0 top-0 hidden h-full w-[36rem] opacity-50 lg:block">
-        <div className="absolute right-10 top-16 h-28 w-28 rounded-full border border-blue-200" />
-        <div className="absolute right-20 top-24 h-56 w-56 rounded-full border border-blue-100" />
-        <div className="absolute bottom-[-7rem] right-[-5rem] h-80 w-80 rounded-full bg-blue-200/70 blur-3xl" />
-      </div>
+    <main className="grid min-h-screen grid-cols-1 bg-background text-foreground lg:grid-cols-2">
+      <aside className="relative hidden min-h-screen overflow-hidden bg-public-hero text-public-hero-foreground lg:block">
+        <Image
+          src="/images/defaults/highrise-interior.png"
+          alt="Interior of a high-rise living room with a skyline view at dusk"
+          fill
+          sizes="50vw"
+          className="object-cover"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-gradient-to-t from-public-hero/90 via-public-hero/30 to-public-hero/60"
+        />
 
-      <div className="relative mx-auto grid min-h-screen w-full max-w-7xl grid-cols-1 lg:grid-cols-[0.9fr_1.1fr]">
-        <aside className="hidden min-h-screen flex-col justify-between px-10 py-12 lg:flex xl:px-14">
-          <div className="flex items-center gap-4">
-            <div className="grid size-14 place-items-center rounded-2xl bg-blue-600 text-white shadow-xl shadow-blue-600/30">
-              <Sparkles className="size-7" />
-            </div>
+        <div className="relative flex h-full flex-col justify-between p-10 xl:p-14">
+          <Link href="/" className="flex flex-col leading-none">
+            <span className="font-serif text-2xl font-medium tracking-tight">
+              PropertyGoJB
+            </span>
+            <span className="mt-1 text-[0.62rem] font-medium tracking-[0.4em] text-public-hero-accent uppercase">
+              Johor Bahru Property Desk
+            </span>
+          </Link>
 
-            <div>
-              <p className="text-3xl font-black tracking-tight">PropertyGoJB</p>
-              <p className="text-sm font-medium text-slate-500">
-                Modern Property Platform
-              </p>
-            </div>
-          </div>
-
-          <div className="max-w-sm">
-            <div className="mb-6 grid size-14 place-items-center rounded-full bg-blue-100 text-blue-600">
-              <ShieldCheck className="size-7" />
-            </div>
-
-            <h2 className="text-2xl font-black leading-tight tracking-tight">
-              Your privacy and security are our top priority.
+          <div className="max-w-md">
+            <p className="mb-5 inline-flex items-center gap-3 text-xs font-light tracking-[0.32em] text-public-hero-foreground/75 uppercase">
+              <span
+                aria-hidden="true"
+                className="h-px w-8 bg-public-hero-accent"
+              />
+              The Private Desk
+            </p>
+            <h2 className="text-balance font-serif text-4xl leading-tight font-light xl:text-5xl">
+              A more considered way to find home.
             </h2>
-
-            <p className="mt-5 text-base leading-8 text-slate-500">
-              Secure access for property showcase, agent workspace, and admin
-              operations.
+            <p className="mt-5 max-w-sm text-sm leading-relaxed font-light text-public-hero-foreground/80">
+              One account for saved projects, viewing requests, and enquiry
+              history across every published launch.
             </p>
           </div>
 
-          <div className="relative h-72 overflow-hidden rounded-[2rem] border border-white/70 bg-blue-100/70 shadow-inner">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_15%,rgba(255,255,255,0.95),transparent_25%),linear-gradient(180deg,rgba(255,255,255,0.15),rgba(96,165,250,0.45))]" />
-            <div className="absolute bottom-0 h-32 w-full bg-gradient-to-t from-blue-300/70 to-transparent" />
-          </div>
-        </aside>
+          <p className="text-[0.62rem] font-medium tracking-[0.3em] text-public-hero-foreground/60 uppercase">
+            Johor Bahru
+          </p>
+        </div>
+      </aside>
 
-        <section className="flex min-h-screen items-center justify-center px-4 py-8 sm:px-6 lg:px-10">
-          {children}
-        </section>
-      </div>
+      <section className="relative flex min-h-screen flex-col justify-start px-6 py-10 sm:px-10 sm:py-12 lg:justify-center lg:px-16 xl:px-20">
+        {/* Absolutely positioned (not part of the centered flow below) so it
+            sits at the same spot regardless of form height/content length —
+            a centered flex item would otherwise drift with taller content
+            (e.g. register's stepper) vs. shorter content (e.g. login). */}
+        <Link
+          href="/"
+          className="absolute top-10 right-6 text-xs font-medium tracking-[0.2em] text-muted-foreground uppercase transition hover:text-foreground sm:top-12 sm:right-10 lg:top-14 lg:right-16 xl:right-20"
+        >
+          Return to site
+        </Link>
+
+        <div className="mx-auto w-full max-w-sm pt-14 sm:pt-16 lg:pt-0">
+          <p className="mb-4 text-xs font-medium tracking-[0.28em] text-public-decorative uppercase">
+            {eyebrow}
+          </p>
+          <h1 className="font-serif text-4xl font-medium tracking-tight text-foreground">
+            {title}
+          </h1>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+            {description}
+          </p>
+
+          <div className="mt-10">{children}</div>
+        </div>
+      </section>
     </main>
   );
 }
