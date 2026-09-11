@@ -1,0 +1,26 @@
+# Stage 0 ownership policy. Configure branch protection to require these reviews.
+* @JOSEPH990108
+
+# Control plane and delivery policy
+/.github/ @JOSEPH990108
+/AGENTS.md @JOSEPH990108
+/CLAUDE.md @JOSEPH990108
+/package.json @JOSEPH990108
+/package-lock.json @JOSEPH990108
+/docs/AI_AGENTIC_SDLC.md @JOSEPH990108
+/docs/sdlc/ @JOSEPH990108
+/docs/work-items/ @JOSEPH990108
+/scripts/sdlc- @JOSEPH990108
+
+# Protected application domains
+/src/lib/auth/ @JOSEPH990108
+/src/app/api/auth/ @JOSEPH990108
+/src/db/schema/ @JOSEPH990108
+/drizzle/ @JOSEPH990108
+/src/lib/bookings/ @JOSEPH990108
+/src/app/api/**/bookings/ @JOSEPH990108
+/src/lib/documents/ @JOSEPH990108
+/src/app/api/**/documents/ @JOSEPH990108
+/src/app/api/**/files/ @JOSEPH990108
+/src/lib/whatsapp/ @JOSEPH990108
+/src/app/api/webhooks/whatsapp/ @JOSEPH990108

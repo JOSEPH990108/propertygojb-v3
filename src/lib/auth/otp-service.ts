@@ -5,7 +5,7 @@ import { and, eq, isNull } from "drizzle-orm";
 
 import { db, schema } from "@/db";
 
-export type AuthOtpPurpose = "REGISTER" | "PASSWORD_RESET";
+export type AuthOtpPurpose = "REGISTER" | "PASSWORD_RESET" | "PHONE_CHANGE";
 
 const OTP_EXPIRES_SECONDS = 300;
 const OTP_RESEND_SECONDS = 60;
@@ -78,6 +78,26 @@ async function closeActiveChallenges(
     );
 }
 
+async function closeActiveUserChallenges(
+  userId: string,
+  purpose: AuthOtpPurpose,
+) {
+  await db
+    .update(schema.otpChallenges)
+    .set({
+      consumedAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(schema.otpChallenges.userId, userId),
+        eq(schema.otpChallenges.purpose, purpose),
+        isNull(schema.otpChallenges.consumedAt),
+        isNull(schema.otpChallenges.lockedAt),
+      ),
+    );
+}
+
 export async function createAuthOtpChallenge(params: {
   phoneNumber: string;
   phoneNormalized: string;
@@ -93,6 +113,7 @@ export async function createAuthOtpChallenge(params: {
 
   if (
     activeChallenge &&
+    activeChallenge.userId === (params.userId ?? null) &&
     activeChallenge.expiresAt.getTime() > now.getTime() &&
     activeChallenge.resendAvailableAt.getTime() > now.getTime()
   ) {
@@ -105,6 +126,10 @@ export async function createAuthOtpChallenge(params: {
   const code = generateOtpCode();
   const expiresAt = new Date(now.getTime() + OTP_EXPIRES_SECONDS * 1000);
   const resendAvailableAt = new Date(now.getTime() + OTP_RESEND_SECONDS * 1000);
+
+  if (params.userId && params.purpose === "PHONE_CHANGE") {
+    await closeActiveUserChallenges(params.userId, params.purpose);
+  }
 
   await closeActiveChallenges(params.phoneNormalized, params.purpose);
 
@@ -139,6 +164,7 @@ export async function verifyAuthOtpChallenge(params: {
   phoneNormalized: string;
   purpose: AuthOtpPurpose;
   code: string;
+  userId?: string;
 }) {
   const now = new Date();
 
@@ -148,6 +174,13 @@ export async function verifyAuthOtpChallenge(params: {
   );
 
   if (!challenge) {
+    return {
+      ok: false as const,
+      message: "OTP not found. Please request a new code.",
+    };
+  }
+
+  if (params.userId && challenge.userId !== params.userId) {
     return {
       ok: false as const,
       message: "OTP not found. Please request a new code.",
@@ -226,6 +259,7 @@ export async function getVerifiedAuthOtpChallenge(params: {
   challengeId: string;
   phoneNormalized: string;
   purpose: AuthOtpPurpose;
+  userId?: string;
 }) {
   const now = new Date();
 
@@ -241,7 +275,11 @@ export async function getVerifiedAuthOtpChallenge(params: {
       ),
   });
 
-  if (!challenge || challenge.expiresAt.getTime() <= now.getTime()) {
+  if (
+    !challenge ||
+    (params.userId && challenge.userId !== params.userId) ||
+    challenge.expiresAt.getTime() <= now.getTime()
+  ) {
     return null;
   }
 

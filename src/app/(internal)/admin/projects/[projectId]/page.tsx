@@ -145,14 +145,24 @@ export default async function ProjectDetailPage({
 
   return (
     <main className="space-y-8 p-6">
-      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-        <Link
-          href="/admin/projects"
-          className="inline-flex items-center gap-2 text-sm font-bold text-blue-600"
-        >
-          <ArrowLeft className="size-4" />
-          Back to Projects
-        </Link>
+      <section className="sticky top-4 z-20 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex items-center justify-between gap-4">
+          <Link
+            href="/admin/projects"
+            className="inline-flex items-center gap-2 text-sm font-bold text-blue-600"
+          >
+            <ArrowLeft className="size-4" />
+            Back to Projects
+          </Link>
+
+          <button
+            type="submit"
+            form="project-edit-form"
+            className="inline-flex h-10 items-center rounded-xl bg-blue-600 px-4 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700"
+          >
+            Save Changes
+          </button>
+        </div>
 
         <div className="mt-5 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="flex items-center gap-4">

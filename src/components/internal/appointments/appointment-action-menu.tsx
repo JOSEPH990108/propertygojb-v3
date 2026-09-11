@@ -76,7 +76,7 @@ export function AppointmentActionMenu({
             </Link>
           </DropdownMenu.Item>
 
-          {currentStatus !== "COMPLETED" ? (
+          {currentStatus !== "COMPLETED" && currentStatus !== "REQUESTED" ? (
             <DropdownMenu.Item
               onSelect={(event) => {
                 event.preventDefault();
@@ -104,7 +104,7 @@ export function AppointmentActionMenu({
             </DropdownMenu.Item>
           ) : null}
 
-          {currentStatus !== "SCHEDULED" ? (
+          {currentStatus !== "SCHEDULED" && currentStatus !== "REQUESTED" ? (
             <DropdownMenu.Item
               onSelect={(event) => {
                 event.preventDefault();

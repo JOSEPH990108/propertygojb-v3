@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { db, schema } from "@/db";
 import { errorJson, okJson, parseApiError } from "@/lib/api/json";
-import { requireRole } from "@/lib/auth/guards";
+import { authorizeApiRoles } from "@/lib/auth/api-guards";
 
 const optionalId = z
   .string()
@@ -49,12 +49,15 @@ const createProjectSchema = z.object({
   totalUnits: z.number().int().min(0).max(100000).default(0),
   launchYear: z.number().int().min(1900).max(2100).nullable().optional(),
   isHotDeal: z.boolean().default(false),
-  isPublished: z.boolean().default(false),
 });
 
 export async function POST(request: NextRequest) {
   try {
-    await requireRole(["ADMIN", "SUPER_ADMIN"], "/admin/projects/new");
+    const authorization = await authorizeApiRoles(["ADMIN", "SUPER_ADMIN"]);
+
+    if (!authorization.ok) {
+      return errorJson(authorization.message, authorization.status);
+    }
 
     const body = await request.json();
     const validated = createProjectSchema.parse(body);
@@ -111,7 +114,7 @@ export async function POST(request: NextRequest) {
         totalUnits: validated.totalUnits,
         launchYear: validated.launchYear ?? null,
         isHotDeal: validated.isHotDeal,
-        isPublished: validated.isPublished,
+        isPublished: false,
       })
       .returning({
         id: schema.projects.id,

@@ -39,8 +39,22 @@ export const simpleLookupConfigs = {
   "unit-positions": {
     kind: "code",
     title: "Unit Positions",
-    description: "Manage unit positions such as Intermediate Lot, End Lot, Corner Lot, High Floor, or Pool View.",
+    description: "Manage physical unit positions such as Intermediate, End, Corner, or End Unit.",
     table: schema.unitPositions,
+    backHref: "/admin/settings/lookups",
+  },
+  "unit-views": {
+    kind: "code",
+    title: "Unit Views",
+    description: "Manage unit views such as River View, City View, Sea View, or Facilities View.",
+    table: schema.unitViews,
+    backHref: "/admin/settings/lookups",
+  },
+  "unit-facings": {
+    kind: "code",
+    title: "Unit Facings",
+    description: "Manage geographic orientations such as North, North East, South West, or West.",
+    table: schema.unitFacings,
     backHref: "/admin/settings/lookups",
   },
   "construction-statuses": {

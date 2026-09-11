@@ -20,7 +20,9 @@ import {
   bookingStatuses,
   buyerTypes,
   lotTypes,
+  unitFacings,
   unitPositions,
+  unitViews,
 } from "./lookups";
 
 export const units = pgTable(
@@ -38,13 +40,16 @@ export const units = pgTable(
     floor: integer("floor"),
     stack: varchar("stack", { length: 10 }),
     streetName: varchar("street_name", { length: 100 }),
+    blockCode: varchar("block_code", { length: 50 }),
     displaySequence: integer("display_sequence").default(0).notNull(),
 
     builtUpSqft: decimal("built_up_sqft", { precision: 10, scale: 2 }),
     landAreaSqft: decimal("land_area_sqft", { precision: 10, scale: 2 }),
     dimensionText: varchar("dimension_text", { length: 50 }),
     facing: varchar("facing", { length: 100 }),
+    facingTypeId: text("facing_type_id").references(() => unitFacings.id),
     positionTypeId: text("position_type_id").references(() => unitPositions.id),
+    viewTypeId: text("view_type_id").references(() => unitViews.id),
 
     carparkCount: integer("carpark_count").default(1).notNull(),
     carparkLotNo: varchar("carpark_lot_no", { length: 100 }),
@@ -63,8 +68,11 @@ export const units = pgTable(
   (t) => ({
     uniqProjectUnitNo: unique().on(t.projectId, t.unitNo),
     unitsProjectIdx: index("units_project_idx").on(t.projectId),
+    unitsProjectBlockIdx: index("units_project_block_idx").on(t.projectId, t.blockCode),
     unitsTowerIdx: index("units_tower_idx").on(t.towerId),
     unitsLayoutIdx: index("units_layout_idx").on(t.layoutId),
+    unitsFacingTypeIdx: index("units_facing_type_idx").on(t.facingTypeId),
+    unitsViewTypeIdx: index("units_view_type_idx").on(t.viewTypeId),
     unitsBookingStatusIdx: index("units_booking_status_idx").on(
       t.bookingStatusId,
     ),

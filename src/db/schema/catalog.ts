@@ -9,6 +9,7 @@ import {
   pgTable,
   primaryKey,
   text,
+  timestamp,
   unique,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -98,6 +99,17 @@ export const projects = pgTable(
     featuredFileId: text("featured_file_id").references(() => files.id),
     isHotDeal: boolean("is_hot_deal").default(false).notNull(),
     isPublished: boolean("is_published").default(false).notNull(),
+    publishedAt: timestamp("published_at"),
+
+    metaTitle: varchar("meta_title", { length: 70 }),
+    metaDescription: varchar("meta_description", { length: 180 }),
+    canonicalUrl: varchar("canonical_url", { length: 1000 }),
+    ogTitle: varchar("og_title", { length: 100 }),
+    ogDescription: varchar("og_description", { length: 300 }),
+    ogImageFileId: text("og_image_file_id").references(() => files.id),
+    heroVideoUrl: varchar("hero_video_url", { length: 1000 }),
+    highlightsJson: jsonb("highlights_json"),
+    faqJson: jsonb("faq_json"),
   },
   (t) => ({
     uniqSlug: unique().on(t.slug),
@@ -144,6 +156,22 @@ export const projectTowers = pgTable(
   },
   (t) => ({
     uniqProjectTowerNumber: unique().on(t.projectId, t.towerNumber),
+  }),
+);
+
+export const projectAvailabilityPlans = pgTable(
+  "project_availability_plans",
+  {
+    ...baseColumns(),
+    projectId: text("project_id")
+      .references(() => projects.id)
+      .notNull(),
+    towerCode: varchar("tower_code", { length: 50 }).notNull(),
+    plan: jsonb("plan").notNull(),
+  },
+  (t) => ({
+    uniqProjectAvailabilityPlanTower: unique().on(t.projectId, t.towerCode),
+    availabilityPlansProjectIdx: index("availability_plans_project_idx").on(t.projectId),
   }),
 );
 

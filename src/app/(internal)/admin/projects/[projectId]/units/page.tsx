@@ -42,7 +42,7 @@ export default async function ProjectUnitsPage({ params }: ProjectUnitsPageProps
     notFound();
   }
 
-  const [layouts, lotTypes, bookingStatuses, unitPositions, units] =
+  const [layouts, lotTypes, bookingStatuses, unitPositions, unitViews, unitFacings, units] =
     await Promise.all([
       db
         .select({
@@ -83,6 +83,24 @@ export default async function ProjectUnitsPage({ params }: ProjectUnitsPageProps
 
       db
         .select({
+          id: schema.unitViews.id,
+          name: schema.unitViews.name,
+          code: schema.unitViews.code,
+        })
+        .from(schema.unitViews)
+        .orderBy(asc(schema.unitViews.sortOrder), asc(schema.unitViews.name)),
+
+      db
+        .select({
+          id: schema.unitFacings.id,
+          name: schema.unitFacings.name,
+          code: schema.unitFacings.code,
+        })
+        .from(schema.unitFacings)
+        .orderBy(asc(schema.unitFacings.sortOrder), asc(schema.unitFacings.name)),
+
+      db
+        .select({
           id: schema.units.id,
           layoutId: schema.units.layoutId,
           layoutName: schema.projectLayouts.name,
@@ -94,9 +112,13 @@ export default async function ProjectUnitsPage({ params }: ProjectUnitsPageProps
           builtUpSqft: schema.units.builtUpSqft,
           landAreaSqft: schema.units.landAreaSqft,
           dimensionText: schema.units.dimensionText,
-          facing: schema.units.facing,
+          facing: schema.unitFacings.name,
+          facingTypeId: schema.units.facingTypeId,
+          facingTypeName: schema.unitFacings.name,
           positionTypeId: schema.units.positionTypeId,
           positionTypeName: schema.unitPositions.name,
+          viewTypeId: schema.units.viewTypeId,
+          viewTypeName: schema.unitViews.name,
           carparkCount: schema.units.carparkCount,
           carparkLotNo: schema.units.carparkLotNo,
           carparkType: schema.units.carparkType,
@@ -109,7 +131,9 @@ export default async function ProjectUnitsPage({ params }: ProjectUnitsPageProps
         })
         .from(schema.units)
         .leftJoin(schema.projectLayouts, eq(schema.units.layoutId, schema.projectLayouts.id))
+        .leftJoin(schema.unitFacings, eq(schema.units.facingTypeId, schema.unitFacings.id))
         .leftJoin(schema.unitPositions, eq(schema.units.positionTypeId, schema.unitPositions.id))
+        .leftJoin(schema.unitViews, eq(schema.units.viewTypeId, schema.unitViews.id))
         .leftJoin(schema.lotTypes, eq(schema.units.lotTypeId, schema.lotTypes.id))
         .leftJoin(schema.bookingStatuses, eq(schema.units.bookingStatusId, schema.bookingStatuses.id))
         .where(eq(schema.units.projectId, projectId))
@@ -159,6 +183,8 @@ export default async function ProjectUnitsPage({ params }: ProjectUnitsPageProps
         lotTypes={lotTypes.map(toOption)}
         bookingStatuses={bookingStatuses.map(toOption)}
         unitPositions={unitPositions.map(toOption)}
+        unitViews={unitViews.map(toOption)}
+        unitFacings={unitFacings.map(toOption)}
         units={units}
       />
     </main>

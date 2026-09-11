@@ -2,9 +2,9 @@ export const routes = {
   public: {
     home: "/",
     projects: "/projects",
-    bookViewing: "/book-viewing",
     contact: "/contact",
     about: "/about",
+    account: "/account",
   },
 
   auth: {

@@ -1,0 +1,387 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://propertygojb.local/schemas/business-rules.schema.json",
+  "title": "PropertyGoJB Agentic SDLC business-rule registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "version",
+    "updatedAt",
+    "owner",
+    "policy",
+    "learningPolicy",
+    "riskBands",
+    "autonomyCeiling",
+    "gates",
+    "checks",
+    "rules",
+    "escalators",
+    "learnedRules"
+  ],
+  "properties": {
+    "$schema": { "const": "./business-rules.schema.json" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "updatedAt": { "type": "string", "format": "date" },
+    "owner": { "type": "string", "minLength": 1 },
+    "policy": { "type": "string", "minLength": 1 },
+    "learningPolicy": { "$ref": "#/$defs/learningPolicy" },
+    "riskBands": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "prefixItems": [
+        {
+          "allOf": [
+            { "$ref": "#/$defs/riskBand" },
+            {
+              "properties": {
+                "class": { "const": "R0" },
+                "minScore": { "const": 0 },
+                "maxScore": { "const": 9 }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/riskBand" },
+            {
+              "properties": {
+                "class": { "const": "R1" },
+                "minScore": { "const": 10 },
+                "maxScore": { "const": 24 }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/riskBand" },
+            {
+              "properties": {
+                "class": { "const": "R2" },
+                "minScore": { "const": 25 },
+                "maxScore": { "const": 49 }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/riskBand" },
+            {
+              "properties": {
+                "class": { "const": "R3" },
+                "minScore": { "const": 50 },
+                "maxScore": { "const": 79 }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/riskBand" },
+            {
+              "properties": {
+                "class": { "const": "R4" },
+                "minScore": { "const": 80 },
+                "maxScore": { "const": 100 }
+              }
+            }
+          ]
+        }
+      ],
+      "items": false
+    },
+    "autonomyCeiling": { "$ref": "#/$defs/autonomyMap" },
+    "gates": { "$ref": "#/$defs/gatesMap" },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "always",
+        "code",
+        "schema",
+        "dependencies",
+        "docsOnly",
+        "sdlcControl"
+      ],
+      "properties": {
+        "always": { "$ref": "#/$defs/nonEmptyStringList" },
+        "code": { "$ref": "#/$defs/nonEmptyStringList" },
+        "schema": { "$ref": "#/$defs/nonEmptyStringList" },
+        "dependencies": { "$ref": "#/$defs/nonEmptyStringList" },
+        "docsOnly": { "$ref": "#/$defs/nonEmptyStringList" },
+        "sdlcControl": { "$ref": "#/$defs/nonEmptyStringList" }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "allOf": [
+          { "$ref": "#/$defs/rule" },
+          {
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^BR-(?!LEARN-)[A-Z0-9-]+$"
+              }
+            },
+            "not": { "required": ["status"] }
+          }
+        ]
+      }
+    },
+    "escalators": { "type": "array", "items": { "$ref": "#/$defs/escalator" } },
+    "learnedRules": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          { "$ref": "#/$defs/rule" },
+          {
+            "type": "object",
+            "required": ["status"],
+            "properties": {
+              "status": {
+                "enum": ["proposed", "active", "retired", "superseded"]
+              },
+              "id": { "type": "string", "pattern": "^BR-LEARN-[A-Z0-9-]+$" },
+              "owner": { "type": "string" },
+              "approvedBy": { "type": "string" },
+              "approvedAt": { "type": "string", "format": "date" },
+              "reviewBy": { "type": "string", "format": "date" },
+              "supersededBy": { "type": "string" }
+            }
+          },
+          {
+            "if": {
+              "properties": { "status": { "const": "active" } },
+              "required": ["status"]
+            },
+            "then": {
+              "required": ["owner", "approvedBy", "approvedAt", "reviewBy"],
+              "properties": {
+                "owner": { "type": "string", "minLength": 1 },
+                "approvedBy": { "type": "string", "minLength": 1 },
+                "approvedAt": { "type": "string", "format": "date" },
+                "reviewBy": { "type": "string", "format": "date" }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "riskClass": { "enum": ["R0", "R1", "R2", "R3", "R4"] },
+    "stringList": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "nonEmptyStringList": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "learningPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceOfTruth",
+        "candidateState",
+        "promotionGate",
+        "requiredActiveFields"
+      ],
+      "properties": {
+        "sourceOfTruth": { "type": "string", "minLength": 1 },
+        "candidateState": { "type": "string", "minLength": 1 },
+        "promotionGate": { "type": "string", "minLength": 1 },
+        "requiredActiveFields": { "$ref": "#/$defs/nonEmptyStringList" }
+      }
+    },
+    "riskBand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class", "minScore", "maxScore", "label"],
+      "properties": {
+        "class": { "$ref": "#/$defs/riskClass" },
+        "minScore": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "maxScore": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "label": { "type": "string", "minLength": 1 }
+      }
+    },
+    "autonomyEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "note"],
+      "properties": {
+        "level": { "enum": ["A0", "A1", "A2", "A3", "A4", "A5"] },
+        "note": { "type": "string", "minLength": 1 }
+      }
+    },
+    "autonomyMap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["R0", "R1", "R2", "R3", "R4"],
+      "properties": {
+        "R0": {
+          "allOf": [
+            { "$ref": "#/$defs/autonomyEntry" },
+            { "properties": { "level": { "const": "A1" } } }
+          ]
+        },
+        "R1": {
+          "allOf": [
+            { "$ref": "#/$defs/autonomyEntry" },
+            { "properties": { "level": { "const": "A2" } } }
+          ]
+        },
+        "R2": {
+          "allOf": [
+            { "$ref": "#/$defs/autonomyEntry" },
+            { "properties": { "level": { "const": "A2" } } }
+          ]
+        },
+        "R3": {
+          "allOf": [
+            { "$ref": "#/$defs/autonomyEntry" },
+            { "properties": { "level": { "const": "A2" } } }
+          ]
+        },
+        "R4": {
+          "allOf": [
+            { "$ref": "#/$defs/autonomyEntry" },
+            { "properties": { "level": { "const": "A0" } } }
+          ]
+        }
+      }
+    },
+    "gatesMap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["R0", "R1", "R2", "R3", "R4"],
+      "properties": {
+        "R0": { "$ref": "#/$defs/nonEmptyStringList" },
+        "R1": { "$ref": "#/$defs/nonEmptyStringList" },
+        "R2": { "$ref": "#/$defs/nonEmptyStringList" },
+        "R3": {
+          "allOf": [
+            { "$ref": "#/$defs/nonEmptyStringList" },
+            {
+              "contains": {
+                "const": "human-plan-approval-before-implementation"
+              }
+            },
+            { "contains": { "const": "independent-review" } }
+          ]
+        },
+        "R4": {
+          "allOf": [
+            { "$ref": "#/$defs/nonEmptyStringList" },
+            { "contains": { "const": "human-execution-only" } },
+            { "contains": { "const": "no-autonomous-action" } }
+          ]
+        }
+      }
+    },
+    "hardStopTrigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actions", "targets", "appliesTo"],
+      "properties": {
+        "actions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "targets": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "appliesTo": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "enum": ["change", "read-only"] }
+        }
+      }
+    },
+    "rule": {
+      "type": "object",
+      "required": [
+        "id",
+        "category",
+        "statement",
+        "enforcement",
+        "weight",
+        "riskFloor",
+        "keywords",
+        "paths",
+        "requires",
+        "sources",
+        "validation"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^BR-[A-Z0-9-]+$" },
+        "category": { "type": "string", "minLength": 1 },
+        "statement": { "type": "string", "minLength": 1 },
+        "enforcement": { "enum": ["enforced", "partial", "planned", "policy"] },
+        "weight": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "riskFloor": { "$ref": "#/$defs/riskClass" },
+        "hardStop": { "type": "boolean" },
+        "contextWeight": { "type": "integer", "minimum": 0, "maximum": 79 },
+        "contextRiskFloor": {
+          "enum": ["R0", "R1", "R2", "R3"]
+        },
+        "contextRequires": { "$ref": "#/$defs/stringList" },
+        "hardStopTriggers": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/hardStopTrigger" }
+        },
+        "keywords": { "$ref": "#/$defs/stringList" },
+        "paths": { "$ref": "#/$defs/stringList" },
+        "excludePaths": { "$ref": "#/$defs/stringList" },
+        "requires": { "$ref": "#/$defs/stringList" },
+        "sources": { "$ref": "#/$defs/stringList" },
+        "validation": { "$ref": "#/$defs/stringList" },
+        "status": { "enum": ["proposed", "active", "retired", "superseded"] },
+        "owner": { "type": "string" },
+        "approvedBy": { "type": "string" },
+        "approvedAt": { "type": "string", "format": "date" },
+        "reviewBy": { "type": "string", "format": "date" },
+        "supersededBy": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "hardStop": { "const": true } },
+            "required": ["hardStop"]
+          },
+          "then": {
+            "required": [
+              "contextWeight",
+              "contextRiskFloor",
+              "contextRequires",
+              "hardStopTriggers"
+            ]
+          }
+        }
+      ]
+    },
+    "escalator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "weight", "riskFloor", "when", "keywords"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^ESC-[A-Z0-9-]+$" },
+        "weight": { "type": "integer", "minimum": 0, "maximum": 20 },
+        "riskFloor": { "enum": ["R2", "R3"] },
+        "when": { "type": "string", "minLength": 1 },
+        "keywords": { "$ref": "#/$defs/stringList" }
+      }
+    }
+  }
+}

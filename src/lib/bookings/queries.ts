@@ -85,13 +85,14 @@ export async function getBookingDetailById(bookingId: string) {
           builtUpSqft: schema.units.builtUpSqft,
           landAreaSqft: schema.units.landAreaSqft,
           dimensionText: schema.units.dimensionText,
-          facing: schema.units.facing,
+          facing: schema.unitFacings.name,
           carparkCount: schema.units.carparkCount,
           basePrice: schema.units.basePrice,
           finalPrice: schema.units.finalPrice,
         })
         .from(schema.bookingUnits)
         .leftJoin(schema.units, eq(schema.bookingUnits.unitId, schema.units.id))
+        .leftJoin(schema.unitFacings, eq(schema.units.facingTypeId, schema.unitFacings.id))
         .where(
           and(
             eq(schema.bookingUnits.bookingId, bookingId),

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
@@ -7,6 +8,7 @@ import { AppButton } from "@/components/common/app-button";
 import { AppSelect } from "@/components/common/app-select";
 import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { postJson } from "@/lib/api/client";
 import { appToast } from "@/lib/app-toast";
 import { appConfirm } from "@/lib/app-confirm";
@@ -28,6 +30,25 @@ type NearbyPlaceItem = {
 
 type ProjectContentManagerProps = {
   projectId: string;
+  currentTime: string;
+  marketingContent: {
+    metaTitle: string | null;
+    metaDescription: string | null;
+    canonicalUrl: string | null;
+    ogTitle: string | null;
+    ogDescription: string | null;
+    heroVideoUrl: string | null;
+    ogImageFileId: string | null;
+    isPublished: boolean;
+    publishedAt: string | null;
+    highlights: string[];
+    faqs: { question: string; answer: string }[];
+  };
+  mediaItems: {
+    fileId: string;
+    url: string;
+    caption: string | null;
+  }[];
   amenities: SelectOption[];
   selectedAmenityIds: string[];
   tags: SelectOption[];
@@ -184,6 +205,9 @@ function NearbyRow({
 
 export function ProjectContentManager({
   projectId,
+  currentTime,
+  marketingContent,
+  mediaItems,
   amenities,
   selectedAmenityIds,
   tags,
@@ -192,6 +216,36 @@ export function ProjectContentManager({
 }: ProjectContentManagerProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+
+  const [metaTitle, setMetaTitle] = useState(marketingContent.metaTitle ?? "");
+  const [metaDescription, setMetaDescription] = useState(marketingContent.metaDescription ?? "");
+  const [canonicalUrl, setCanonicalUrl] = useState(marketingContent.canonicalUrl ?? "");
+  const [ogTitle, setOgTitle] = useState(marketingContent.ogTitle ?? "");
+  const [ogDescription, setOgDescription] = useState(marketingContent.ogDescription ?? "");
+  const [heroVideoUrl, setHeroVideoUrl] = useState(marketingContent.heroVideoUrl ?? "");
+  const [ogImageFileId, setOgImageFileId] = useState(marketingContent.ogImageFileId ?? "");
+  const [publicationMode, setPublicationMode] = useState<"draft" | "live" | "scheduled">(
+    !marketingContent.isPublished
+      ? "draft"
+      : marketingContent.publishedAt && new Date(marketingContent.publishedAt).getTime() > new Date(currentTime).getTime()
+        ? "scheduled"
+        : "live",
+  );
+  const [publishedAt, setPublishedAt] = useState(() => {
+    if (!marketingContent.publishedAt) return "";
+    const date = new Date(marketingContent.publishedAt);
+    const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
+    return localDate.toISOString().slice(0, 16);
+  });
+  const minimumPublishedAt = (() => {
+    const date = new Date(new Date(currentTime).getTime() + 60_000);
+    const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
+    return localDate.toISOString().slice(0, 16);
+  })();
+  const [highlightsText, setHighlightsText] = useState(marketingContent.highlights.join("\n"));
+  const [faqsText, setFaqsText] = useState(
+    marketingContent.faqs.map((faq) => `${faq.question} | ${faq.answer}`).join("\n"),
+  );
 
   const [amenityId, setAmenityId] = useState(amenities[0]?.id ?? "");
   const [newAmenityName, setNewAmenityName] = useState("");
@@ -275,8 +329,200 @@ export function ProjectContentManager({
     setNewTagDescription("");
   }
 
+  function handleUpdateMarketing() {
+    const highlights = highlightsText
+      .split("\n")
+      .map((item) => item.trim())
+      .filter(Boolean);
+    const faqs = faqsText
+      .split("\n")
+      .map((item) => item.split("|", 2).map((part) => part.trim()))
+      .filter(([question, answer]) => Boolean(question && answer))
+      .map(([question, answer]) => ({ question, answer }));
+
+    postContent(
+      {
+        action: "update-marketing",
+        metaTitle,
+        metaDescription,
+        canonicalUrl,
+        ogTitle,
+        ogDescription,
+        heroVideoUrl,
+        highlights,
+        faqs,
+      },
+      "Marketing content updated.",
+    );
+  }
+
+  function handleUpdatePublication() {
+    if (publicationMode === "scheduled" && !publishedAt) {
+      appToast.error("Choose a publication date and time.");
+      return;
+    }
+
+    postContent(
+      {
+        action: "update-publication",
+        isPublished: publicationMode !== "draft",
+        publishedAt:
+          publicationMode === "scheduled" ? new Date(publishedAt).toISOString() : null,
+      },
+      publicationMode === "draft"
+        ? "Project moved to draft."
+        : publicationMode === "scheduled"
+          ? "Project publication scheduled."
+          : "Project published.",
+    );
+  }
+
+  function handleUpdateOgImage(fileId: string | null) {
+    postContent(
+      { action: "set-og-image", fileId },
+      fileId ? "Social image selected." : "Social image fallback restored.",
+    );
+    setOgImageFileId(fileId ?? "");
+  }
+
   return (
     <div className="space-y-8">
+      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-xl font-black tracking-tight text-slate-950">Publication</h2>
+            <p className="mt-1 text-sm text-slate-500">Control when this project enters the public catalog, sitemap, and project routes.</p>
+          </div>
+          <AppStatusBadge tone={publicationMode === "live" ? "success" : publicationMode === "scheduled" ? "warning" : "neutral"}>
+            {publicationMode === "live" ? "Live" : publicationMode === "scheduled" ? "Scheduled" : "Draft"}
+          </AppStatusBadge>
+        </div>
+
+        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          {([
+            { value: "draft", label: "Draft", text: "Hidden from public routes" },
+            { value: "live", label: "Publish now", text: "Visible immediately" },
+            { value: "scheduled", label: "Schedule", text: "Visible at a future time" },
+          ] as const).map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => setPublicationMode(option.value)}
+              className={`min-h-24 rounded-xl border p-4 text-left transition ${publicationMode === option.value ? "border-blue-500 bg-blue-50 ring-2 ring-blue-100" : "border-slate-200 bg-white hover:border-blue-300"}`}
+            >
+              <span className="block font-black text-slate-950">{option.label}</span>
+              <span className="mt-1 block text-sm text-slate-500">{option.text}</span>
+            </button>
+          ))}
+        </div>
+
+        {publicationMode === "scheduled" ? (
+          <label className="mt-5 block max-w-sm space-y-2">
+            <span className="text-sm font-bold text-slate-700">Publication date and time</span>
+            <Input
+              type="datetime-local"
+              value={publishedAt}
+              min={minimumPublishedAt}
+              onChange={(event) => setPublishedAt(event.target.value)}
+              className="h-11 rounded-xl"
+            />
+          </label>
+        ) : null}
+
+        <AppButton type="button" disabled={isPending} onClick={handleUpdatePublication} className="mt-5 h-11 rounded-xl px-6 text-sm">
+          {isPending ? "Saving..." : "Save publication settings"}
+        </AppButton>
+      </section>
+
+      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-xl font-black tracking-tight text-slate-950">
+              SEO & Marketing Content
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Empty metadata fields automatically fall back to the project name and catalog details.
+            </p>
+          </div>
+          <AppStatusBadge tone="info">Public website</AppStatusBadge>
+        </div>
+
+        <div className="mt-6 grid gap-4 lg:grid-cols-2">
+          <label className="space-y-2">
+            <span className="text-sm font-bold text-slate-700">SEO title ({metaTitle.length}/70)</span>
+            <Input value={metaTitle} maxLength={70} onChange={(event) => setMetaTitle(event.target.value)} placeholder="Project name in Johor Bahru" className="h-11 rounded-xl" />
+          </label>
+          <label className="space-y-2">
+            <span className="text-sm font-bold text-slate-700">Canonical URL</span>
+            <Input type="url" value={canonicalUrl} onChange={(event) => setCanonicalUrl(event.target.value)} placeholder="https://propertygojb.com/projects/project-name" className="h-11 rounded-xl" />
+          </label>
+          <label className="space-y-2 lg:col-span-2">
+            <span className="text-sm font-bold text-slate-700">SEO description ({metaDescription.length}/180)</span>
+            <Textarea value={metaDescription} maxLength={180} onChange={(event) => setMetaDescription(event.target.value)} placeholder="Concise search-result description" className="min-h-24 rounded-xl" />
+          </label>
+          <label className="space-y-2">
+            <span className="text-sm font-bold text-slate-700">Social title ({ogTitle.length}/100)</span>
+            <Input value={ogTitle} maxLength={100} onChange={(event) => setOgTitle(event.target.value)} placeholder="Optional social sharing title" className="h-11 rounded-xl" />
+          </label>
+          <label className="space-y-2">
+            <span className="text-sm font-bold text-slate-700">Hero video URL</span>
+            <Input type="url" value={heroVideoUrl} onChange={(event) => setHeroVideoUrl(event.target.value)} placeholder="HTTPS .mp4 or .webm URL" className="h-11 rounded-xl" />
+          </label>
+          <label className="space-y-2 lg:col-span-2">
+            <span className="text-sm font-bold text-slate-700">Social description ({ogDescription.length}/300)</span>
+            <Textarea value={ogDescription} maxLength={300} onChange={(event) => setOgDescription(event.target.value)} placeholder="Optional Open Graph description" className="min-h-24 rounded-xl" />
+          </label>
+          <label className="space-y-2">
+            <span className="text-sm font-bold text-slate-700">Highlights</span>
+            <Textarea value={highlightsText} onChange={(event) => setHighlightsText(event.target.value)} placeholder={"One highlight per line\nFreehold title\nNear transport"} className="min-h-36 rounded-xl" />
+          </label>
+          <label className="space-y-2">
+            <span className="text-sm font-bold text-slate-700">FAQs</span>
+            <Textarea value={faqsText} onChange={(event) => setFaqsText(event.target.value)} placeholder={"One FAQ per line: Question | Answer"} className="min-h-36 rounded-xl" />
+          </label>
+        </div>
+
+        <AppButton type="button" disabled={isPending} onClick={handleUpdateMarketing} className="mt-6 h-11 rounded-xl px-6 text-sm">
+          {isPending ? "Saving..." : "Save SEO & Marketing Content"}
+        </AppButton>
+      </section>
+
+      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-xl font-black tracking-tight text-slate-950">Social Sharing Image</h2>
+            <p className="mt-1 text-sm text-slate-500">Select an image from Project Media. Without a selection, the first project image is used.</p>
+          </div>
+          <AppStatusBadge tone={ogImageFileId ? "success" : "neutral"}>{ogImageFileId ? "Custom image" : "Automatic fallback"}</AppStatusBadge>
+        </div>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {mediaItems.map((item) => (
+            <button
+              key={item.fileId}
+              type="button"
+              onClick={() => handleUpdateOgImage(item.fileId)}
+              className={`overflow-hidden rounded-xl border text-left transition ${ogImageFileId === item.fileId ? "border-blue-500 ring-2 ring-blue-100" : "border-slate-200 hover:border-blue-300"}`}
+            >
+              <span className="relative block aspect-[1.91/1] bg-slate-100">
+                <Image src={item.url} alt={item.caption ?? "Project social image"} fill unoptimized sizes="(max-width: 640px) 100vw, 33vw" className="object-cover" />
+              </span>
+              <span className="block truncate px-3 py-3 text-sm font-bold text-slate-700">{item.caption ?? "Project image"}</span>
+            </button>
+          ))}
+        </div>
+
+        {mediaItems.length === 0 ? (
+          <p className="mt-5 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-5 text-sm font-semibold text-slate-600">Add a validated HTTPS image under Project Media before selecting a custom social image.</p>
+        ) : null}
+
+        {ogImageFileId ? (
+          <AppButton type="button" appVariant="outline" disabled={isPending} onClick={() => handleUpdateOgImage(null)} className="mt-5 h-11 rounded-xl px-5 text-sm">
+            Use automatic fallback
+          </AppButton>
+        ) : null}
+      </section>
+
       <section className="grid gap-6 xl:grid-cols-2">
         <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-xl font-black tracking-tight text-slate-950">

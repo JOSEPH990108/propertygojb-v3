@@ -5,6 +5,7 @@ import { z } from "zod";
 import { db, schema } from "@/db";
 import { errorJson, okJson, parseApiError } from "@/lib/api/json";
 import { requireRole } from "@/lib/auth/guards";
+import { writeAuditLog } from "@/lib/audit/log";
 
 const createLeadAppointmentSchema = z.object({
   activityId: z.string().min(1).optional().nullable(),
@@ -135,7 +136,7 @@ export async function POST(request: NextRequest) {
       const existingStatus =
         getMetadata(existing.metadata).appointmentStatus ?? "SCHEDULED";
 
-      if (existingStatus !== "SCHEDULED") {
+      if (!["REQUESTED", "SCHEDULED"].includes(String(existingStatus))) {
         return errorJson(
           "Only scheduled appointments can be updated. Create a new appointment or reopen it first.",
           400,
@@ -153,6 +154,14 @@ export async function POST(request: NextRequest) {
             ...getMetadata(existing.metadata),
             ...appointmentMetadata,
             appointmentStatus: "SCHEDULED",
+            confirmedAt:
+              existingStatus === "REQUESTED"
+                ? now.toISOString()
+                : getMetadata(existing.metadata).confirmedAt,
+            confirmedByUserId:
+              existingStatus === "REQUESTED"
+                ? currentUserId
+                : getMetadata(existing.metadata).confirmedByUserId,
             updatedFrom: "LEAD_DETAIL",
             updatedAt: now.toISOString(),
           },
@@ -226,6 +235,26 @@ export async function POST(request: NextRequest) {
         sourceEventType: "LEAD_APPOINTMENT",
       });
     }
+
+    await writeAuditLog({
+      actionType: mode === "created" ? "CREATE_APPOINTMENT" : "UPDATE_APPOINTMENT",
+      entityType: "VIEWING_APPOINTMENT",
+      entityId: activityId,
+      actorUserId: currentUserId,
+      sourceApp: authContext.roleCode === "AGENT" ? "AGENT_PORTAL" : "ADMIN_PORTAL",
+      changeSummary:
+        mode === "created"
+          ? `Viewing appointment created for ${projectName}.`
+          : `Viewing appointment confirmed or updated for ${projectName}.`,
+      afterJson: {
+        leadId: lead.id,
+        projectId: project.id,
+        appointmentStatus: "SCHEDULED",
+        scheduledAt: scheduledAt.toISOString(),
+        durationMinutes: validated.durationMinutes,
+      },
+      request,
+    });
 
     return okJson({
       message:
