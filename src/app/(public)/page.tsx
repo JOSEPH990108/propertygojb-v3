@@ -167,11 +167,11 @@ export default async function HomePage() {
               project photo). Update this note if that file is replaced. */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-black/10"
+            className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-black/5"
           />
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10"
+            className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent"
           />
           {/* Top scrim: the shell's header floats transparently over this hero
               (see public-shell.tsx overlay phase); the photo has bright sky/
@@ -179,7 +179,7 @@ export default async function HomePage() {
               text/buttons lose contrast in places. */}
           <div
             aria-hidden="true"
-            className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/70 to-transparent sm:h-48"
+            className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/40 to-transparent sm:h-40"
           />
 
           <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col justify-end px-4 pt-28 pb-16 sm:px-6 lg:px-8 lg:pt-32 lg:pb-24">

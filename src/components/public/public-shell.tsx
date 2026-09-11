@@ -117,7 +117,7 @@ export function PublicShell({
         {overlay ? (
           <div
             aria-hidden="true"
-            className="absolute inset-0 -z-10 bg-gradient-to-b from-black/55 via-black/25 to-transparent"
+            className="absolute inset-0 -z-10 bg-gradient-to-b from-black/35 via-black/10 to-transparent"
           />
         ) : null}
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
