@@ -60,6 +60,8 @@ import {
 import { getPublicWhatsAppHref } from "@/lib/public/site";
 import { buildPublicPageMetadata } from "@/lib/public/seo";
 
+export const dynamic = "force-dynamic";
+
 const DIRECTORY_GROUP_ORDER = ["Discover", "The details", "Planning"];
 
 function formatMyr(value: number | null) {
