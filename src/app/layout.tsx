@@ -1,5 +1,6 @@
 import { AppConfirmProvider } from "@/components/common/app-confirm-provider";
 import { AppThemeProvider } from "@/components/common/app-theme-provider";
+import { PageTransitionProvider } from "@/components/common/page-transition-provider";
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 
@@ -39,7 +40,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <AppThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
+          <PageTransitionProvider>{children}</PageTransitionProvider>
           <AppToastProvider />
           <AppConfirmProvider />
         </AppThemeProvider>
