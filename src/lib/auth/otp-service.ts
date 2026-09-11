@@ -4,6 +4,7 @@ import { createHmac, randomInt, randomUUID, timingSafeEqual } from "crypto";
 import { and, eq, isNull } from "drizzle-orm";
 
 import { db, schema } from "@/db";
+import { sendMoceanOtpSms } from "@/lib/auth/mocean-sms";
 
 export type AuthOtpPurpose = "REGISTER" | "PASSWORD_RESET" | "PHONE_CHANGE";
 
@@ -127,8 +128,15 @@ export async function createAuthOtpChallenge(params: {
   const expiresAt = new Date(now.getTime() + OTP_EXPIRES_SECONDS * 1000);
   const resendAvailableAt = new Date(now.getTime() + OTP_RESEND_SECONDS * 1000);
 
-  if (params.userId && params.purpose === "PHONE_CHANGE") {
-    await closeActiveUserChallenges(params.userId, params.purpose);
+  if (process.env.APP_ENV === "staging") {
+    await sendMoceanOtpSms({
+      phoneNumber: params.phoneNumber,
+      code,
+    });
+  } else if (process.env.NODE_ENV !== "production") {
+    console.log(`[DEV ${params.purpose} OTP] ${params.phoneNumber}: ${code}`);
+  } else {
+    throw new Error("SMS delivery is temporarily unavailable.");
   }
 
   await closeActiveChallenges(params.phoneNormalized, params.purpose);
@@ -148,10 +156,6 @@ export async function createAuthOtpChallenge(params: {
     userId: params.userId ?? null,
     metadata: params.metadata ?? {},
   });
-
-  if (process.env.NODE_ENV !== "production") {
-    console.log(`[DEV ${params.purpose} OTP] ${params.phoneNumber}: ${code}`);
-  }
 
   return {
     expiresAt,
