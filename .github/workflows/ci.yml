@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate and test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: propertygojb_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U ci -d propertygojb_ci"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    env:
+      CI: true
+      DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/propertygojb_ci
+      BETTER_AUTH_SECRET: ci-only-placeholder-secret
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.14.0
+          cache: npm
+
+      - name: Verify npm major version
+        run: npm --version | grep -E '^10\.'
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Apply migrations to isolated database
+        run: npm run db:migrate
+
+      - name: Validate SDLC control plane
+        run: npm run sdlc:validate
+
+      - name: Test SDLC calculator
+        run: npm run test:sdlc
+
+      - name: Check formatting
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          changed_files="$(git diff --name-only "$BASE_SHA" "$GITHUB_SHA" -- '*.css' '*.json' '*.js' '*.mjs' '*.md' '*.mdx' '*.ts' '*.tsx' '*.yml' '*.yaml')"
+          if [[ -n "$changed_files" ]]; then
+            npm exec prettier -- --check $changed_files
+          else
+            echo "No supported files changed; formatting check is not applicable."
+          fi
+
+      - name: Generate Next.js route types
+        run: npm exec next typegen
+
+      - name: Lint
+        run: npm run lint -- --max-warnings=0
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test application
+        run: npm run test
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=high
+
+      - name: Build application
+        run: npm run build

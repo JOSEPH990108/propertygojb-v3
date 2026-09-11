@@ -5,6 +5,10 @@ import { AppSearchInput } from "@/components/common/app-search-input";
 import { AppointmentActionMenu } from "@/components/internal/appointments/appointment-action-menu";
 import { AppStatusBadge } from "@/components/common/app-status-badge";
 import { db, schema } from "@/db";
+import {
+  formatAppointmentStatus,
+  getAppointmentStatusTone,
+} from "@/lib/appointments/format";
 
 type AdminAppointmentsPageProps = {
   searchParams?: Promise<{
@@ -41,28 +45,6 @@ function getAppointmentStatus(appointment: {
   }
 
   return appointment.completedAt ? "COMPLETED" : "SCHEDULED";
-}
-
-function getAppointmentStatusTone(
-  status: string,
-): "success" | "danger" | "warning" | "info" | "neutral" {
-  switch (status) {
-    case "COMPLETED":
-      return "success";
-    case "CANCELLED":
-      return "danger";
-    case "SCHEDULED":
-      return "warning";
-    default:
-      return "neutral";
-  }
-}
-
-function formatAppointmentStatus(status: string) {
-  return status
-    .split("_")
-    .map((part) => part.slice(0, 1) + part.slice(1).toLowerCase())
-    .join(" ");
 }
 
 function formatDate(value: Date | null) {
@@ -127,6 +109,9 @@ export default async function AdminAppointmentsPage({
   const completedCount = appointments.filter(
     (appointment) => getAppointmentStatus(appointment) === "COMPLETED",
   ).length;
+  const requestedCount = appointments.filter(
+    (appointment) => getAppointmentStatus(appointment) === "REQUESTED",
+  ).length;
 
   return (
     <div className="space-y-8 p-8">
@@ -151,7 +136,7 @@ export default async function AdminAppointmentsPage({
           />
         </div>
 
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
+        <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
             <CalendarClock className="size-6 text-blue-600" />
             <p className="mt-4 text-3xl font-black text-slate-950">
@@ -159,6 +144,16 @@ export default async function AdminAppointmentsPage({
             </p>
             <p className="mt-1 text-sm font-semibold text-slate-500">
               Showing appointments
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <Clock3 className="size-6 text-blue-600" />
+            <p className="mt-4 text-3xl font-black text-slate-950">
+              {requestedCount}
+            </p>
+            <p className="mt-1 text-sm font-semibold text-slate-500">
+              Awaiting confirmation
             </p>
           </div>
 

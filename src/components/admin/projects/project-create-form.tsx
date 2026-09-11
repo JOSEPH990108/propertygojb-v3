@@ -113,7 +113,6 @@ export function ProjectCreateForm({
   const [totalUnits, setTotalUnits] = useState("0");
   const [launchYear, setLaunchYear] = useState("");
   const [isHotDeal, setIsHotDeal] = useState(false);
-  const [isPublished, setIsPublished] = useState(false);
 
   const filteredPropertyTypes = useMemo(() => {
     if (!propertyCategoryId) {
@@ -164,7 +163,6 @@ export function ProjectCreateForm({
           totalUnits: Number(totalUnits) || 0,
           launchYear: launchYear ? Number(launchYear) : null,
           isHotDeal,
-          isPublished,
         },
       );
 
@@ -408,21 +406,14 @@ export function ProjectCreateForm({
             />
           </label>
 
-          <label className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <div className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
             <div>
-              <p className="font-bold text-slate-950">Published</p>
+              <p className="font-bold text-slate-950">Starts as draft</p>
               <p className="mt-1 text-sm text-slate-500">
-                Make project visible to public project listing.
+                Add media and marketing content before publishing from Project Content.
               </p>
             </div>
-
-            <input
-              type="checkbox"
-              checked={isPublished}
-              onChange={(event) => setIsPublished(event.target.checked)}
-              className="size-5"
-            />
-          </label>
+          </div>
         </div>
       </section>
 

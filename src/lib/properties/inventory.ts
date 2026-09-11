@@ -30,7 +30,7 @@ export async function getPropertyInventory({
       builtUpSqft: schema.units.builtUpSqft,
       landAreaSqft: schema.units.landAreaSqft,
       dimensionText: schema.units.dimensionText,
-      facing: schema.units.facing,
+      facing: schema.unitFacings.name,
       carparkCount: schema.units.carparkCount,
       basePrice: schema.units.basePrice,
       finalPrice: schema.units.finalPrice,
@@ -61,6 +61,7 @@ export async function getPropertyInventory({
     .from(schema.units)
     .innerJoin(schema.projects, eq(schema.units.projectId, schema.projects.id))
     .leftJoin(schema.projectLayouts, eq(schema.units.layoutId, schema.projectLayouts.id))
+    .leftJoin(schema.unitFacings, eq(schema.units.facingTypeId, schema.unitFacings.id))
     .innerJoin(schema.bookingStatuses, eq(schema.units.bookingStatusId, schema.bookingStatuses.id))
     .innerJoin(schema.lotTypes, eq(schema.units.lotTypeId, schema.lotTypes.id))
     .where(
@@ -172,7 +173,7 @@ export async function getPropertyUnitDetailById(unitId: string) {
       builtUpSqft: schema.units.builtUpSqft,
       landAreaSqft: schema.units.landAreaSqft,
       dimensionText: schema.units.dimensionText,
-      facing: schema.units.facing,
+      facing: schema.unitFacings.name,
       carparkCount: schema.units.carparkCount,
       basePrice: schema.units.basePrice,
       finalPrice: schema.units.finalPrice,
@@ -204,6 +205,7 @@ export async function getPropertyUnitDetailById(unitId: string) {
     .from(schema.units)
     .innerJoin(schema.projects, eq(schema.units.projectId, schema.projects.id))
     .leftJoin(schema.projectLayouts, eq(schema.units.layoutId, schema.projectLayouts.id))
+    .leftJoin(schema.unitFacings, eq(schema.units.facingTypeId, schema.unitFacings.id))
     .innerJoin(schema.bookingStatuses, eq(schema.units.bookingStatusId, schema.bookingStatuses.id))
     .innerJoin(schema.lotTypes, eq(schema.units.lotTypeId, schema.lotTypes.id))
     .where(

@@ -39,6 +39,17 @@ export default async function ProjectContentPage({
       name: true,
       displayName: true,
       slug: true,
+      metaTitle: true,
+      metaDescription: true,
+      canonicalUrl: true,
+      ogTitle: true,
+      ogDescription: true,
+      heroVideoUrl: true,
+      ogImageFileId: true,
+      isPublished: true,
+      publishedAt: true,
+      highlightsJson: true,
+      faqJson: true,
     },
   });
 
@@ -46,7 +57,7 @@ export default async function ProjectContentPage({
     notFound();
   }
 
-  const [amenities, selectedAmenities, tags, selectedTags, nearbyPlaces] =
+  const [amenities, selectedAmenities, tags, selectedTags, nearbyPlaces, mediaItems] =
     await Promise.all([
       db
         .select({
@@ -96,6 +107,18 @@ export default async function ProjectContentPage({
           asc(schema.projectNearbyPlaces.sortOrder),
           asc(schema.projectNearbyPlaces.name),
         ),
+
+      db
+        .select({
+          fileId: schema.projectMedia.fileId,
+          url: schema.files.url,
+          key: schema.files.key,
+          caption: schema.projectMedia.caption,
+        })
+        .from(schema.projectMedia)
+        .innerJoin(schema.files, eq(schema.projectMedia.fileId, schema.files.id))
+        .where(eq(schema.projectMedia.projectId, projectId))
+        .orderBy(asc(schema.projectMedia.sortOrder), asc(schema.projectMedia.createdAt)),
     ]);
 
   return (
@@ -142,6 +165,39 @@ export default async function ProjectContentPage({
 
       <ProjectContentManager
         projectId={project.id}
+        currentTime={new Date().toISOString()}
+        marketingContent={{
+          metaTitle: project.metaTitle,
+          metaDescription: project.metaDescription,
+          canonicalUrl: project.canonicalUrl,
+          ogTitle: project.ogTitle,
+          ogDescription: project.ogDescription,
+          heroVideoUrl: project.heroVideoUrl,
+          ogImageFileId: project.ogImageFileId,
+          isPublished: project.isPublished,
+          publishedAt: project.publishedAt?.toISOString() ?? null,
+          highlights: Array.isArray(project.highlightsJson)
+            ? project.highlightsJson.filter((item): item is string => typeof item === "string")
+            : [],
+          faqs: Array.isArray(project.faqJson)
+            ? project.faqJson.filter(
+                (item): item is { question: string; answer: string } =>
+                  Boolean(
+                    item &&
+                      typeof item === "object" &&
+                      "question" in item &&
+                      typeof item.question === "string" &&
+                      "answer" in item &&
+                      typeof item.answer === "string",
+                  ),
+              )
+            : [],
+        }}
+        mediaItems={mediaItems.map((item) => ({
+          fileId: item.fileId,
+          url: item.url ?? item.key,
+          caption: item.caption,
+        }))}
         amenities={amenities.map(toOption)}
         selectedAmenityIds={selectedAmenities.map((item) => item.amenityId)}
         tags={tags.map(toOption)}

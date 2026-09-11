@@ -40,16 +40,19 @@ const projectImportUnitSchema = z.object({
   unitNo: z.string().trim().min(1).max(50),
   layoutCode: z.string().trim().optional().nullable(),
   lotType: lookupRefSchema,
-  bookingStatus: lookupRefSchema.default("AVAILABLE"),
+  bookingStatus: optionalLookupRefSchema,
   floor: z.coerce.number().int().optional().nullable(),
   stack: z.string().trim().optional().nullable(),
   streetName: z.string().trim().optional().nullable(),
+  blockCode: z.string().trim().max(50).optional().nullable(),
   displaySequence: z.coerce.number().int().min(0).default(0),
   builtUpSqft: z.coerce.number().min(0).optional().nullable(),
   landAreaSqft: z.coerce.number().min(0).optional().nullable(),
   dimensionText: z.string().trim().optional().nullable(),
   facing: z.string().trim().optional().nullable(),
+  facingType: optionalLookupRefSchema,
   positionType: optionalLookupRefSchema,
+  viewType: optionalLookupRefSchema,
   carparkCount: z.coerce.number().int().min(0).default(1),
   carparkLotNo: z.string().trim().optional().nullable(),
   carparkType: z.string().trim().optional().nullable(),
@@ -62,6 +65,77 @@ const nearbyPlaceSchema = z.object({
   category: z.string().trim().min(1).max(50).default("OTHER"),
   distanceKm: z.coerce.number().min(0).optional().nullable(),
   sortOrder: z.coerce.number().int().min(0).default(0),
+});
+
+const landedSitePlanSchema = z.object({
+  zoneCode: z.string().trim().min(1).max(50),
+  title: z.string().trim().min(1).max(120),
+  tabs: z
+    .array(
+      z.object({
+        code: z.string().trim().min(1).max(50),
+        label: z.string().trim().min(1).max(120),
+        layoutCodes: z.array(z.string().trim().min(1).max(50)).min(1),
+      }),
+    )
+    .min(1),
+  maps: z
+    .array(
+      z.object({
+        tabCode: z.string().trim().min(1).max(50),
+        markerRadius: z.coerce.number().positive().max(100).default(12),
+        hitRadius: z.coerce.number().positive().max(100).default(22),
+        lots: z
+          .array(
+            z.object({
+              unitNo: z.string().trim().min(1).max(50),
+              xNorm: z.coerce.number().min(0).max(1),
+              yNorm: z.coerce.number().min(0).max(1),
+            }),
+          )
+          .min(1),
+      }),
+    )
+    .optional(),
+  rowGroups: z
+    .array(
+      z.object({
+        code: z.string().trim().min(1).max(50),
+        label: z.string().trim().min(1).max(120),
+        rows: z.array(z.array(z.string().trim().min(1).max(50)).min(1).max(30)).min(1),
+      }),
+    )
+    .optional(),
+});
+
+const availabilityPlanSchema = z.object({
+  towerCode: z.string().trim().min(1).max(50),
+  plan: z.object({
+    physicalStacks: z.array(z.string().trim().min(1)).optional(),
+    viewGroups: z.array(z.array(z.string().trim().min(1)).min(1)).optional(),
+    floorOverrides: z
+      .record(
+        z.string().trim().min(1),
+        z.object({
+          mergedFootprints: z
+            .array(z.array(z.string().trim().min(1)).min(1))
+            .optional(),
+          serviceBlocks: z
+            .array(
+              z.object({
+                label: z.string().trim().min(1),
+                stacks: z.array(z.string().trim().min(1)).min(1),
+              }),
+            )
+            .optional(),
+          unitStackToPhysicalStack: z
+            .record(z.string().trim().min(1), z.string().trim().min(1))
+            .optional(),
+        }),
+      )
+      .optional(),
+    sitePlan: landedSitePlanSchema.optional(),
+  }),
 });
 
 export const projectImportSchema = z.object({
@@ -89,6 +163,7 @@ export const projectImportSchema = z.object({
   amenities: z.array(z.string().trim().min(1)).default([]),
   tags: z.array(z.string().trim().min(1)).default([]),
   nearbyPlaces: z.array(nearbyPlaceSchema).default([]),
+  availabilityPlans: z.array(availabilityPlanSchema).default([]),
 });
 
 export type LookupRef = z.infer<typeof lookupRefSchema>;

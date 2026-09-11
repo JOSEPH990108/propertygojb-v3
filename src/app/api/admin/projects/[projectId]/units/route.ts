@@ -5,6 +5,7 @@ import { z } from "zod";
 import { db, schema } from "@/db";
 import { errorJson, okJson, parseApiError } from "@/lib/api/json";
 import { requireRole } from "@/lib/auth/guards";
+import { revalidatePublicProjectData } from "@/lib/public/project-revalidation";
 
 const optionalId = z
   .string()
@@ -53,8 +54,9 @@ const unitActionSchema = z.discriminatedUnion("action", [
     builtUpSqft: nullableDecimal,
     landAreaSqft: nullableDecimal,
     dimensionText: optionalText(50),
-    facing: optionalText(100),
+    facingTypeId: optionalId,
     positionTypeId: optionalId,
+    viewTypeId: optionalId,
     carparkCount: z.coerce.number().int().min(0).max(20).default(1),
     carparkLotNo: optionalText(100),
     carparkType: optionalText(50),
@@ -75,8 +77,9 @@ const unitActionSchema = z.discriminatedUnion("action", [
     builtUpSqft: nullableDecimal,
     landAreaSqft: nullableDecimal,
     dimensionText: optionalText(50),
-    facing: optionalText(100),
+    facingTypeId: optionalId,
     positionTypeId: optionalId,
+    viewTypeId: optionalId,
     carparkCount: z.coerce.number().int().min(0).max(20).default(1),
     carparkLotNo: optionalText(100),
     carparkType: optionalText(50),
@@ -148,6 +151,8 @@ export async function POST(
 
       await db.delete(schema.units).where(eq(schema.units.id, validated.unitId));
 
+      await revalidatePublicProjectData();
+
       return okJson({
         message: "Unit removed successfully.",
       });
@@ -181,8 +186,10 @@ export async function POST(
       builtUpSqft: toOptionalMoney(validated.builtUpSqft),
       landAreaSqft: toOptionalMoney(validated.landAreaSqft),
       dimensionText: validated.dimensionText,
-      facing: validated.facing,
+      facing: null,
+      facingTypeId: validated.facingTypeId,
       positionTypeId: validated.positionTypeId,
+      viewTypeId: validated.viewTypeId,
       carparkCount: validated.carparkCount,
       carparkLotNo: validated.carparkLotNo,
       carparkType: validated.carparkType,
@@ -197,6 +204,8 @@ export async function POST(
         projectId,
         ...payload,
       });
+
+      await revalidatePublicProjectData();
 
       return okJson({
         message: "Unit created successfully.",
@@ -216,6 +225,8 @@ export async function POST(
         updatedAt: new Date(),
       })
       .where(eq(schema.units.id, validated.unitId));
+
+    await revalidatePublicProjectData();
 
     return okJson({
       message: "Unit updated successfully.",

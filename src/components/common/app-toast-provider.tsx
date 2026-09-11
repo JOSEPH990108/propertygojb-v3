@@ -1,19 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import {
-  CheckCircle2,
-  Info,
-  TriangleAlert,
-  X,
-  XCircle,
-} from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { CheckCircle2, Info, TriangleAlert, X, XCircle } from "lucide-react";
 
-import {
-  type AppToast,
-  subscribeAppToast,
-} from "@/lib/app-toast";
+import { type AppToast, subscribeAppToast } from "@/lib/app-toast";
 import { cn } from "@/lib/utils";
 
 function getToastIcon(type: AppToast["type"]) {
@@ -44,6 +35,7 @@ function getToastClassName(type: AppToast["type"]) {
 
 export function AppToastProvider() {
   const [toasts, setToasts] = useState<AppToast[]>([]);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     return subscribeAppToast((toast) => {
@@ -60,19 +52,36 @@ export function AppToastProvider() {
   }
 
   return (
-    <div className="pointer-events-none fixed right-4 top-4 z-[9999] flex w-[calc(100vw-2rem)] max-w-sm flex-col gap-3">
+    <div
+      role="status"
+      aria-live="polite"
+      aria-atomic="false"
+      className="pointer-events-none fixed right-4 top-4 z-[9999] flex w-[calc(100vw-2rem)] max-w-sm flex-col gap-3"
+    >
       <AnimatePresence initial={false}>
         {toasts.map((toast) => (
           <motion.div
             key={toast.id}
             layout
-            drag="x"
+            drag={reduceMotion ? false : "x"}
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.22}
-            initial={{ opacity: 0, x: 80, scale: 0.96 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 120, scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 420, damping: 34 }}
+            initial={
+              reduceMotion ? { opacity: 0 } : { opacity: 0, x: 80, scale: 0.96 }
+            }
+            animate={
+              reduceMotion ? { opacity: 1 } : { opacity: 1, x: 0, scale: 1 }
+            }
+            exit={
+              reduceMotion
+                ? { opacity: 0 }
+                : { opacity: 0, x: 120, scale: 0.96 }
+            }
+            transition={
+              reduceMotion
+                ? { duration: 0.15 }
+                : { type: "spring", stiffness: 420, damping: 34 }
+            }
             onDragEnd={(_, info) => {
               if (Math.abs(info.offset.x) > 90) {
                 removeToast(toast.id);

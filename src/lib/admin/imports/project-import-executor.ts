@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 
 import { db, schema } from "@/db";
+import { geocodeProjectLocation } from "@/lib/geocoding";
 
 import {
   LookupRef,
@@ -10,6 +11,7 @@ import {
   ProjectImportPayload,
   slugify,
 } from "./project-import-schema";
+import { resolveUnitBookingStatusId } from "./unit-booking-status";
 
 export type ProjectImportPreview = {
   projectName: string;
@@ -21,6 +23,7 @@ export type ProjectImportPreview = {
     amenities: number;
     tags: number;
     nearbyPlaces: number;
+    availabilityPlans: number;
   };
   warnings: string[];
 };
@@ -106,9 +109,11 @@ async function findOrCreatePropertyCategory(ref: LookupRef) {
 
 async function findOrCreatePropertyType(categoryId: string, ref: LookupRef) {
   const item = normalizeLookupRef(ref);
+  const slug = slugify(item.name);
 
   const existing = await db.query.propertyTypes.findFirst({
-    where: (table, { eq }) => eq(table.code, item.code),
+    where: (table, { eq, or }) =>
+      or(eq(table.code, item.code), eq(table.slug, slug)),
     columns: {
       id: true,
     },
@@ -124,7 +129,7 @@ async function findOrCreatePropertyType(categoryId: string, ref: LookupRef) {
       categoryId,
       code: item.code,
       name: item.name,
-      slug: slugify(item.name),
+      slug,
       description: null,
       sortOrder: 0,
       isActive: true,
@@ -299,7 +304,15 @@ async function findOrCreateUnitPosition(ref: LookupRef | null | undefined) {
     return null;
   }
 
-  const item = normalizeLookupRef(ref);
+  const normalized = normalizeLookupRef(ref);
+  const item = {
+    ...normalized,
+    code: ({
+      CORNER_LOT: "COR",
+      END_LOT: "END",
+      INTERMEDIATE_LOT: "INTER",
+    } as Record<string, string>)[normalized.code] ?? normalized.code,
+  };
 
   const existing = await db.query.unitPositions.findFirst({
     where: (table, { eq }) => eq(table.code, item.code),
@@ -326,6 +339,116 @@ async function findOrCreateUnitPosition(ref: LookupRef | null | undefined) {
     });
 
   return firstId(inserted, "unit position");
+}
+
+async function findOrCreateUnitView(ref: LookupRef | null | undefined) {
+  if (!ref) {
+    return null;
+  }
+
+  const item = normalizeLookupRef(ref);
+  const existing = await db.query.unitViews.findFirst({
+    where: (table, { eq }) => eq(table.code, item.code),
+    columns: {
+      id: true,
+    },
+  });
+
+  if (existing) {
+    return existing.id;
+  }
+
+  const inserted = await db
+    .insert(schema.unitViews)
+    .values({
+      code: item.code,
+      name: item.name,
+      description: null,
+      sortOrder: 0,
+      isActive: true,
+    })
+    .returning({
+      id: schema.unitViews.id,
+    });
+
+  return firstId(inserted, "unit view");
+}
+
+const facingCodeByLegacyValue: Record<string, string> = {
+  N: "N",
+  NORTH: "N",
+  NE: "NE",
+  NORTH_EAST: "NE",
+  NORTHEAST: "NE",
+  E: "E",
+  EAST: "E",
+  SE: "SE",
+  SOUTH_EAST: "SE",
+  SOUTHEAST: "SE",
+  S: "S",
+  SOUTH: "S",
+  SW: "SW",
+  SOUTH_WEST: "SW",
+  SOUTHWEST: "SW",
+  W: "W",
+  WEST: "W",
+  NW: "NW",
+  NORTH_WEST: "NW",
+  NORTHWEST: "NW",
+};
+
+function normalizeFacingRef(ref: LookupRef | string | null | undefined) {
+  if (!ref) {
+    return null;
+  }
+
+  const item = typeof ref === "string"
+    ? { code: normalizeCode(ref), name: ref.trim() }
+    : normalizeLookupRef(ref);
+  const code = facingCodeByLegacyValue[item.code] ?? item.code;
+
+  return {
+    code,
+    name: ({
+      N: "North",
+      NE: "North East",
+      E: "East",
+      SE: "South East",
+      S: "South",
+      SW: "South West",
+      W: "West",
+      NW: "North West",
+    } as Record<string, string>)[code] ?? item.name,
+  };
+}
+
+async function findOrCreateUnitFacing(ref: LookupRef | string | null | undefined) {
+  const item = normalizeFacingRef(ref);
+  if (!item) {
+    return null;
+  }
+
+  const existing = await db.query.unitFacings.findFirst({
+    where: (table, { eq }) => eq(table.code, item.code),
+    columns: { id: true },
+  });
+
+  if (existing) {
+    return existing.id;
+  }
+
+  const inserted = await db
+    .insert(schema.unitFacings)
+    .values({
+      code: item.code,
+      name: item.name,
+      description: null,
+      sortOrder: 0,
+      isActive: true,
+    })
+    .returning({ id: schema.unitFacings.id });
+
+  return firstId(inserted, "unit facing");
 }
 
 async function findOrCreateLocation(
@@ -515,6 +638,7 @@ export async function previewProjectImport(payloadInput: unknown) {
       amenities: payload.amenities.length,
       tags: payload.tags.length,
       nearbyPlaces: payload.nearbyPlaces.length,
+      availabilityPlans: payload.availabilityPlans.length,
     },
     warnings,
   } satisfies ProjectImportPreview;
@@ -538,6 +662,14 @@ export async function executeProjectImport(payloadInput: unknown) {
     payload.project.projectStatus,
   );
   const location = await findOrCreateLocation(payload.project.location);
+  const coordinates = await geocodeProjectLocation({
+    name: payload.project.name,
+    address: location.address,
+    area: payload.project.location?.area ?? null,
+    region: payload.project.location?.region ?? null,
+    state: payload.project.location?.state ?? null,
+    country: payload.project.location?.country ?? null,
+  });
 
   const existingProject = await db.query.projects.findFirst({
     where: (table, { eq }) => eq(table.slug, projectSlug),
@@ -562,6 +694,8 @@ export async function executeProjectImport(payloadInput: unknown) {
     regionId: location.regionId,
     areaId: location.areaId,
     address: location.address,
+    latitude: coordinates ? coordinates.lat : null,
+    longitude: coordinates ? coordinates.lon : null,
     totalUnits: payload.project.totalUnits,
     launchYear: payload.project.launchYear ?? null,
     isHotDeal: payload.project.isHotDeal,
@@ -589,6 +723,10 @@ export async function executeProjectImport(payloadInput: unknown) {
   }
 
   const layoutIdByCode = new Map<string, string>();
+  const canonicalAvailableBookingStatusId = await findOrCreateBookingStatus({
+    code: "AVAILABLE",
+    name: "Available",
+  });
 
   for (const layout of payload.layouts) {
     const code = normalizeCode(layout.code);
@@ -645,15 +783,30 @@ export async function executeProjectImport(payloadInput: unknown) {
     const layoutCode = unit.layoutCode ? normalizeCode(unit.layoutCode) : null;
     const layoutId = layoutCode ? layoutIdByCode.get(layoutCode) ?? null : null;
     const lotTypeId = await findOrCreateLotType(unit.lotType);
-    const bookingStatusId = await findOrCreateBookingStatus(unit.bookingStatus);
-    const positionTypeId = await findOrCreateUnitPosition(unit.positionType);
+    const legacyViewCodes = new Set(["RIVER_VIEW", "FACILITIES_VIEW", "CITY_VIEW", "SEA_VIEW"]);
+    const positionIsLegacyView = unit.positionType && legacyViewCodes.has(normalizeLookupRef(unit.positionType).code);
+    const positionTypeId = positionIsLegacyView
+      ? null
+      : await findOrCreateUnitPosition(unit.positionType);
+    const viewTypeId = await findOrCreateUnitView(
+      unit.viewType ?? (positionIsLegacyView ? unit.positionType : null),
+    );
+    const facingTypeId = await findOrCreateUnitFacing(unit.facingType ?? unit.facing);
 
     const existingUnit = await db.query.units.findFirst({
       where: (table, { and, eq }) =>
         and(eq(table.projectId, projectId), eq(table.unitNo, unitNo)),
       columns: {
         id: true,
+        bookingStatusId: true,
       },
+    });
+
+    const bookingStatusId = await resolveUnitBookingStatusId({
+      providedBookingStatus: unit.bookingStatus,
+      existingBookingStatusId: existingUnit?.bookingStatusId ?? undefined,
+      canonicalAvailableBookingStatusId,
+      resolveProvidedBookingStatusId: (ref) => findOrCreateBookingStatus(ref),
     });
 
     const unitValues = {
@@ -663,12 +816,15 @@ export async function executeProjectImport(payloadInput: unknown) {
       floor: unit.floor ?? null,
       stack: unit.stack ?? null,
       streetName: unit.streetName ?? null,
+      blockCode: unit.blockCode ?? null,
       displaySequence: unit.displaySequence,
       builtUpSqft: optionalMoney(unit.builtUpSqft),
       landAreaSqft: optionalMoney(unit.landAreaSqft),
       dimensionText: unit.dimensionText ?? null,
-      facing: unit.facing ?? null,
+      facing: null,
+      facingTypeId,
       positionTypeId,
+      viewTypeId,
       carparkCount: unit.carparkCount,
       carparkLotNo: unit.carparkLotNo ?? null,
       carparkType: unit.carparkType ?? null,
@@ -688,6 +844,36 @@ export async function executeProjectImport(payloadInput: unknown) {
         .where(eq(schema.units.id, existingUnit.id));
     } else {
       await db.insert(schema.units).values(unitValues);
+    }
+  }
+
+  for (const availabilityPlan of payload.availabilityPlans) {
+    const towerCode = normalizeCode(availabilityPlan.towerCode);
+    const existingPlan = await db.query.projectAvailabilityPlans.findFirst({
+      where: (table, { and, eq }) =>
+        and(
+          eq(table.projectId, projectId),
+          eq(table.towerCode, towerCode),
+        ),
+      columns: {
+        id: true,
+      },
+    });
+
+    if (existingPlan) {
+      await db
+        .update(schema.projectAvailabilityPlans)
+        .set({
+          plan: availabilityPlan.plan,
+          updatedAt: new Date(),
+        })
+        .where(eq(schema.projectAvailabilityPlans.id, existingPlan.id));
+    } else {
+      await db.insert(schema.projectAvailabilityPlans).values({
+        projectId,
+        towerCode,
+        plan: availabilityPlan.plan,
+      });
     }
   }
 

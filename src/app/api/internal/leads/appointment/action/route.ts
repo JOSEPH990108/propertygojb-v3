@@ -5,6 +5,7 @@ import { z } from "zod";
 import { db, schema } from "@/db";
 import { errorJson, okJson, parseApiError } from "@/lib/api/json";
 import { requireRole } from "@/lib/auth/guards";
+import { writeAuditLog } from "@/lib/audit/log";
 
 const appointmentActionSchema = z.object({
   activityId: z.string().min(1, "Appointment is required."),
@@ -151,6 +152,19 @@ export async function POST(request: NextRequest) {
     const now = new Date();
     const config = getActionConfig(validated.action);
     const metadata = getMetadata(appointment.metadata);
+    const currentAppointmentStatus = String(
+      metadata.appointmentStatus ?? "SCHEDULED",
+    );
+
+    if (
+      currentAppointmentStatus === "REQUESTED" &&
+      validated.action !== "CANCEL"
+    ) {
+      return errorJson(
+        "Confirm the requested viewing from the lead page before completing or reopening it.",
+        400,
+      );
+    }
 
     const nextLeadStatus = getNextLeadStatus({
       action: validated.action,
@@ -205,6 +219,19 @@ export async function POST(request: NextRequest) {
         sourceEventType: "LEAD_APPOINTMENT_ACTION",
       });
     }
+
+    await writeAuditLog({
+      actionType: `${validated.action}_APPOINTMENT`,
+      entityType: "VIEWING_APPOINTMENT",
+      entityId: appointment.activityId,
+      actorUserId: currentUserId,
+      sourceApp: authContext.roleCode === "AGENT" ? "AGENT_PORTAL" : "ADMIN_PORTAL",
+      changeSummary: config.title,
+      beforeJson: { appointmentStatus: currentAppointmentStatus },
+      afterJson: { appointmentStatus: config.appointmentStatus },
+      metadata: { leadId: appointment.leadId },
+      request,
+    });
 
     return okJson({
       message: config.title,

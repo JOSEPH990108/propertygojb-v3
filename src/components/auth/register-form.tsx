@@ -9,7 +9,7 @@ import {
   useTransition,
 } from "react";
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, Smartphone, UserRound } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { AuthCard } from "@/components/auth/auth-card";
@@ -18,7 +18,10 @@ import { GoogleLoginButton } from "@/components/auth/google-login-button";
 import { PasswordInput } from "@/components/auth/password-input";
 import { PasswordRequirements } from "@/components/auth/password-requirements";
 import { AppButton } from "@/components/common/app-button";
-import { AppSelect, type AppSelectOption } from "@/components/common/app-select";
+import {
+  AppSelect,
+  type AppSelectOption,
+} from "@/components/common/app-select";
 import { AppStepper } from "@/components/common/app-stepper";
 import { Input } from "@/components/ui/input";
 import { postJson } from "@/lib/api/client";
@@ -82,7 +85,10 @@ export function RegisterForm() {
       }
 
       setStep("verify");
-      appToast.success("OTP sent successfully.", "Check your dev server terminal.");
+      appToast.success(
+        "OTP sent successfully.",
+        "Check your dev server terminal.",
+      );
 
       setTimeout(() => {
         inputRefs.current[0]?.focus();
@@ -131,7 +137,11 @@ export function RegisterForm() {
         "Registration completed.",
         "Please login with your mobile number.",
       );
-      router.push(nextPath === "/" ? "/login" : `/login?next=${encodeURIComponent(nextPath)}`);
+      router.push(
+        nextPath === "/"
+          ? "/login"
+          : `/login?next=${encodeURIComponent(nextPath)}`,
+      );
       router.refresh();
     });
   }
@@ -177,55 +187,41 @@ export function RegisterForm() {
   }
 
   return (
-    <AuthPageShell>
+    <AuthPageShell
+      eyebrow="Account Access"
+      title={step === "verify" ? "Verify your number." : "Create your account."}
+      description={
+        step === "verify"
+          ? "Enter the 6-digit code sent to your mobile number."
+          : "One account for saved projects, viewings, and enquiries."
+      }
+    >
       <AuthCard>
-        <div className="space-y-7">
+        <div className="space-y-6">
           <AppStepper
             currentStep={step === "verify" ? 1 : 0}
-            items={[
-              { label: "Account Details", icon: <UserRound className="size-6" /> },
-              { label: "Verification", icon: <ShieldCheck className="size-6" /> },
-            ]}
+            items={[{ label: "Details" }, { label: "Verification" }]}
           />
 
-          <div className="space-y-3 text-center">
-            <div className="mx-auto grid size-16 place-items-center rounded-full bg-blue-600 text-white shadow-[0_0_0_14px_rgba(37,99,235,0.10)]">
-              {step === "verify" ? (
-                <ShieldCheck className="size-7" />
-              ) : (
-                <Smartphone className="size-7" />
-              )}
-            </div>
-
-            <h1 className="text-3xl font-black tracking-tight">
-              {step === "verify" ? "Verify Your Mobile Number" : "Create Your Account"}
-            </h1>
-
-            <p className="mx-auto max-w-xs text-sm leading-6 text-slate-500">
-              {step === "verify"
-                ? "Enter the 6-digit code sent to your mobile number."
-                : "Create your account with mobile number verification."}
-            </p>
-          </div>
-
           {step === "details" ? (
-            <div className="space-y-5">
+            <div className="space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-semibold">Name</label>
-                <div className="relative">
-                  <UserRound className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-                  <Input
-                    value={name}
-                    onChange={(event) => setName(event.target.value)}
-                    placeholder="Enter your full name"
-                    autoComplete="name"
-                    className="h-12 rounded-2xl border-slate-200 bg-white/80 pl-11 shadow-sm"
-                  />
-                </div>
+                <label className="text-[0.65rem] font-medium tracking-[0.24em] text-muted-foreground uppercase">
+                  Full Name
+                </label>
+                <Input
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  placeholder="Enter your full name"
+                  autoComplete="name"
+                  className="h-auto rounded-none border-0 border-b border-border bg-transparent px-2 pt-3 pb-3 text-sm font-light shadow-none focus-visible:border-b-2 focus-visible:border-public-decorative focus-visible:ring-0 dark:bg-transparent"
+                />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-semibold">Mobile Number</label>
+                <label className="text-[0.65rem] font-medium tracking-[0.24em] text-muted-foreground uppercase">
+                  Mobile Number
+                </label>
 
                 <div className="flex gap-3">
                   <AppSelect
@@ -234,25 +230,22 @@ export function RegisterForm() {
                     onValueChange={setCountryCode}
                     searchable
                     searchPlaceholder="Search country..."
-                    triggerClassName="w-[132px]"
+                    triggerClassName="h-auto w-auto min-w-0 justify-start rounded-none border-0 border-b border-border bg-transparent px-2 pt-3 pb-3 shadow-none hover:bg-transparent dark:border-border dark:bg-transparent dark:hover:bg-transparent"
                     renderValue={(option) => (
-                      <span className="flex items-center gap-2">
-                        <span className="grid size-7 place-items-center rounded-md bg-blue-50 text-xs font-bold text-blue-700">
-                          {option?.leading}
-                        </span>
-                        <span>{option?.value}</span>
+                      <span className="text-sm font-light">
+                        {option?.value}
                       </span>
                     )}
                     renderOption={(option) => (
                       <>
-                        <span className="grid size-8 place-items-center rounded-md bg-blue-50 text-xs font-bold text-blue-700">
+                        <span className="grid size-8 place-items-center bg-muted text-xs font-semibold text-foreground">
                           {option.leading}
                         </span>
                         <div className="min-w-0 flex-1">
-                          <p className="font-semibold text-slate-900">
+                          <p className="font-semibold text-foreground">
                             {option.label}
                           </p>
-                          <p className="text-xs text-slate-500">
+                          <p className="text-xs text-muted-foreground">
                             {option.description}
                           </p>
                         </div>
@@ -260,22 +253,21 @@ export function RegisterForm() {
                     )}
                   />
 
-                  <div className="relative flex-1">
-                    <Smartphone className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-                    <Input
-                      value={mobile}
-                      onChange={(event) => setMobile(event.target.value)}
-                      placeholder="Enter mobile number"
-                      inputMode="tel"
-                      autoComplete="tel"
-                      className="h-12 rounded-2xl border-slate-200 bg-white/80 pl-11 shadow-sm"
-                    />
-                  </div>
+                  <Input
+                    value={mobile}
+                    onChange={(event) => setMobile(event.target.value)}
+                    placeholder="Enter mobile number"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    className="h-auto flex-1 rounded-none border-0 border-b border-border bg-transparent px-2 pt-3 pb-3 text-sm font-light shadow-none focus-visible:border-b-2 focus-visible:border-public-decorative focus-visible:ring-0 dark:bg-transparent"
+                  />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-semibold">Password</label>
+                <label className="text-[0.65rem] font-medium tracking-[0.24em] text-muted-foreground uppercase">
+                  Password
+                </label>
                 <PasswordInput
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
@@ -295,50 +287,53 @@ export function RegisterForm() {
                 type="button"
                 disabled={isPending}
                 onClick={handleStartRegistration}
-                className="w-full"
+                className="w-full rounded-none text-xs font-medium tracking-[0.2em] uppercase"
               >
                 {isPending ? "Sending Code..." : "Register Now"}
                 <ArrowRight className="ml-2 size-4" />
               </AppButton>
 
               <div className="flex items-center gap-3">
-                <div className="h-px flex-1 bg-slate-200" />
-                <span className="text-xs text-slate-400">or</span>
-                <div className="h-px flex-1 bg-slate-200" />
+                <div className="h-px flex-1 bg-border" />
+                <span className="text-xs text-muted-foreground uppercase">
+                  or
+                </span>
+                <div className="h-px flex-1 bg-border" />
               </div>
 
               <GoogleLoginButton callbackURL="/auth-redirect" />
 
-              <p className="text-center text-sm text-slate-500">
+              <p className="text-center text-sm text-muted-foreground">
                 Already have an account?{" "}
-                <Link href="/login" className="font-semibold text-blue-600">
+                <Link
+                  href="/login"
+                  className="font-medium text-foreground underline underline-offset-4"
+                >
                   Login
                 </Link>
               </p>
             </div>
           ) : (
-            <div className="space-y-5">
-              <div className="rounded-2xl border border-slate-200 bg-white/70 p-4">
-                <div className="flex items-center justify-between gap-4">
-                  <p className="text-sm font-medium text-slate-600">
-                    {countryCode} {mobile}
-                  </p>
+            <div className="space-y-6">
+              <div className="flex items-center justify-between gap-4 border border-border bg-muted/40 p-4">
+                <p className="text-sm font-medium text-muted-foreground">
+                  {countryCode} {mobile}
+                </p>
 
-                  <button
-                    type="button"
-                    className="text-sm font-semibold text-blue-600"
-                    onClick={() => {
-                      setStep("details");
-                      setOtpDigits(["", "", "", "", "", ""]);
-                    }}
-                  >
-                    Edit
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  className="text-sm font-medium text-foreground underline underline-offset-4"
+                  onClick={() => {
+                    setStep("details");
+                    setOtpDigits(["", "", "", "", "", ""]);
+                  }}
+                >
+                  Edit
+                </button>
               </div>
 
               <div className="space-y-3">
-                <label className="text-sm font-semibold">
+                <label className="text-[0.65rem] font-medium tracking-[0.24em] text-muted-foreground uppercase">
                   Enter the 6-digit code
                 </label>
 
@@ -359,7 +354,7 @@ export function RegisterForm() {
                       onPaste={handleOtpPaste}
                       inputMode="numeric"
                       maxLength={1}
-                      className="h-12 rounded-xl border-slate-200 bg-white/80 text-center text-lg font-bold shadow-sm focus-visible:ring-blue-600 sm:h-14"
+                      className="h-12 rounded-none border-0 border-b border-border bg-transparent text-center text-lg font-medium shadow-none focus-visible:border-b-2 focus-visible:border-public-decorative focus-visible:ring-0 sm:h-14 dark:bg-transparent"
                     />
                   ))}
                 </div>
@@ -369,7 +364,7 @@ export function RegisterForm() {
                 type="button"
                 disabled={isPending}
                 onClick={handleVerifyOtp}
-                className="w-full"
+                className="w-full rounded-none text-xs font-medium tracking-[0.2em] uppercase"
               >
                 {isPending ? "Verifying..." : "Verify & Continue"}
                 <ArrowRight className="ml-2 size-4" />

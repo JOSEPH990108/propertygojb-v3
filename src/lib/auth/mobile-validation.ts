@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import { normalizeLocalPhoneNumber } from "@/lib/auth/phone";
-import { isPasswordValid } from "@/lib/auth/password-policy";
+import { isPasswordValid } from "./password-policy";
+import { normalizeLocalPhoneNumber } from "./phone";
 
 export const countryCodeSchema = z.enum(["+60", "+65", "+62", "+66", "+91"]);
 
