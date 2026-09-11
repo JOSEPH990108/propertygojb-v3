@@ -11,6 +11,7 @@
     "db:migrate": "drizzle-kit migrate --config=drizzle.config.ts",
     "db:studio": "drizzle-kit studio --config=drizzle.config.ts",
     "db:seed": "tsx src/db/seeds/run.ts",
+    "db:bootstrap:staging": "tsx src/db/seeds/bootstrap-staging.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "format": "prettier --write .",
